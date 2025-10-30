@@ -1,8 +1,13 @@
 FROM python:3.13-bookworm
 
+RUN apt-get update && \
+    apt-get install -y build-essential pkg-config gdal-bin libgdal-dev \
+    libgeos-dev proj-bin libproj-dev
+
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV UV_SYSTEM_PYTHON 1
+ENV DJANGO_SETTINGS_MODULE=core.settings
 
 WORKDIR /app
 
@@ -18,7 +23,7 @@ RUN if [ "$DEBUG" = "False" ]; then \
     uv sync; \
     fi
 
-COPY . .
+COPY src gunicorn-cfg.py ./
 
 RUN uv run django-admin collectstatic --no-input --clear || true
 
