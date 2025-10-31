@@ -49,8 +49,9 @@ class UserManager(BaseUserManager):
             **extra_fields,
         )
 
+        token = user.create_user_token()
         logger.info("Sending activation email to %s", user.email)
-        user.send_activation_email()
+        user.send_activation_email(token)
 
         return user
 
@@ -61,5 +62,6 @@ class UserManager(BaseUserManager):
             is_staff=True,
             is_superuser=True,
             is_active=True,
+            is_email_verified=True,
             **extra_fields,
         )

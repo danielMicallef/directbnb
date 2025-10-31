@@ -22,7 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure--7o$i(-mz$$^c=^s6c0u^3$czi#k2izv#juiaz=u*0q%ldehee")
+SECRET_KEY = os.getenv(
+    "DJANGO_SECRET_KEY",
+    "django-insecure--7o$i(-mz$$^c=^s6c0u^3$czi#k2izv#juiaz=u*0q%ldehee",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "True")
@@ -37,6 +40,10 @@ LOCAL_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "storages",
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
+    "drf_spectacular",
 ]
 DEBUG_APPS = []
 DJANGO_APPS = [
@@ -47,7 +54,7 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = LOCAL_APPS + THIRD_PARTY_APPS + DJANGO_APPS
 if DEBUG:
     INSTALLED_APPS += DEBUG_APPS
 
@@ -130,7 +137,9 @@ if os.getenv("USE_S3", "False") == "True":
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
     AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")
-    AWS_S3_CUSTOM_DOMAIN = f'{os.getenv("AWS_STORAGE_BUCKET_NAME")}.{os.getenv("AWS_S3_ENDPOINT_URL")}'
+    AWS_S3_CUSTOM_DOMAIN = (
+        f"{os.getenv('AWS_STORAGE_BUCKET_NAME')}.{os.getenv('AWS_S3_ENDPOINT_URL')}"
+    )
     AWS_S3_OBJECT_PARAMETERS = {
         "CacheControl": "max-age=86400",
     }
@@ -148,13 +157,13 @@ else:
     }
 
 if DEBUG:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = os.getenv('EMAIL_HOST', 'mailcatcher')
-    EMAIL_HOST_USER = ''
-    EMAIL_HOST_PASSWORD = ''
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    EMAIL_HOST = os.getenv("EMAIL_HOST", "mailcatcher")
+    EMAIL_HOST_USER = ""
+    EMAIL_HOST_PASSWORD = ""
     EMAIL_PORT = 1025
     EMAIL_USE_TLS = False
-    DEFAULT_FROM_EMAIL = 'noreply@directbnb.local'
+    DEFAULT_FROM_EMAIL = "noreply@directbnb.local"
 
 else:
     raise NotImplementedError("Setup email not implemented yet")
@@ -187,3 +196,66 @@ AUTH_USER_MODEL = "users.BNBUser"
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = LOGIN_URL
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+# Simple JWT settings
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": None,
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "JTI_CLAIM": "jti",
+}
+
+# DRF Spectacular (OpenAPI) settings
+SPECTACULAR_SETTINGS = {
+    "TITLE": SITE_NAME,
+    "DESCRIPTION": f"API documentation for {SITE_NAME} - A property rental platform",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SCHEMA_PATH_PREFIX": "/api",
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+    },
+    "AUTHENTICATION_WHITELIST": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "APPEND_COMPONENTS": {
+        "securitySchemes": {
+            "Bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+            }
+        }
+    },
+    "SECURITY": [{"Bearer": []}],
+}

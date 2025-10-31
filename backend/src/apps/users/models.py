@@ -50,8 +50,8 @@ class BNBUser(AbstractBaseUser, PermissionsMixin):
     is_email_confirmed = models.BooleanField(_("confirmed email"), default=False)
     registered_at = models.DateTimeField(_("registered at"), auto_now_add=True)
 
-    EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'email'
+    EMAIL_FIELD = "email"
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = UserManager()
@@ -77,8 +77,7 @@ class BNBUser(AbstractBaseUser, PermissionsMixin):
             from_email = settings.DEFAULT_FROM_EMAIL
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    def send_activation_email(self):
-        token = self.create_user_token()
+    def send_activation_email(self, token):
         verification_url = reverse("users:verify_email", kwargs={"token": token})
         full_verification_url = f"{settings.SITE_URL}{verification_url}"
 
@@ -97,6 +96,11 @@ class BNBUser(AbstractBaseUser, PermissionsMixin):
         ut.save()
         return ut.token
 
+    def refresh_user_token(self):
+        UserToken.objects.filter(user=self).delete()
+        token = self.create_user_token()
+        return token
+
 
 class UserToken(AbstractTrackedModel):
     MAX_HOURS_VALID = 24
@@ -108,4 +112,7 @@ class UserToken(AbstractTrackedModel):
     def is_expired(self):
         from datetime import timedelta
         from django.utils import timezone
-        return (timezone.now() - self.created_at) > timedelta(hours=self.MAX_HOURS_VALID)
+
+        return (timezone.now() - self.created_at) > timedelta(
+            hours=self.MAX_HOURS_VALID
+        )

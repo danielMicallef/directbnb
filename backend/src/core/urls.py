@@ -14,10 +14,19 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
+from apps.users import api_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include('apps.users.urls')),
+    # API endpoints
+    path("api/auth/", include("apps.users.api_urls")),
+    # OpenAPI schema and documentation (protected in production)
+    path("api/schema/", api_views.ProtectedSpectacularAPIView.as_view(), name="schema"),
+    path("api/docs/", api_views.ProtectedSpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path("api/redoc/", api_views.ProtectedSpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+    # Web views
+    path("", include("apps.users.urls")),
 ]

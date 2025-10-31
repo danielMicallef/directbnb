@@ -10,6 +10,10 @@ urlpatterns = [
     path("login/", views.EmailLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("verify/<uuid:token>/", views.verify_email, name="verify_email"),
-    path("resend-verification/", views.ResendVerificationEmailView.as_view(), name="resend_verification"),
+    path(
+        "resend-verification/",
+        views.ResendVerificationEmailView.as_view(),
+        name="resend_verification",
+    ),
     path("", views.HomeView.as_view(), name="home"),
 ]

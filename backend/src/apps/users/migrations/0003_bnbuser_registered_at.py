@@ -5,16 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0002_bnbuser_is_email_confirmed'),
+        ("users", "0002_bnbuser_is_email_confirmed"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='bnbuser',
-            name='registered_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now, verbose_name='registered at'),
+            model_name="bnbuser",
+            name="registered_at",
+            field=models.DateTimeField(
+                auto_now_add=True,
+                default=django.utils.timezone.now,
+                verbose_name="registered at",
+            ),
             preserve_default=False,
         ),
     ]

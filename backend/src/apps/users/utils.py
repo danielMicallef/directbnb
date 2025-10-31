@@ -1,4 +1,3 @@
-
 def get_user_avatar_path(instance, filename):
     """
     Generate a unique path for user avatar uploads.
