@@ -1,0 +1,227 @@
+# DirectBnB Development Rules
+
+## Core Programming Principles
+
+### SOLID Principles
+1. **Single Responsibility Principle (SRP)**
+   - Each class/function should have one reason to change
+   - Keep views, serializers, models, and managers focused on their specific purpose
+   - Example: Separate authentication logic from business logic
+
+2. **Open/Closed Principle (OCP)**
+   - Classes should be open for extension but closed for modification
+   - Use inheritance, mixins, and composition to extend functionality
+   - Example: `ConditionalLoginRequiredMixin` extends behavior without modifying base classes
+
+3. **Liskov Substitution Principle (LSP)**
+   - Derived classes must be substitutable for their base classes
+   - Ensure overridden methods maintain expected behavior
+   - Example: Custom views must work anywhere base views are expected
+
+4. **Interface Segregation Principle (ISP)**
+   - Don't force classes to implement interfaces they don't use
+   - Use small, focused mixins rather than large base classes
+   - Keep serializers and forms minimal with only required fields
+
+5. **Dependency Inversion Principle (DIP)**
+   - Depend on abstractions, not concrete implementations
+   - Use Django's settings and dependency injection
+   - Example: Use `settings.EMAIL_HOST` instead of hardcoded values
+
+### YAGNI (You Aren't Gonna Need It)
+- Don't add functionality until it's actually needed
+- Avoid premature optimization and abstraction
+- Build features incrementally based on real requirements
+- Remove unused code, imports, and commented-out sections
+
+## Django Best Practices
+
+### Models
+- Whenever required inherit from `AbstractTrackedModel` for automatic timestamp tracking
+- Use descriptive field names with `verbose_name`
+- Add proper `__str__` methods for admin interface
+- Use `related_name` for reverse relations
+- Keep business logic in models, not views
+- Use managers for complex queries
+
+### Views
+- Keep views thin - delegate to models, serializers, and services
+- Use class-based views for consistency
+- Separate API views (`api_views.py`) from template views (`views.py`)
+- Always use appropriate mixins (`LoginRequiredMixin`, `PermissionRequiredMixin`)
+- Return proper HTTP status codes
+
+### Serializers
+- One serializer per purpose (read, write, update)
+- Use `write_only=True` for sensitive fields like passwords
+- Validate data in serializer `validate()` methods
+- Keep serializers focused and DRY
+
+### URLs
+- Use descriptive URL names
+- Organize by feature/app
+- Keep API URLs separate (`api_urls.py`)
+- Use URL namespacing (`app_name = "users"`)
+
+## Code Organization
+
+### File Structure
+```
+apps/
+  └── app_name/
+      ├── models.py          # Database models
+      ├── views.py           # Template-based views
+      ├── api_views.py       # REST API views
+      ├── serializers.py     # DRF serializers
+      ├── forms.py           # Django forms
+      ├── managers.py        # Custom model managers
+      ├── utils.py           # Helper functions
+      ├── urls.py            # Template view URLs
+      └── api_urls.py        # API URLs
+```
+
+### Naming Conventions
+- Models: `PascalCase` (e.g., `BNBUser`, `UserToken`)
+- Views: `PascalCase` with suffix (e.g., `RegisterView`, `LoginAPIView`)
+- Functions: `snake_case` (e.g., `send_activation_email`)
+- Variables: `snake_case` (e.g., `user_token`, `refresh_token`)
+- Constants: `UPPER_SNAKE_CASE` (e.g., `MAX_HOURS_VALID`)
+- URL names: `kebab-case` (e.g., `"resend-verification"`)
+
+## Security Best Practices
+
+### Authentication & Authorization
+- Always check `is_email_confirmed` before allowing login
+- Use JWT tokens for API authentication
+- Implement token blacklisting for logout
+- Use `AllowAny` explicitly only for public endpoints
+- Default to `IsAuthenticated` permission class
+
+### Sensitive Data
+- Never commit secrets to git
+- Use environment variables for configuration
+- Use `write_only=True` for passwords in serializers
+- Don't reveal user existence in error messages (security through obscurity for emails)
+- Hash passwords using Django's built-in methods
+
+### Email Verification
+- Generate unique tokens for email verification
+- Set expiration time on tokens (24 hours)
+- Delete tokens after use
+- Allow token refresh/resend functionality
+
+## Django REST Framework
+
+### API Design
+- Use proper HTTP methods (GET, POST, PUT, PATCH, DELETE)
+- Return consistent response formats
+- Include helpful error messages
+- Use status codes correctly:
+  - 200: Success
+  - 201: Created
+  - 400: Bad Request
+  - 401: Unauthorized
+  - 403: Forbidden
+  - 404: Not Found
+
+### Documentation
+- Add docstrings to all API views
+- Use drf-spectacular for OpenAPI documentation
+- Protect documentation in production (DEBUG=False)
+- Keep Swagger UI interactive and up-to-date
+
+## Email Configuration
+
+### Development vs Production
+- Use console/SMTP backend in DEBUG mode
+- Point to mailcatcher service in Docker: `EMAIL_HOST=mailcatcher`
+- Use proper email templates with context
+- Always test email delivery in development
+
+## Testing & Quality
+
+### Code Formatting
+- **ALWAYS run `uv run ruff format .` after making changes**
+- Run `uv run ruff check .` to catch linting issues
+- Fix all linting warnings before committing
+- Keep lines under 88 characters (Ruff default)
+
+### Code Review Checklist
+- [ ] SOLID principles followed
+- [ ] YAGNI principle applied
+- [ ] No unused imports or code
+- [ ] Proper error handling
+- [ ] Security considerations addressed
+- [ ] Tests written (when applicable)
+- [ ] Documentation updated
+- [ ] **Formatted with `uv run ruff format .`**
+
+## Docker & Deployment
+
+### Running Commands
+- Always use `docker compose exec app uv run python manage.py <command>`
+- Use `uv sync` to install dependencies
+- Run migrations after model changes
+- Restart services after dependency updates
+
+### Environment Variables
+- Use `.env` file for local development
+- Never commit `.env` to git
+- Keep `.env.example` updated
+- Use proper defaults in settings
+
+## Git Workflow
+
+### Commits
+- Write clear, descriptive commit messages
+- Commit related changes together
+- Don't commit commented-out code
+- Don't commit debug print statements
+
+### Pull Requests
+- Keep PRs focused and small
+- Update documentation
+- Include test results
+- Run `uv run ruff format .` before pushing
+
+## Performance Considerations
+
+### Database
+- Use `select_related()` for ForeignKey fields
+- Use `prefetch_related()` for reverse relations
+- Add database indexes for frequently queried fields
+- Avoid N+1 queries
+
+### Caching
+- Only implement caching when needed (YAGNI)
+- Use Django's cache framework
+- Cache expensive operations, not everything
+
+## Error Handling
+
+### Best Practices
+- Use try-except for expected errors
+- Log errors appropriately (use `loguru`)
+- Return user-friendly error messages
+- Don't expose stack traces in production
+
+### Validation
+- Validate at multiple levels (serializer, model, form)
+- Use Django's built-in validators
+- Write custom validators when needed
+- Return specific validation errors
+
+## Package Management
+
+### UV Commands
+- `uv sync` - Install/sync dependencies
+- `uv add <package>` - Add new dependency
+- `uv run <command>` - Run command in uv environment
+- `uv run ruff format .` - Format code (ALWAYS RUN AFTER CHANGES)
+- `uv run ruff check .` - Lint code
+
+## Final Reminder
+
+**CRITICAL: Always run `uv run ruff format .` after making code changes before committing or completing tasks.**
+
+This ensures consistent code style across the project and catches potential issues early.
