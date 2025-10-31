@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 LOCAL_APPS = [
     "apps.users.apps.UsersConfig",
     "apps.properties.apps.PropertiesConfig",
+    "apps.builder.apps.BuilderConfig",
 ]
 THIRD_PARTY_APPS = [
     "storages",
@@ -259,3 +260,12 @@ SPECTACULAR_SETTINGS = {
     },
     "SECURITY": [{"Bearer": []}],
 }
+
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
+SCRAPE_PROXY_URL = ""

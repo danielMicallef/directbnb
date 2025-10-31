@@ -1,0 +1,623 @@
+{
+  "coordinates": {
+    "latitude": 36.02694,
+    "longitude": 14.21779
+  },
+  "room_type": "Entire home/apt",
+  "is_super_host": false,
+  "home_tier": 1,
+  "person_capacity": 6,
+  "rating": {
+    "accuracy": 4.87,
+    "checking": 4.97,
+    "cleanliness": 4.97,
+    "communication": 4.97,
+    "location": 4.9,
+    "value": 4.84,
+    "guest_satisfaction": 4.87,
+    "review_count": "31"
+  },
+  "house_rules": {
+    "aditional": "No Parties or events whatsoever.\nSmoking inside is strictly not allowed.\nTrash must be taken out by end of stay.\nCheck out by 10AM.",
+    "general": [
+      {
+        "title": "Checking in and out",
+        "values": [
+          {
+            "title": "Check-in: 3:00 PM - 10:00 PM",
+            "icon": "SYSTEM_CLOCK"
+          },
+          {
+            "title": "Checkout before 10:00 AM",
+            "icon": "SYSTEM_CLOCK"
+          },
+          {
+            "title": "Self check-in with lockbox",
+            "icon": "SYSTEM_CHECK_IN"
+          }
+        ]
+      },
+      {
+        "title": "During your stay",
+        "values": [
+          {
+            "title": "6 guests maximum",
+            "icon": "SYSTEM_FAMILY"
+          },
+          {
+            "title": "Pets allowed",
+            "icon": "SYSTEM_PETS"
+          },
+          {
+            "title": "Quiet hours",
+            "icon": "SYSTEM_EVENING"
+          },
+          {
+            "title": "No parties or events",
+            "icon": "SYSTEM_NO_EVENTS"
+          },
+          {
+            "title": "Commercial photography allowed",
+            "icon": "SYSTEM_CAMERA"
+          },
+          {
+            "title": "No smoking",
+            "icon": "SYSTEM_SMOKING_NOT_ALLOWED"
+          }
+        ]
+      },
+      {
+        "title": "Before you leave",
+        "values": [
+          {
+            "title": "Gather used towels",
+            "icon": "SYSTEM_TOWEL"
+          },
+          {
+            "title": "Throw trash away",
+            "icon": "SYSTEM_TRASH"
+          },
+          {
+            "title": "Turn things off",
+            "icon": "SYSTEM_POWER_SWITCH"
+          },
+          {
+            "title": "Return keys",
+            "icon": "SYSTEM_HOST_OWNERS"
+          }
+        ]
+      }
+    ]
+  },
+  "host": {
+    "id": "54753198",
+    "name": "Hosted by Daniel"
+  },
+  "sub_description": {
+    "title": "Entire rental unit in Munxar, Malta",
+    "items": [
+      "6 guests",
+      "2 bedrooms",
+      "4 beds",
+      "2 baths"
+    ]
+  },
+  "amenities": [
+    {
+      "title": "Scenic views",
+      "values": [
+        {
+          "title": "Sea view",
+          "subtitle": "",
+          "icon": "SYSTEM_VIEW_OCEAN",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Bathroom",
+      "values": [
+        {
+          "title": "Hair dryer",
+          "subtitle": "",
+          "icon": "SYSTEM_HAIRDRYER",
+          "available": true
+        },
+        {
+          "title": "Cleaning products",
+          "subtitle": "",
+          "icon": "SYSTEM_CLEANING_SUPPLIES",
+          "available": true
+        },
+        {
+          "title": "Hot water",
+          "subtitle": "",
+          "icon": "SYSTEM_HOT_WATER",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Bedroom and laundry",
+      "values": [
+        {
+          "title": "Free washer – In unit",
+          "subtitle": "",
+          "icon": "SYSTEM_WASHER",
+          "available": true
+        },
+        {
+          "title": "Essentials",
+          "subtitle": "Towels, bed sheets, soap, and toilet paper",
+          "icon": "SYSTEM_TOILETRIES",
+          "available": true
+        },
+        {
+          "title": "Hangers",
+          "subtitle": "",
+          "icon": "SYSTEM_HANGERS",
+          "available": true
+        },
+        {
+          "title": "Bed linens",
+          "subtitle": "Egyptian cotton linens",
+          "icon": "SYSTEM_BLANKETS",
+          "available": true
+        },
+        {
+          "title": "Extra pillows and blankets",
+          "subtitle": "",
+          "icon": "SYSTEM_PILLOW",
+          "available": true
+        },
+        {
+          "title": "Room-darkening shades",
+          "subtitle": "",
+          "icon": "SYSTEM_BLACKOUT_SHADES",
+          "available": true
+        },
+        {
+          "title": "Iron",
+          "subtitle": "",
+          "icon": "SYSTEM_IRON",
+          "available": true
+        },
+        {
+          "title": "Drying rack for clothing",
+          "subtitle": "",
+          "icon": "SYSTEM_HANGERS",
+          "available": true
+        },
+        {
+          "title": "Safe",
+          "subtitle": "",
+          "icon": "SYSTEM_SAFE",
+          "available": true
+        },
+        {
+          "title": "Mosquito net",
+          "subtitle": "",
+          "icon": "SYSTEM_MOSQUITO_NET",
+          "available": true
+        },
+        {
+          "title": "Clothing storage: wardrobe and dresser",
+          "subtitle": "",
+          "icon": "SYSTEM_WARDROBE",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Entertainment",
+      "values": [
+        {
+          "title": "32 inch HDTV with Netflix",
+          "subtitle": "",
+          "icon": "SYSTEM_TV",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Family",
+      "values": [
+        {
+          "title": "Crib",
+          "subtitle": "",
+          "icon": "SYSTEM_CRIB",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Heating and cooling",
+      "values": [
+        {
+          "title": "AC - split type ductless system",
+          "subtitle": "",
+          "icon": "SYSTEM_SNOWFLAKE",
+          "available": true
+        },
+        {
+          "title": "Radiant heating",
+          "subtitle": "",
+          "icon": "SYSTEM_THERMOMETER",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Home safety",
+      "values": [
+        {
+          "title": "Carbon monoxide alarm",
+          "subtitle": "",
+          "icon": "SYSTEM_DETECTOR_CO",
+          "available": true
+        },
+        {
+          "title": "Fire extinguisher",
+          "subtitle": "",
+          "icon": "SYSTEM_FIRE_EXTINGUISHER",
+          "available": true
+        },
+        {
+          "title": "First aid kit",
+          "subtitle": "",
+          "icon": "SYSTEM_FIRST_AID_KIT",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Internet and office",
+      "values": [
+        {
+          "title": "Wifi",
+          "subtitle": "",
+          "icon": "SYSTEM_WI_FI",
+          "available": true
+        },
+        {
+          "title": "Dedicated workspace",
+          "subtitle": "",
+          "icon": "SYSTEM_WORKSPACE",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Kitchen and dining",
+      "values": [
+        {
+          "title": "Kitchen",
+          "subtitle": "Space where guests can cook their own meals",
+          "icon": "SYSTEM_COOKING_BASICS",
+          "available": true
+        },
+        {
+          "title": "Samsung refrigerator",
+          "subtitle": "",
+          "icon": "SYSTEM_REFRIGERATOR",
+          "available": true
+        },
+        {
+          "title": "Microwave",
+          "subtitle": "",
+          "icon": "SYSTEM_MICROWAVE",
+          "available": true
+        },
+        {
+          "title": "Cooking basics",
+          "subtitle": "Pots and pans, oil, salt and pepper",
+          "icon": "SYSTEM_COOKING_BASICS",
+          "available": true
+        },
+        {
+          "title": "Dishes and silverware",
+          "subtitle": "Bowls, chopsticks, plates, cups, etc.",
+          "icon": "SYSTEM_DISHES_AND_SILVERWARE",
+          "available": true
+        },
+        {
+          "title": "Freezer",
+          "subtitle": "",
+          "icon": "SYSTEM_REFRIGERATOR",
+          "available": true
+        },
+        {
+          "title": "Stainless steel gas stove",
+          "subtitle": "",
+          "icon": "SYSTEM_STOVE",
+          "available": true
+        },
+        {
+          "title": "Stainless steel oven",
+          "subtitle": "",
+          "icon": "SYSTEM_OVEN",
+          "available": true
+        },
+        {
+          "title": "Hot water kettle",
+          "subtitle": "",
+          "icon": "SYSTEM_WATER_KETTLE",
+          "available": true
+        },
+        {
+          "title": "Coffee maker: french press",
+          "subtitle": "",
+          "icon": "SYSTEM_COFFEE_MAKER",
+          "available": true
+        },
+        {
+          "title": "Wine glasses",
+          "subtitle": "",
+          "icon": "SYSTEM_MAPS_BAR",
+          "available": true
+        },
+        {
+          "title": "Toaster",
+          "subtitle": "",
+          "icon": "SYSTEM_TOASTER",
+          "available": true
+        },
+        {
+          "title": "Dining table",
+          "subtitle": "",
+          "icon": "SYSTEM_DINING_TABLE",
+          "available": true
+        },
+        {
+          "title": "Coffee",
+          "subtitle": "",
+          "icon": "SYSTEM_COFFEE_MAKER",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Location features",
+      "values": [
+        {
+          "title": "Shared beach access – Beachfront",
+          "subtitle": "Guests can enjoy a nearby beach",
+          "icon": "SYSTEM_BEACH",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Outdoor",
+      "values": [
+        {
+          "title": "Private patio or balcony",
+          "subtitle": "",
+          "icon": "SYSTEM_PATIO_BALCONY",
+          "available": true
+        },
+        {
+          "title": "Outdoor dining area",
+          "subtitle": "",
+          "icon": "SYSTEM_ROOFTOP_DECK",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Parking and facilities",
+      "values": [
+        {
+          "title": "Free parking on premises",
+          "subtitle": "",
+          "icon": "SYSTEM_MAPS_CAR_RENTAL",
+          "available": true
+        },
+        {
+          "title": "Free street parking",
+          "subtitle": "",
+          "icon": "SYSTEM_MAPS_CAR_RENTAL",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Services",
+      "values": [
+        {
+          "title": "Pets allowed",
+          "subtitle": "Assistance animals are always allowed",
+          "icon": "SYSTEM_PETS",
+          "available": true
+        },
+        {
+          "title": "Luggage dropoff allowed",
+          "subtitle": "For guests' convenience when they have early arrival or late departure",
+          "icon": "SYSTEM_LUGGAGE_DROP",
+          "available": true
+        },
+        {
+          "title": "Long term stays allowed",
+          "subtitle": "Allow stay for 28 days or more",
+          "icon": "SYSTEM_CALENDAR",
+          "available": true
+        },
+        {
+          "title": "Self check-in",
+          "subtitle": "",
+          "icon": "SYSTEM_KEY",
+          "available": true
+        },
+        {
+          "title": "Lockbox",
+          "subtitle": "",
+          "icon": "SYSTEM_SAFE",
+          "available": true
+        },
+        {
+          "title": "Cleaning available during stay",
+          "subtitle": "",
+          "icon": "SYSTEM_CLEAN",
+          "available": true
+        }
+      ]
+    },
+    {
+      "title": "Not included",
+      "values": [
+        {
+          "title": "Exterior security cameras on property",
+          "subtitle": null,
+          "icon": "SYSTEM_NO_SURVEILLANCE",
+          "available": false
+        },
+        {
+          "title": "Dryer",
+          "subtitle": "",
+          "icon": "SYSTEM_NO_DRYER",
+          "available": false
+        },
+        {
+          "title": "Smoke alarm",
+          "subtitle": "This place may not have a smoke detector. Reach out to the host with any questions.",
+          "icon": "SYSTEM_NO_DETECTOR_SMOKE",
+          "available": false
+        }
+      ]
+    }
+  ],
+  "co_hosts": [],
+  "images": [
+    {
+      "title": "Living room image 1",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/b0c5d58a-28b1-4570-8164-afa9666a8fb1.jpeg"
+    },
+    {
+      "title": "Living room image 2",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6NTU5OTA3MzgzNzA5NDExOTUw/original/553435e7-737d-40b0-81be-e3cf2d1c0fb3.jpeg"
+    },
+    {
+      "title": "Living room image 3",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6NTU5OTA3MzgzNzA5NDExOTUw/original/6bbf8c48-e088-4a84-a01e-4b9782733395.jpeg"
+    },
+    {
+      "title": "Living room image 4",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6NTU5OTA3MzgzNzA5NDExOTUw/original/ceed7b7e-3e8a-46b7-b2fa-08ebcf27c358.jpeg"
+    },
+    {
+      "title": "Living room image 5",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6NTU5OTA3MzgzNzA5NDExOTUw/original/189b6f05-7007-4157-bbf7-a64bd2392a0f.jpeg"
+    },
+    {
+      "title": "Full kitchen image 1",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/2f819ecb-2415-4a4f-8c56-6d1cee3a4858.jpeg"
+    },
+    {
+      "title": "Dining area image 1",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/da7586ef-2daa-4414-a28b-d85a12e41fda.jpeg"
+    },
+    {
+      "title": "Bedroom 1 image 1",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/fbaf3c42-6737-414e-b5b7-aa9dfbd10d86.jpeg"
+    },
+    {
+      "title": "Bedroom 1 image 2",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/ad8e3716-2ab7-4509-b598-859c32b0f87d.jpeg"
+    },
+    {
+      "title": "Bedroom 1 image 3",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/d0e32339-f61f-426e-aaa6-2e4ad7ad6086.jpeg"
+    },
+    {
+      "title": "Bedroom 1 image 4",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/dc8106b2-2f17-4a19-b45d-25b7ca9c04cd.jpeg"
+    },
+    {
+      "title": "Sofa bed, can be extended to a double bed.",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/dcd7c9d9-db35-4044-ad0b-f90e20918117.jpeg"
+    },
+    {
+      "title": "Bedroom 2 image 1",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/fc2f155c-b9d0-43ea-aa91-21c2d1636fc9.jpeg"
+    },
+    {
+      "title": "Bedroom 2 image 2",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/583df140-e3d5-4c52-b40e-6e472b4b6fef.jpeg"
+    },
+    {
+      "title": "Full bathroom 1 image 1",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/a9cf770a-90d5-462a-9464-45adc093f787.jpeg"
+    },
+    {
+      "title": "Full bathroom 1 image 2",
+      "url": "https://a0.muscache.com/im/pictures/654fac8d-b53f-48fe-9c2a-c26cf69b8ea3.jpg"
+    },
+    {
+      "title": "Full bathroom 2 image 1",
+      "url": "https://a0.muscache.com/im/pictures/bd6018d6-c179-45fa-bb50-d07eab26918f.jpg"
+    },
+    {
+      "title": "Balcony image 1",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/128ac2b5-8822-4bc4-8d16-c86a40bb7401.jpeg"
+    },
+    {
+      "title": "Balcony image 2",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6NTU5OTA3MzgzNzA5NDExOTUw/original/c0812669-1163-4f3a-939d-ee362fbf7d98.jpeg"
+    },
+    {
+      "title": "Balcony image 3",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6NTU5OTA3MzgzNzA5NDExOTUw/original/4d4dee45-d3b4-4152-abea-a30361b0fe3e.jpeg"
+    },
+    {
+      "title": "Additional photos image 1",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/2e1cb21d-230c-42f4-8c33-7ed86b1fc488.jpeg"
+    },
+    {
+      "title": "Beach, and cliffs opposite to the apartment.",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/b03e03de-4f50-4b7c-9137-70abf0cf52b9.jpeg"
+    },
+    {
+      "title": "Clear beach, a short walk from the apartment",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-559907383709411950/original/9388105f-e37d-4431-be1d-a5c0d37bcc81.jpeg"
+    },
+    {
+      "title": "Sunset from Xlendi beach in January",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6NTU5OTA3MzgzNzA5NDExOTUw/original/39547374-ad1c-4f60-8afc-ee61c2ec2448.jpeg"
+    },
+    {
+      "title": "Inlet in Xlendi 2 minutes walk from the apartment",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6NTU5OTA3MzgzNzA5NDExOTUw/original/2c38cee2-8174-4366-90a8-d642d4732d51.jpeg"
+    }
+  ],
+  "location_descriptions": [
+    {
+      "title": "Munxar, Malta",
+      "content": "Quiet area especially during winter months. A lot of restaurants within walking distance."
+    },
+    {
+      "title": "Getting around",
+      "content": "Get around Gozo, either by car, public transport, or taxi service. Cycling is also a good option, however consider opting for an electric bike to get some help on some of the steeper roads. <br /><br />On most days, especially during winter months, its easy to find parking just outside the apartment block."
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Self check-in",
+      "subtitle": "Check yourself in with the lockbox.",
+      "icon": "SYSTEM_CHECK_IN"
+    },
+    {
+      "title": "Beautiful area",
+      "subtitle": "This home is in a scenic location.",
+      "icon": "SYSTEM_LOCATION"
+    },
+    {
+      "title": "At-home coffee",
+      "subtitle": "Start your morning right with the french press.",
+      "icon": "SYSTEM_COFFEE_MAKER"
+    }
+  ],
+  "is_guest_favorite": true,
+  "description": "A lovely, sea-view apartment with a fully-equipped kitchen and two air-conditioned bedrooms (sleep 4 and sofa bed which can be opened in a double bed, accommodating 6 total).<br /><br />A 2 minute walk from Xlendi beach, with a host of restaurants, bars and coffee shops. Also close to a grocery.<br /><br />Spacious balcony with lovely sunset views, ideal for a romantic dinner.<br /><br />Free wifi available.<br /><br /><b>The space</b><br />The apartment is one floor up, and includes a large living space, kitchen area with balcony, two bedrooms (one with ensuite), a bathroom and a laundry room.<br /><br /><b>Guest access</b><br />Guests are able to access the whole apartment.<br /><br /><b>Other things to note</b><br />Air-conditioning is available on a pay per use basis. It will cost approximately €2/night.",
+  "title": "Seaview 2-bedroom Apartment in Xlendi",
+  "language": "en"
+}

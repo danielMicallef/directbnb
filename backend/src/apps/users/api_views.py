@@ -31,22 +31,30 @@ class ConditionalLoginRequiredMixin:
             # Apply authentication check when not in DEBUG mode
             if not request.user.is_authenticated:
                 from django.contrib.auth.views import redirect_to_login
+
                 return redirect_to_login(request.get_full_path())
         return super().dispatch(request, *args, **kwargs)
 
 
 class ProtectedSpectacularAPIView(ConditionalLoginRequiredMixin, SpectacularAPIView):
     """OpenAPI schema view with optional authentication"""
+
     pass
 
 
-class ProtectedSpectacularSwaggerView(ConditionalLoginRequiredMixin, SpectacularSwaggerView):
+class ProtectedSpectacularSwaggerView(
+    ConditionalLoginRequiredMixin, SpectacularSwaggerView
+):
     """Swagger UI view with optional authentication"""
+
     pass
 
 
-class ProtectedSpectacularRedocView(ConditionalLoginRequiredMixin, SpectacularRedocView):
+class ProtectedSpectacularRedocView(
+    ConditionalLoginRequiredMixin, SpectacularRedocView
+):
     """ReDoc view with optional authentication"""
+
     pass
 
 

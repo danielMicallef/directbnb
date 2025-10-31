@@ -43,6 +43,7 @@
 - Use `related_name` for reverse relations
 - Keep business logic in models, not views
 - Use managers for complex queries
+- Never change database settings
 
 ### Views
 - Keep views thin - delegate to models, serializers, and services

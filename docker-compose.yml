@@ -77,6 +77,14 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgresuser}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
 
+  redis:
+    image: redis:8.2.2-bookworm
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+
 networks:
   db_network:
     driver: bridge
@@ -85,3 +93,4 @@ networks:
 
 volumes:
   postgres_data:
+  redis_data:
