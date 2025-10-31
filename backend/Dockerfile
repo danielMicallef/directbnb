@@ -26,10 +26,13 @@ RUN if [ "$DEBUG" = "False" ]; then \
     fi
 
 COPY src ./src
+COPY entrypoint.sh ./
 
 RUN uv run django-admin collectstatic --no-input --clear || true
 
 EXPOSE 8000
+
+ENTRYPOINT ["./entrypoint.sh"]
 
 FROM base as development
 CMD ["uv", "run", "django-admin", "runserver", "0.0.0.0:8000"]

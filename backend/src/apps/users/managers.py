@@ -49,11 +49,8 @@ class UserManager(BaseUserManager):
             **extra_fields,
         )
 
-        from apps.users.utils import send_activate_user_email
-
-        logger.info("Sending email to %s", user.email)
-        # Todo: Send email only when required.
-        send_activate_user_email([user])
+        logger.info("Sending activation email to %s", user.email)
+        user.send_activation_email()
 
         return user
 

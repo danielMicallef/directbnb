@@ -1,4 +1,3 @@
-from datetime import datetime
 from uuid import uuid4
 
 from django.contrib.auth.base_user import AbstractBaseUser
@@ -49,6 +48,7 @@ class BNBUser(AbstractBaseUser, PermissionsMixin):
         ),
     )
     is_email_confirmed = models.BooleanField(_("confirmed email"), default=False)
+    registered_at = models.DateTimeField(_("registered at"), auto_now_add=True)
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
@@ -93,7 +93,8 @@ class BNBUser(AbstractBaseUser, PermissionsMixin):
         )
 
     def create_user_token(self):
-        ut = UserToken(user=self).save()
+        ut = UserToken(user=self)
+        ut.save()
         return ut.token
 
 
@@ -106,4 +107,5 @@ class UserToken(AbstractTrackedModel):
     @property
     def is_expired(self):
         from datetime import timedelta
-        return (self.created_at - datetime.now()) > timedelta(hours=self.MAX_HOURS_VALID)
+        from django.utils import timezone
+        return (timezone.now() - self.created_at) > timedelta(hours=self.MAX_HOURS_VALID)

@@ -68,7 +68,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [UI_TEMPLATES],
-        "APP_DIRS": False,
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.request",
@@ -148,11 +148,13 @@ else:
     }
 
 if DEBUG:
-    EMAIL_HOST = '127.0.0.1'
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.getenv('EMAIL_HOST', 'mailcatcher')
     EMAIL_HOST_USER = ''
     EMAIL_HOST_PASSWORD = ''
     EMAIL_PORT = 1025
     EMAIL_USE_TLS = False
+    DEFAULT_FROM_EMAIL = 'noreply@directbnb.local'
 
 else:
     raise NotImplementedError("Setup email not implemented yet")
@@ -180,3 +182,8 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.BNBUser"
+
+# Login/Logout URLs
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = LOGIN_URL
