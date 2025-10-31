@@ -21,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure--7o$i(-mz$$^c=^s6c0u^3$czi#k2izv#juiaz=u*0q%ldehee"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure--7o$i(-mz$$^c=^s6c0u^3$czi#k2izv#juiaz=u*0q%ldehee")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", "True")
 
 ALLOWED_HOSTS = []
 
@@ -90,7 +90,7 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_DB", "postgres"),
         "USER": os.getenv("POSTGRES_USER", "postgresuser"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
-        "HOST": os.getenv("POSTGRES_PASSWORD", "db"),
+        "HOST": os.getenv("POSTGRES_HOST", "db"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
@@ -144,6 +144,16 @@ else:
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
+
+if DEBUG:
+    EMAIL_HOST = '127.0.0.1'
+    EMAIL_HOST_USER = ''
+    EMAIL_HOST_PASSWORD = ''
+    EMAIL_PORT = 1025
+    EMAIL_USE_TLS = False
+
+else:
+    raise NotImplementedError("Setup email not implemented yet")
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

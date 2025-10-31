@@ -1,0 +1,69 @@
+services:
+  traefik:
+    image: traefik:v3.5.4
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.file.directory=/etc/traefik"
+      - "--providers.file.watch=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik:/etc/traefik"
+      - "./certs:/certs"
+    networks:
+      - web_network
+    depends_on:
+      - app
+
+  app:
+    restart: always
+    build:
+      context: backend
+      dockerfile: Dockerfile
+      target: development
+      args:
+        DEBUG: ${DEBUG:-True}
+    ports:
+      - "8001:8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`localhost`)"
+      - "traefik.http.routers.app.entrypoints=websecure"
+      - "traefik.http.routers.app.tls=true"
+      - "traefik.http.services.app.loadbalancer.server.port=8000"
+      - "traefik.docker.network=web_network"
+    volumes:
+      - "./backend/src:/app/src"
+    networks:
+      - db_network
+      - web_network
+    depends_on:
+      - db
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgresuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-False}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,0.0.0.0}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}
+      USE_S3: ${USE_S3:-False}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "127.0.0.1:1080:1080"
