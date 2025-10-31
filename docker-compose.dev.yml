@@ -48,6 +48,7 @@ services:
     depends_on:
       - db
     environment:
+      SITE_URL: ${SITE_URL:-http://localhost:8001}
       POSTGRES_HOST: ${POSTGRES_HOST:-db}
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
       POSTGRES_USER: ${POSTGRES_USER:-postgresuser}
