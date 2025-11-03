@@ -88,7 +88,9 @@ class PropertyViewSet(viewsets.ModelViewSet):
         """
         serializer.save(owner=self.request.user)
 
-    @action(detail=False, methods=["get"], permission_classes=[permissions.IsAuthenticated])
+    @action(
+        detail=False, methods=["get"], permission_classes=[permissions.IsAuthenticated]
+    )
     def my_properties(self, request):
         """
         Get all properties for the logged-in user.

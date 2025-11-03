@@ -7,8 +7,8 @@ class ThemeChoicesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ThemeChoices
-        fields = ("id", "name", "created_at", "updated_at")
-        read_only_fields = ("id", "created_at", "updated_at")
+        fields = ("id", "name", "icon_name", "created_at", "preview_link", "updated_at")
+        read_only_fields = ("id", "created_at", "preview_link", "updated_at")
 
 
 class ColorSchemeChoicesSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class ColorSchemeChoicesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ColorSchemeChoices
-        fields = ("id", "name", "created_at", "updated_at")
+        fields = ("id", "name", "icon", "created_at", "updated_at")
         read_only_fields = ("id", "created_at", "updated_at")
 
 

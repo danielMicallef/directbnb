@@ -127,7 +127,9 @@ class PropertyUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 instance=getattr(property_obj, "sub_description", None)
             )
             context["image_formset"] = ImageFormSet(instance=property_obj)
-            context["location_formset"] = LocationDescriptionFormSet(instance=property_obj)
+            context["location_formset"] = LocationDescriptionFormSet(
+                instance=property_obj
+            )
             context["highlight_formset"] = HighlightFormSet(instance=property_obj)
 
         return context

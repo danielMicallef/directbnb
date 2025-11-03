@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,223 +14,538 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Amenity',
+            name="Amenity",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('title', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("title", models.CharField(max_length=255)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='GeneralRule',
+            name="GeneralRule",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('title', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("title", models.CharField(max_length=255)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='HouseRules',
+            name="HouseRules",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('additional', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("additional", models.TextField(blank=True, null=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='AmenityValue',
+            name="AmenityValue",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('title', models.CharField(max_length=255)),
-                ('subtitle', models.CharField(blank=True, max_length=255, null=True)),
-                ('icon', models.CharField(max_length=255)),
-                ('available', models.BooleanField(default=True)),
-                ('amenity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='values', to='properties.amenity')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("subtitle", models.CharField(blank=True, max_length=255, null=True)),
+                ("icon", models.CharField(max_length=255)),
+                ("available", models.BooleanField(default=True)),
+                (
+                    "amenity",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="values",
+                        to="properties.amenity",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='GeneralRuleValue',
+            name="GeneralRuleValue",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('title', models.CharField(max_length=255)),
-                ('icon', models.CharField(max_length=255)),
-                ('general_rule', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='values', to='properties.generalrule')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("icon", models.CharField(max_length=255)),
+                (
+                    "general_rule",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="values",
+                        to="properties.generalrule",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
-            },
-        ),
-        migrations.AddField(
-            model_name='generalrule',
-            name='house_rules',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='general', to='properties.houserules'),
-        ),
-        migrations.CreateModel(
-            name='Property',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('room_type', models.CharField(blank=True, max_length=255, null=True)),
-                ('is_super_host', models.BooleanField(default=False)),
-                ('home_tier', models.IntegerField(blank=True, null=True)),
-                ('person_capacity', models.IntegerField(blank=True, null=True)),
-                ('is_guest_favorite', models.BooleanField(default=False)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('title', models.CharField(blank=True, max_length=255, null=True)),
-                ('language', models.CharField(blank=True, max_length=10, null=True)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='LocationDescription',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('title', models.CharField(max_length=255)),
-                ('content', models.TextField()),
-                ('property', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='location_descriptions', to='properties.property')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='Image',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('title', models.CharField(max_length=255)),
-                ('url', models.URLField()),
-                ('property', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='properties.property')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.AddField(
-            model_name='houserules',
-            name='property',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='house_rules', to='properties.property'),
-        ),
-        migrations.CreateModel(
-            name='Host',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('host_id', models.CharField(max_length=255)),
-                ('name', models.CharField(max_length=255)),
-                ('property', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='host', to='properties.property')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='Highlight',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('title', models.CharField(max_length=255)),
-                ('subtitle', models.CharField(max_length=255)),
-                ('icon', models.CharField(max_length=255)),
-                ('property', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='highlights', to='properties.property')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='Coordinates',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('latitude', models.FloatField()),
-                ('longitude', models.FloatField()),
-                ('property', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='coordinates', to='properties.property')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='CoHost',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('host_id', models.CharField(blank=True, max_length=255, null=True)),
-                ('name', models.CharField(blank=True, max_length=255, null=True)),
-                ('property', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='co_hosts', to='properties.property')),
-            ],
-            options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.AddField(
-            model_name='amenity',
-            name='property',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='amenities', to='properties.property'),
+            model_name="generalrule",
+            name="house_rules",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="general",
+                to="properties.houserules",
+            ),
         ),
         migrations.CreateModel(
-            name='Rating',
+            name="Property",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('accuracy', models.FloatField(blank=True, null=True)),
-                ('checking', models.FloatField(blank=True, null=True)),
-                ('cleanliness', models.FloatField(blank=True, null=True)),
-                ('communication', models.FloatField(blank=True, null=True)),
-                ('location', models.FloatField(blank=True, null=True)),
-                ('value', models.FloatField(blank=True, null=True)),
-                ('guest_satisfaction', models.FloatField(blank=True, null=True)),
-                ('review_count', models.CharField(blank=True, max_length=255, null=True)),
-                ('property', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='rating', to='properties.property')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("room_type", models.CharField(blank=True, max_length=255, null=True)),
+                ("is_super_host", models.BooleanField(default=False)),
+                ("home_tier", models.IntegerField(blank=True, null=True)),
+                ("person_capacity", models.IntegerField(blank=True, null=True)),
+                ("is_guest_favorite", models.BooleanField(default=False)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("title", models.CharField(blank=True, max_length=255, null=True)),
+                ("language", models.CharField(blank=True, max_length=10, null=True)),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='SubDescription',
+            name="LocationDescription",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Creation time')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Update time')),
-                ('title', models.CharField(max_length=255)),
-                ('items', models.JSONField(default=list)),
-                ('property', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='sub_description', to='properties.property')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("content", models.TextField()),
+                (
+                    "property",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="location_descriptions",
+                        to="properties.property",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="Image",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("url", models.URLField()),
+                (
+                    "property",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="images",
+                        to="properties.property",
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.AddField(
+            model_name="houserules",
+            name="property",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="house_rules",
+                to="properties.property",
+            ),
+        ),
+        migrations.CreateModel(
+            name="Host",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("host_id", models.CharField(max_length=255)),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "property",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="host",
+                        to="properties.property",
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="Highlight",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("subtitle", models.CharField(max_length=255)),
+                ("icon", models.CharField(max_length=255)),
+                (
+                    "property",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="highlights",
+                        to="properties.property",
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="Coordinates",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("latitude", models.FloatField()),
+                ("longitude", models.FloatField()),
+                (
+                    "property",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="coordinates",
+                        to="properties.property",
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="CoHost",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("host_id", models.CharField(blank=True, max_length=255, null=True)),
+                ("name", models.CharField(blank=True, max_length=255, null=True)),
+                (
+                    "property",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="co_hosts",
+                        to="properties.property",
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.AddField(
+            model_name="amenity",
+            name="property",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="amenities",
+                to="properties.property",
+            ),
+        ),
+        migrations.CreateModel(
+            name="Rating",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("accuracy", models.FloatField(blank=True, null=True)),
+                ("checking", models.FloatField(blank=True, null=True)),
+                ("cleanliness", models.FloatField(blank=True, null=True)),
+                ("communication", models.FloatField(blank=True, null=True)),
+                ("location", models.FloatField(blank=True, null=True)),
+                ("value", models.FloatField(blank=True, null=True)),
+                ("guest_satisfaction", models.FloatField(blank=True, null=True)),
+                (
+                    "review_count",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "property",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="rating",
+                        to="properties.property",
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="SubDescription",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Creation time"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, verbose_name="Update time"),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("items", models.JSONField(default=list)),
+                (
+                    "property",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sub_description",
+                        to="properties.property",
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
             },
         ),
     ]

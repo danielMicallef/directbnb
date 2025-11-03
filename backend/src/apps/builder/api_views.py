@@ -34,7 +34,7 @@ class ThemeChoicesViewSet(viewsets.ModelViewSet):
 
     queryset = ThemeChoices.objects.all().order_by("name")
     serializer_class = ThemeChoicesSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def get_permissions(self):
         """Admin permissions required for write operations"""
@@ -65,7 +65,7 @@ class ColorSchemeChoicesViewSet(viewsets.ModelViewSet):
 
     queryset = ColorSchemeChoices.objects.all().order_by("name")
     serializer_class = ColorSchemeChoicesSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def get_permissions(self):
         """Admin permissions required for write operations"""

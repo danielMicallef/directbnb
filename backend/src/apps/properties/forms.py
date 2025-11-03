@@ -34,7 +34,9 @@ class PropertyForm(forms.ModelForm):
         ]
         widgets = {
             "description": forms.Textarea(attrs={"rows": 5}),
-            "room_type": forms.TextInput(attrs={"placeholder": "e.g., Entire home/apt"}),
+            "room_type": forms.TextInput(
+                attrs={"placeholder": "e.g., Entire home/apt"}
+            ),
             "title": forms.TextInput(attrs={"placeholder": "Property title"}),
         }
 
@@ -67,13 +69,25 @@ class RatingForm(forms.ModelForm):
             "review_count",
         ]
         widgets = {
-            "accuracy": forms.NumberInput(attrs={"step": "0.01", "min": "0", "max": "5"}),
-            "checking": forms.NumberInput(attrs={"step": "0.01", "min": "0", "max": "5"}),
-            "cleanliness": forms.NumberInput(attrs={"step": "0.01", "min": "0", "max": "5"}),
-            "communication": forms.NumberInput(attrs={"step": "0.01", "min": "0", "max": "5"}),
-            "location": forms.NumberInput(attrs={"step": "0.01", "min": "0", "max": "5"}),
+            "accuracy": forms.NumberInput(
+                attrs={"step": "0.01", "min": "0", "max": "5"}
+            ),
+            "checking": forms.NumberInput(
+                attrs={"step": "0.01", "min": "0", "max": "5"}
+            ),
+            "cleanliness": forms.NumberInput(
+                attrs={"step": "0.01", "min": "0", "max": "5"}
+            ),
+            "communication": forms.NumberInput(
+                attrs={"step": "0.01", "min": "0", "max": "5"}
+            ),
+            "location": forms.NumberInput(
+                attrs={"step": "0.01", "min": "0", "max": "5"}
+            ),
             "value": forms.NumberInput(attrs={"step": "0.01", "min": "0", "max": "5"}),
-            "guest_satisfaction": forms.NumberInput(attrs={"step": "0.01", "min": "0", "max": "5"}),
+            "guest_satisfaction": forms.NumberInput(
+                attrs={"step": "0.01", "min": "0", "max": "5"}
+            ),
         }
 
 
@@ -107,7 +121,7 @@ class SubDescriptionForm(forms.ModelForm):
             "items": forms.Textarea(
                 attrs={
                     "rows": 3,
-                    "placeholder": "Enter items as JSON array, e.g., [\"6 guests\", \"2 bedrooms\"]",
+                    "placeholder": 'Enter items as JSON array, e.g., ["6 guests", "2 bedrooms"]',
                 }
             ),
         }
