@@ -4,12 +4,14 @@ services:
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
       - "--providers.file.directory=/etc/traefik"
       - "--providers.file.watch=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--log.level=DEBUG"
     ports:
       - "80:80"
       - "443:443"
@@ -20,8 +22,6 @@ services:
       - "./certs:/certs"
     networks:
       - web_network
-    depends_on:
-      - app
 
   app:
     restart: always
@@ -44,6 +44,7 @@ services:
       - web_network
     depends_on:
       - db
+      - redis
     environment:
       DEFAULT_SUPERUSER_EMAIL:
       DEFAULT_SUPERUSER_PASSWORD:
@@ -81,6 +82,8 @@ services:
     image: redis:8.2.2-bookworm
     ports:
       - "6379:6379"
+    networks:
+      - db_network
     volumes:
       - redis_data:/data
 

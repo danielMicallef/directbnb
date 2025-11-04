@@ -1,4 +1,6 @@
 from django.contrib import admin
+
+from apps.builder.forms import ThemeColorsWidget
 from apps.builder.models import ThemeChoices, ColorSchemeChoices, Website
 
 
@@ -10,8 +12,13 @@ class ThemeChoicesAdmin(admin.ModelAdmin):
 
 @admin.register(ColorSchemeChoices)
 class ColorSchemeChoicesAdmin(admin.ModelAdmin):
-    list_display = ("name", "icon")
-    search_fields = ("name",)
+    list_display = ("name", "internal_name", "theme_colors")
+    search_fields = ("name", "internal_name")
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == "theme_colors":
+            kwargs["widget"] = ThemeColorsWidget
+        return super().formfield_for_dbfield(db_field, **kwargs)
 
 
 @admin.register(Website)

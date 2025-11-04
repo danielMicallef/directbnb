@@ -1,8 +1,10 @@
 from datetime import timedelta, datetime
 
+from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 
+from apps.builder.utils import get_domain
 from apps.properties.models import BNBUser
 from core.models import AbstractTrackedModel
 
@@ -12,13 +14,22 @@ class ThemeChoices(AbstractTrackedModel):
     preview_link = models.URLField(null=True, blank=True)
     icon_name = models.CharField(max_length=55, null=True, blank=True)
 
+    def get_default_preview_link(self):
+        return f"{self.name.lower()}_preview.{get_domain(settings.SITE_URL)}"
+
+    def save(self, *args, **kwargs):
+        if not self.preview_link:
+            self.preview_link = self.get_default_preview_link()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
 
 class ColorSchemeChoices(AbstractTrackedModel):
-    name = models.CharField(max_length=255, unique=True)
-    icon = models.CharField(max_length=55)
+    name = models.CharField(max_length=100, unique=True)
+    internal_name = models.CharField(max_length=100, null=True, blank=True)
+    theme_colors = models.JSONField(default=dict)
 
     def __str__(self):
         return self.name

@@ -1,0 +1,42 @@
+<div id="{{ widget.name }}-container">
+  {% for color in widget.colors %}
+  <div class="color-row">
+    <select name="{{ widget.name }}_name">
+      {% for choice in widget.color_name_choices %}
+      <option value="{{ choice }}" {% if choice == color.name %}selected{% endif %}>{{ choice|title }}</option>
+      {% endfor %}
+    </select>
+    <input type="text" name="{{ widget.name }}_value" value="{{ color.value }}" placeholder="oklch value">
+    <button type="button" class="remove-color-row">-</button>
+  </div>
+  {% endfor %}
+</div>
+<button type="button" id="add-color-row">+</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const container = document.getElementById('{{ widget.name }}-container');
+  const addBtn = document.getElementById('add-color-row');
+
+  addBtn.addEventListener('click', function() {
+    const newRow = document.createElement('div');
+    newRow.classList.add('color-row');
+    newRow.innerHTML = `
+      <select name="{{ widget.name }}_name">
+        {% for choice in widget.color_name_choices %}
+        <option value="{{ choice }}">{{ choice|title }}</option>
+        {% endfor %}
+      </select>
+      <input type="text" name="{{ widget.name }}_value" placeholder="oklch value">
+      <button type="button" class="remove-color-row">-</button>
+    `;
+    container.appendChild(newRow);
+  });
+
+  container.addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-color-row')) {
+      e.target.parentElement.remove();
+    }
+  });
+});
+</script>

@@ -16,8 +16,37 @@ class ColorSchemeChoicesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ColorSchemeChoices
-        fields = ("id", "name", "icon", "created_at", "updated_at")
+        fields = ("id", "name", "theme_colors", "created_at", "updated_at")
         read_only_fields = ("id", "created_at", "updated_at")
+
+    def validate_theme_colors(self, value):
+        if not isinstance(value, list):
+            raise serializers.ValidationError("Theme colors must be a list.")
+
+        valid_names = {
+            "base",
+            "primary",
+            "secondary",
+            "accent",
+            "neutral",
+            "info",
+            "success",
+            "warning",
+            "error",
+        }
+
+        for item in value:
+            if not isinstance(item, dict):
+                raise serializers.ValidationError(
+                    "Each item in theme colors must be a dictionary."
+                )
+            if "name" not in item or "value" not in item:
+                raise serializers.ValidationError(
+                    "Each color item must have a 'name' and 'value'."
+                )
+            if item["name"] not in valid_names:
+                raise serializers.ValidationError(f"Invalid color name: {item['name']}")
+        return value
 
 
 class WebsiteSerializer(serializers.ModelSerializer):
