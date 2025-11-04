@@ -116,3 +116,32 @@ class UserToken(AbstractTrackedModel):
         return (timezone.now() - self.created_at) > timedelta(
             hours=self.MAX_HOURS_VALID
         )
+
+
+class LeadRegistration(AbstractTrackedModel):
+    email = models.EmailField(
+        verbose_name="Email",
+        unique=True,
+        max_length=255,
+    )
+    first_name = models.CharField(
+        verbose_name="First Name",
+        max_length=255,
+    )
+    last_name = models.CharField(
+        verbose_name="Last Name",
+        max_length=255,
+    )
+    phone_number = PhoneNumberField(verbose_name="Phone Number", blank=True, null=True)
+    theme = models.ForeignKey("builder.ThemeChoices", on_delete=models.RESTRICT)
+    color_scheme = models.ForeignKey(
+        "builder.ColorSchemeChoices", on_delete=models.RESTRICT
+    )
+    listing_urls = models.JSONField(default=list)
+    domain_name = models.URLField(null=True, blank=True)
+
+
+class RegistrationOptions(AbstractTrackedModel):
+    lead_registration = models.ForeignKey(LeadRegistration, on_delete=models.CASCADE)
+    promotion = models.ForeignKey("builder.Promotion", on_delete=models.CASCADE)
+    package = models.ForeignKey("builder.Package", on_delete=models.CASCADE)
