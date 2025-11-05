@@ -154,6 +154,13 @@ class LeadRegistrationSerializer(serializers.ModelSerializer):
         child=serializers.URLField(), allow_empty=True, allow_null=True
     )
 
+    # Honey Pot Field
+    confirm_email = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        write_only=True,
+    )
+
     class Meta:
         model = LeadRegistration
         fields = (
@@ -169,13 +176,18 @@ class LeadRegistrationSerializer(serializers.ModelSerializer):
             "registration_options",
             "created_at",
             "updated_at",
+            "confirm_email",
         )
         read_only_fields = ("id", "created_at", "updated_at")
+        extra_kwargs = {
+            "email": {"write_only": True},
+        }
 
     def validate_email(self, value):
         """
         Custom email validation to allow updates to the same email
         """
+        value = value.strip().lower()
         # Allow update on the same instance
         if self.instance and self.instance.email == value:
             return value
@@ -194,3 +206,15 @@ class LeadRegistrationSerializer(serializers.ModelSerializer):
             )
 
         return value
+
+    def validate_confirm_email(self, value):
+        # Honey Pot Field. Should be empty
+        if value.strip():
+            raise serializers.ValidationError(
+                _("Invalid submission.")
+            )
+        return value
+
+    def validate(self, data):
+        data.pop("confirm_email", None)
+        return data
