@@ -12,6 +12,16 @@ router.register(
     r"color-schemes", api_views.ColorSchemeChoicesViewSet, basename="color-scheme"
 )
 router.register(r"websites", api_views.WebsiteViewSet, basename="website")
+router.register(
+    r"lead-registrations",
+    api_views.LeadRegistrationViewSet,
+    basename="lead-registration",
+)
+router.register(
+    r"registration-options",
+    api_views.RegistrationOptionsViewSet,
+    basename="registration-options",
+)
 
 urlpatterns = [
     path("", include(router.urls)),

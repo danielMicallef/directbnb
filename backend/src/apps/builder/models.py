@@ -3,6 +3,7 @@ from datetime import timedelta, datetime
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.builder.utils import get_domain
 from apps.properties.models import BNBUser
@@ -125,3 +126,71 @@ class WebsitePlan(AbstractTrackedModel):
         renew_on = self.created_at + timedelta(days=renew_every)
         days_remaining = (renew_on - datetime.today()).days
         return days_remaining
+
+
+class LeadRegistration(AbstractTrackedModel):
+    email = models.EmailField(
+        verbose_name="Email",
+        max_length=255,
+    )
+    first_name = models.CharField(
+        verbose_name="First Name",
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    last_name = models.CharField(
+        verbose_name="Last Name",
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    phone_number = PhoneNumberField(verbose_name="Phone Number", blank=True, null=True)
+    theme = models.ForeignKey(
+        "builder.ThemeChoices",
+        on_delete=models.RESTRICT,
+        blank=True,
+        null=True,
+    )
+    color_scheme = models.ForeignKey(
+        "builder.ColorSchemeChoices",
+        on_delete=models.RESTRICT,
+        blank=True,
+        null=True,
+    )
+    listing_urls = models.JSONField(default=list, blank=True)
+    domain_name = models.CharField(max_length=200, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Lead Registration"
+        verbose_name_plural = "Lead Registrations"
+
+    def __str__(self):
+        return f"{self.email} - {self.first_name or 'N/A'} {self.last_name or 'N/A'}"
+
+
+class RegistrationOptions(AbstractTrackedModel):
+    lead_registration = models.ForeignKey(
+        LeadRegistration,
+        on_delete=models.CASCADE,
+        related_name="registration_options",
+    )
+    promotion = models.ForeignKey(
+        "builder.Promotion",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    package = models.ForeignKey(
+        "builder.Package",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = "Registration Option"
+        verbose_name_plural = "Registration Options"
+
+    def __str__(self):
+        return f"Options for {self.lead_registration.email}"

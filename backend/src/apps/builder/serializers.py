@@ -1,5 +1,15 @@
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
-from apps.builder.models import ThemeChoices, ColorSchemeChoices, Website
+
+from apps.builder.models import (
+    ThemeChoices,
+    ColorSchemeChoices,
+    Website,
+    RegistrationOptions,
+    LeadRegistration,
+)
+from apps.builder.utils import is_email_blacklisted
+from apps.properties.tasks import BNBUser
 
 
 class ThemeChoicesSerializer(serializers.ModelSerializer):
@@ -117,4 +127,70 @@ class WebsiteCreateUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Please provide a valid Booking.com listing URL"
             )
+        return value
+
+
+class RegistrationOptionsSerializer(serializers.ModelSerializer):
+    """Serializer for RegistrationOptions"""
+
+    class Meta:
+        model = RegistrationOptions
+        fields = (
+            "id",
+            "lead_registration",
+            "promotion",
+            "package",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = ("id", "created_at", "updated_at")
+
+
+class LeadRegistrationSerializer(serializers.ModelSerializer):
+    """Serializer for LeadRegistration with nested RegistrationOptions"""
+
+    registration_options = RegistrationOptionsSerializer(many=True, read_only=True)
+    listing_urls = serializers.ListField(
+        child=serializers.URLField(), allow_empty=True, allow_null=True
+    )
+
+    class Meta:
+        model = LeadRegistration
+        fields = (
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "theme",
+            "color_scheme",
+            "listing_urls",
+            "domain_name",
+            "registration_options",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = ("id", "created_at", "updated_at")
+
+    def validate_email(self, value):
+        """
+        Custom email validation to allow updates to the same email
+        """
+        # Allow update on the same instance
+        if self.instance and self.instance.email == value:
+            return value
+
+        if is_email_blacklisted(value):
+            raise serializers.ValidationError(
+                _(
+                    "This email domain has been blacklisted. Please use a different email address."
+                )
+            )
+
+        # Check if email already exists for new instances
+        if BNBUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                _("A user with this email already exists.")
+            )
+
         return value

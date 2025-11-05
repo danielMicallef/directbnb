@@ -1,16 +1,24 @@
-from rest_framework import generics, viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, extend_schema_view
 
-from apps.builder.models import ThemeChoices, ColorSchemeChoices, Website
+from apps.builder.models import (
+    ThemeChoices,
+    ColorSchemeChoices,
+    Website,
+    LeadRegistration,
+    RegistrationOptions,
+)
 from apps.builder.serializers import (
     ThemeChoicesSerializer,
     ColorSchemeChoicesSerializer,
     WebsiteSerializer,
     WebsiteCreateUpdateSerializer,
+    LeadRegistrationSerializer,
+    RegistrationOptionsSerializer,
 )
 
 
@@ -34,13 +42,11 @@ class ThemeChoicesViewSet(viewsets.ModelViewSet):
 
     queryset = ThemeChoices.objects.all().order_by("name")
     serializer_class = ThemeChoicesSerializer
-    permission_classes = []
+    permission_classes = [AllowAny]
 
     def get_permissions(self):
         """Admin permissions required for write operations"""
         if self.action in ["create", "update", "partial_update", "destroy"]:
-            from rest_framework.permissions import IsAdminUser
-
             return [IsAdminUser()]
         return super().get_permissions()
 
@@ -65,7 +71,7 @@ class ColorSchemeChoicesViewSet(viewsets.ModelViewSet):
 
     queryset = ColorSchemeChoices.objects.all().order_by("name")
     serializer_class = ColorSchemeChoicesSerializer
-    permission_classes = []
+    permission_classes = [AllowAny]
 
     def get_permissions(self):
         """Admin permissions required for write operations"""
@@ -191,3 +197,78 @@ class WebsiteViewSet(viewsets.ModelViewSet):
         website = self.get_object()
         serializer = self.get_serializer(website)
         return Response(serializer.data)
+
+
+@extend_schema_view(
+    list=extend_schema(description="List all lead registrations"),
+    retrieve=extend_schema(description="Retrieve a specific lead registration"),
+    create=extend_schema(description="Create a new lead registration"),
+    update=extend_schema(description="Update a lead registration"),
+    partial_update=extend_schema(description="Partially update a lead registration"),
+)
+class LeadRegistrationViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    ViewSet for LeadRegistration.
+    Allows creating, retrieving, updating, and listing lead registrations.
+    Designed for multi-step forms where data is posted incrementally.
+    """
+
+    queryset = LeadRegistration.objects.all()
+    serializer_class = LeadRegistrationSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_permissions(self):
+        if self.action in ["create"]:
+            return [AllowAny()]
+        return super().get_permissions()
+
+    def get_queryset(self):
+        """
+        Optionally filter by email query parameter
+        """
+        queryset = super().get_queryset()
+        email = self.request.query_params.get("email", None)
+        if email:
+            queryset = queryset.filter(email=email)
+        return queryset
+
+
+@extend_schema_view(
+    list=extend_schema(description="List all registration options"),
+    retrieve=extend_schema(description="Retrieve specific registration options"),
+    create=extend_schema(description="Create new registration options"),
+    update=extend_schema(description="Update registration options"),
+    partial_update=extend_schema(description="Partially update registration options"),
+)
+class RegistrationOptionsViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    ViewSet for RegistrationOptions.
+    Allows creating, retrieving, updating, and listing registration options.
+    Each option is linked to a LeadRegistration.
+    """
+
+    queryset = RegistrationOptions.objects.all()
+    serializer_class = RegistrationOptionsSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        """
+        Optionally filter by lead_registration ID
+        """
+        queryset = super().get_queryset()
+        lead_registration = self.request.query_params.get("lead_registration", None)
+        if lead_registration:
+            queryset = queryset.filter(lead_registration_id=lead_registration)
+        return queryset

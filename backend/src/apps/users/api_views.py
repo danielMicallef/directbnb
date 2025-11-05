@@ -12,7 +12,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
-from apps.users.models import BNBUser, UserToken
+from apps.users.models import BNBUser
 from apps.users.serializers import (
     RegisterSerializer,
     LoginSerializer,
