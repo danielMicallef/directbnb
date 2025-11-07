@@ -1,4 +1,6 @@
 import uuid
+from decimal import Decimal
+
 import stripe
 from datetime import timedelta, datetime
 
@@ -187,15 +189,27 @@ class LeadRegistration(AbstractTrackedModel):
         # Create a Stripe Checkout Session
         stripe.api_key = settings.STRIPE_SECRET_KEY
         line_items = []
-        for option in self.registration_options.all():
+
+        # Get the latest registration option for each package
+        latest_options = self.registration_options.order_by(
+            "package", "-created_at"
+        ).distinct("package")
+
+        for option in latest_options:
+            amount = option.package.amount
+            name = option.package.name
+            if option.promotion:
+                amount *= (100 - Decimal(option.promotion.discount_percentage)) / 100
+                name = f"{option.package.name} ({option.promotion.discount_percentage}% discount)"
+
             line_items.append(
                 {
                     "price_data": {
                         "currency": option.package.currency,
                         "product_data": {
-                            "name": option.package.name,
+                            "name": name,
                         },
-                        "unit_amount": int(option.package.amount * 100),
+                        "unit_amount": int(amount * 100),
                     },
                     "quantity": 1,
                 }
