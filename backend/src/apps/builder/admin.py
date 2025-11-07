@@ -1,7 +1,13 @@
 from django.contrib import admin
 
 from apps.builder.forms import ThemeColorsWidget
-from apps.builder.models import ThemeChoices, ColorSchemeChoices, Website
+from apps.builder.models import (
+    ThemeChoices,
+    ColorSchemeChoices,
+    Website,
+    Package,
+    Promotion,
+)
 
 
 @admin.register(ThemeChoices)
@@ -26,3 +32,16 @@ class WebsiteAdmin(admin.ModelAdmin):
     list_display = ("domain_name", "theme", "color_scheme")
     list_filter = ("theme", "color_scheme")
     search_fields = ("domain_name",)
+
+
+class PromotionInline(admin.TabularInline):
+    model = Promotion
+    extra = 1
+
+
+@admin.register(Package)
+class PackageAdmin(admin.ModelAdmin):
+    list_display = ("label", "name", "amount", "frequency", "description")
+    search_fields = ("name",)
+    list_filter = ("name", "label", "frequency")
+    inlines = [PromotionInline]

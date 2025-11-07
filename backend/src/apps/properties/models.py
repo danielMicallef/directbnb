@@ -17,6 +17,9 @@ class Property(AbstractTrackedModel):
     title = models.CharField(max_length=255, null=True, blank=True)
     language = models.CharField(max_length=10, null=True, blank=True)
 
+    class Meta:
+        verbose_name_plural = "properties"
+
     def __str__(self):
         return self.title
 

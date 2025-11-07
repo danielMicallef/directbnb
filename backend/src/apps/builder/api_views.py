@@ -11,6 +11,7 @@ from apps.builder.models import (
     Website,
     LeadRegistration,
     RegistrationOptions,
+    Package,
 )
 from apps.builder.serializers import (
     ThemeChoicesSerializer,
@@ -19,6 +20,7 @@ from apps.builder.serializers import (
     WebsiteCreateUpdateSerializer,
     LeadRegistrationSerializer,
     RegistrationOptionsSerializer,
+    PackageSerializer,
 )
 
 
@@ -272,3 +274,36 @@ class RegistrationOptionsViewSet(
         if lead_registration:
             queryset = queryset.filter(lead_registration_id=lead_registration)
         return queryset
+
+
+class PackageViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    API view to list all packages grouped by label (Builder, Hosting, Add-on)
+    """
+
+    queryset = Package.objects.all().order_by("label", "amount")
+    serializer_class = PackageSerializer
+    permission_classes = [AllowAny]
+
+    def list(self, request, *args, **kwargs):
+        """
+        Returns packages grouped by their label.
+        Response format:
+        {
+            "Builder": [...],
+            "Hosting": [...],
+            "Add-on": [...]
+        }
+        """
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        # Group packages by label
+        grouped_packages = {}
+        for package_data in serializer.data:
+            label = package_data.get("label_display", "Unknown")
+            if label not in grouped_packages:
+                grouped_packages[label] = []
+            grouped_packages[label].append(package_data)
+
+        return Response(grouped_packages, status=status.HTTP_200_OK)

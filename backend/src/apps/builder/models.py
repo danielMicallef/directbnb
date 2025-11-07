@@ -48,23 +48,26 @@ class Website(AbstractTrackedModel):
         return f"{self.domain_name} by {self.owner}"
 
 
-class Package(AbstractTrackedModel):
-    class Frequency(models.IntegerChoices):
-        ONE_TIME = 1, "One time payment"
-        MONTHLY = 2, "Monthly"
-        QUARTERLY = 3, "Quarterly"
-        YEARLY = 4, "Yearly"
-        BIENNIAL = 5, "Every 2 years"
-        TRIENNIAL = 6, "Every 3 years"
-        QUINQUENNIAL = 7, "Every 5 years"
+class Frequency(models.IntegerChoices):
+    ONE_TIME = 1, "One time payment"
+    MONTHLY = 2, "Monthly"
+    QUARTERLY = 3, "Quarterly"
+    YEARLY = 4, "Yearly"
+    BIENNIAL = 5, "Every 2 years"
+    TRIENNIAL = 6, "Every 3 years"
+    QUINQUENNIAL = 7, "Every 5 years"
 
+
+class Package(AbstractTrackedModel):
     class LabelChoices(models.TextChoices):
         BUILDER = "Builder", "Builder"
         HOSTING = "Hosting", "Hosting"
         ADDON = "Add-on", "Add-on"
 
     name = models.CharField(max_length=255, unique=True)
-    amount = models.PositiveIntegerField(default=0)
+    # List of supported currencies: https://docs.stripe.com/currencies#presentment-currencies
+    currency = models.CharField(max_length=10, default="EUR")
+    amount = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     description = models.CharField(max_length=255, null=True, blank=True)
     frequency = models.PositiveSmallIntegerField(
         choices=Frequency.choices, default=Frequency.ONE_TIME
@@ -72,6 +75,10 @@ class Package(AbstractTrackedModel):
     label = models.CharField(
         max_length=30, choices=LabelChoices.choices, default=LabelChoices.BUILDER
     )
+    extra_info = models.JSONField(default=dict, blank=True)
+
+    def __str__(self):
+        return f"{self.name}, {self.frequency} payments"
 
     def get_frequency_days(self):
         if self.frequency == self.Frequency.ONE_TIME:

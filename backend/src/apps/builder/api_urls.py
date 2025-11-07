@@ -22,6 +22,7 @@ router.register(
     api_views.RegistrationOptionsViewSet,
     basename="registration-options",
 )
+router.register(r"packages", api_views.PackageViewSet, basename="package")
 
 urlpatterns = [
     path("", include(router.urls)),
