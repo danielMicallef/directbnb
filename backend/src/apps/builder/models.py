@@ -167,6 +167,7 @@ class LeadRegistration(AbstractTrackedModel):
     )
     listing_urls = models.JSONField(default=list, blank=True)
     domain_name = models.CharField(max_length=200, null=True, blank=True)
+    extra_requirements = models.JSONField(default=dict, blank=True)
 
     class Meta:
         verbose_name = "Lead Registration"
