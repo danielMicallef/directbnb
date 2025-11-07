@@ -265,6 +265,11 @@ class RegistrationOptionsViewSet(
     serializer_class = RegistrationOptionsSerializer
     permission_classes = [AllowAny]
 
+    def get_permissions(self):
+        if self.action in ["update", "partial_update", "list", "retrieve"]:
+            return [IsAuthenticated()]
+        return super().get_permissions()
+
     def get_queryset(self):
         """
         Optionally filter by lead_registration ID
