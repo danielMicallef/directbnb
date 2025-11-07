@@ -243,8 +243,8 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "5/min",
-        "user": "60/min",
+        "anon": "5/sec",
+        "user": "60/sec",
     },
 }
 
