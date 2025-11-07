@@ -148,7 +148,7 @@ class RegistrationOptionsSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         )
-        read_only_fields = ("id", "created_at", "updated_at")
+        read_only_fields = ("id", "created_at", "updated_at", "paid_at")
 
 
 class LeadRegistrationSerializer(serializers.ModelSerializer):
@@ -158,6 +158,7 @@ class LeadRegistrationSerializer(serializers.ModelSerializer):
     listing_urls = serializers.ListField(
         child=serializers.URLField(), allow_empty=True, allow_null=True
     )
+    checkout_url = serializers.SerializerMethodField()
 
     # Honey Pot Field
     confirm_email = serializers.CharField(
@@ -183,7 +184,8 @@ class LeadRegistrationSerializer(serializers.ModelSerializer):
             "updated_at",
             "confirm_email",
             "extra_requirements",
-            "completed_at"
+            "completed_at",
+            "checkout_url",
         )
         read_only_fields = ("id", "created_at", "updated_at")
         extra_kwargs = {
@@ -223,6 +225,9 @@ class LeadRegistrationSerializer(serializers.ModelSerializer):
     def validate(self, data):
         data.pop("confirm_email", None)
         return data
+
+    def get_checkout_url(self, obj):
+        return self.context.get("checkout_url")
 
 
 class PromotionSerializer(serializers.ModelSerializer):

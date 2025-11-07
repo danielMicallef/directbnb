@@ -1,4 +1,5 @@
 import uuid
+import stripe
 from datetime import timedelta, datetime
 
 from django.conf import settings
@@ -170,7 +171,9 @@ class LeadRegistration(AbstractTrackedModel):
     listing_urls = models.JSONField(default=list, blank=True)
     domain_name = models.CharField(max_length=200, null=True, blank=True)
     extra_requirements = models.JSONField(default=dict, blank=True)
-    user = models.ForeignKey(BNBUser, on_delete=models.DO_NOTHING, null=True, blank=True)
+    user = models.ForeignKey(
+        BNBUser, on_delete=models.DO_NOTHING, null=True, blank=True
+    )
     completed_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
@@ -179,6 +182,33 @@ class LeadRegistration(AbstractTrackedModel):
 
     def __str__(self):
         return f"{self.email} - {self.first_name or 'N/A'} {self.last_name or 'N/A'}"
+
+    def create_checkout_session(self):
+        # Create a Stripe Checkout Session
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        line_items = []
+        for option in self.registration_options.all():
+            line_items.append(
+                {
+                    "price_data": {
+                        "currency": option.package.currency,
+                        "product_data": {
+                            "name": option.package.name,
+                        },
+                        "unit_amount": int(option.package.amount * 100),
+                    },
+                    "quantity": 1,
+                }
+            )
+
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=line_items,
+            mode="payment",
+            success_url=settings.SITE_URL + "/success/",
+            cancel_url=settings.SITE_URL + "/cancel/",
+        )
+        return checkout_session
 
 
 class RegistrationOptions(AbstractTrackedModel):
@@ -199,6 +229,8 @@ class RegistrationOptions(AbstractTrackedModel):
         blank=True,
         null=True,
     )
+    paid_at = models.DateTimeField(null=True, blank=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Registration Option"

@@ -14,6 +14,7 @@ from apps.builder.models import (
     RegistrationOptions,
     Package,
 )
+from apps.builder.permissions import IsLeadRegistrationNotCompleted
 from apps.builder.serializers import (
     ThemeChoicesSerializer,
     ColorSchemeChoicesSerializer,
@@ -235,6 +236,20 @@ class LeadRegistrationViewSet(
             return [AllowAny()]
         return super().get_permissions()
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if "completed_at" in request.data and instance.completed_at is None:
+            checkout_session = instance.create_checkout_session()
+            self.checkout_url = checkout_session.url
+
+        return super().update(request, *args, **kwargs)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if hasattr(self, "checkout_url"):
+            context["checkout_url"] = self.checkout_url
+        return context
+
 
 @extend_schema_view(
     list=extend_schema(description="List all registration options"),
@@ -261,7 +276,9 @@ class RegistrationOptionsViewSet(
     permission_classes = [AllowAny]
 
     def get_permissions(self):
-        if self.action in ["update", "partial_update", "list", "retrieve"]:
+        if self.action in ["update", "partial_update"]:
+            return [IsLeadRegistrationNotCompleted()]
+        if self.action in ["list", "retrieve"]:
             return [IsAuthenticated()]
         return super().get_permissions()
 

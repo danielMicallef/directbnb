@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "drf_spectacular",
     "django_filters",
+    "django_extensions",
 ]
 DEBUG_APPS = []
 DJANGO_APPS = [
@@ -308,3 +309,5 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
 
 SCRAPE_PROXY_URL = ""
+
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")

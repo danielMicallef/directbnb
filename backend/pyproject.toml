@@ -9,6 +9,7 @@ dependencies = [
     "disposable-email-domains>=0.0.147",
     "django>=5.2.7",
     "django-cors-headers>=4.9.0",
+    "django-extensions>=4.1",
     "django-filter>=25.2",
     "django-phonenumber-field[phonenumbers]>=8.3.0",
     "django-storages[s3]>=1.14.6",
@@ -23,6 +24,7 @@ dependencies = [
     "pyairbnb>=2.1.1",
     "pydantic>=2.12.3",
     "redis>=7.0.1",
+    "stripe>=13.2.0",
 ]
 
 [dependency-groups]
