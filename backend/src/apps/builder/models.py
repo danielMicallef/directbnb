@@ -1,3 +1,4 @@
+import uuid
 from datetime import timedelta, datetime
 
 from django.conf import settings
@@ -136,6 +137,7 @@ class WebsitePlan(AbstractTrackedModel):
 
 
 class LeadRegistration(AbstractTrackedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(
         verbose_name="Email",
         max_length=255,
@@ -168,6 +170,8 @@ class LeadRegistration(AbstractTrackedModel):
     listing_urls = models.JSONField(default=list, blank=True)
     domain_name = models.CharField(max_length=200, null=True, blank=True)
     extra_requirements = models.JSONField(default=dict, blank=True)
+    user = models.ForeignKey(BNBUser, on_delete=models.DO_NOTHING, null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Lead Registration"

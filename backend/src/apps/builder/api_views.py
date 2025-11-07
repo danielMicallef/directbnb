@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -224,21 +225,15 @@ class LeadRegistrationViewSet(
     queryset = LeadRegistration.objects.all()
     serializer_class = LeadRegistrationSerializer
     permission_classes = [IsAdminUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["email"]
+    ordering_fields = ["created_at", "updated_at"]
+    ordering = ("updated_at", "created_at")
 
     def get_permissions(self):
-        if self.action in ["create"]:
+        if self.action in ["create", "partial_update", "list"]:
             return [AllowAny()]
         return super().get_permissions()
-
-    def get_queryset(self):
-        """
-        Optionally filter by email query parameter
-        """
-        queryset = super().get_queryset()
-        email = self.request.query_params.get("email", None)
-        if email:
-            queryset = queryset.filter(email=email)
-        return queryset
 
 
 @extend_schema_view(

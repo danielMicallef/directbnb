@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('builder', '0008_package_currency_alter_package_amount_and_more'),
+        ("builder", "0008_package_currency_alter_package_amount_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='leadregistration',
-            name='extra_requirements',
+            model_name="leadregistration",
+            name="extra_requirements",
             field=models.JSONField(blank=True, default=dict),
         ),
     ]

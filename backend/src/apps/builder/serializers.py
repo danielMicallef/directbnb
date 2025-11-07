@@ -10,7 +10,8 @@ from apps.builder.models import (
     RegistrationOptions,
     LeadRegistration,
     Package,
-    Promotion, Frequency,
+    Promotion,
+    Frequency,
 )
 from apps.builder.utils import is_email_blacklisted
 from apps.properties.tasks import BNBUser
@@ -182,6 +183,7 @@ class LeadRegistrationSerializer(serializers.ModelSerializer):
             "updated_at",
             "confirm_email",
             "extra_requirements",
+            "completed_at"
         )
         read_only_fields = ("id", "created_at", "updated_at")
         extra_kwargs = {
@@ -297,13 +299,13 @@ class PackageSerializer(serializers.ModelSerializer):
         # Apply the highest discount
         max_discount = max(promo["discount_percentage"] for promo in promotions)
         discounted_amount = obj.amount * (1 - Decimal(str(max_discount)) / 100)
-        return discounted_amount.quantize(Decimal('0.01'))
+        return discounted_amount.quantize(Decimal("0.01"))
 
     def get_monthly_price(self, obj) -> Decimal:
         discounted_price = self.get_discounted_price(obj)
         frequency = obj.frequency
         if frequency == Frequency.ONE_TIME:
-            return Decimal('0')
+            return Decimal("0")
 
         months_in_freq = {
             Frequency.MONTHLY: 1,
@@ -313,5 +315,5 @@ class PackageSerializer(serializers.ModelSerializer):
             Frequency.TRIENNIAL: 36,
             Frequency.QUINQUENNIAL: 60,
         }
-        price = (discounted_price / months_in_freq[frequency]).quantize(Decimal('0.01'))
+        price = (discounted_price / months_in_freq[frequency]).quantize(Decimal("0.01"))
         return f"{price:,.2f}"

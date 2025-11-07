@@ -4,25 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('builder', '0007_package_extra_info_and_more'),
+        ("builder", "0007_package_extra_info_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='package',
-            name='currency',
-            field=models.CharField(default='EUR', max_length=10),
+            model_name="package",
+            name="currency",
+            field=models.CharField(default="EUR", max_length=10),
         ),
         migrations.AlterField(
-            model_name='package',
-            name='amount',
+            model_name="package",
+            name="amount",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
         ),
         migrations.AlterField(
-            model_name='package',
-            name='extra_info',
+            model_name="package",
+            name="extra_info",
             field=models.JSONField(blank=True, default=dict),
         ),
     ]
