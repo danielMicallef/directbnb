@@ -26,4 +26,9 @@ router.register(r"packages", api_views.PackageViewSet, basename="package")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path(
+        "stripe-webhook/",
+        api_views.StripeWebhookView.as_view(),
+        name="stripe-webhook",
+    ),
 ]

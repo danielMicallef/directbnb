@@ -219,6 +219,7 @@ class LeadRegistration(AbstractTrackedModel):
             payment_method_types=["card"],
             line_items=line_items,
             mode="payment",
+            client_reference_id=self.id,
             success_url=settings.SITE_URL + "/success/",
             cancel_url=settings.SITE_URL + "/cancel/",
         )
@@ -252,3 +253,20 @@ class RegistrationOptions(AbstractTrackedModel):
 
     def __str__(self):
         return f"Options for {self.lead_registration.email}"
+
+
+class StripeWebhookPayload(AbstractTrackedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    payload = models.JSONField(default=dict, blank=True)
+    lead_registration = models.ForeignKey(
+        LeadRegistration,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+    )
+    completed_at = models.DateTimeField(null=True, blank=True)
+    processed_successfully = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "Stripe Webhook Payload"
+        ordering = ["updated_at"]

@@ -6,7 +6,7 @@ from apps.builder.models import (
     ColorSchemeChoices,
     Website,
     Package,
-    Promotion,
+    Promotion, StripeWebhookPayload,
 )
 
 
@@ -45,3 +45,9 @@ class PackageAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     list_filter = ("name", "label", "frequency")
     inlines = [PromotionInline]
+
+
+@admin.register(StripeWebhookPayload)
+class StripeWebhookPayloadAdmin(admin.ModelAdmin):
+    list_display = ("created_at", "payload",)
+    search_fields = ("payload",)

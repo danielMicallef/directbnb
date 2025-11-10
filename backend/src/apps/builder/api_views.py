@@ -1,10 +1,19 @@
+import json
+import stripe
+
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from loguru import logger
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework.views import APIView
+from stripe import SignatureVerificationError
+
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, extend_schema_view
+from django.utils.timezone import datetime
 
 from apps.builder.models import (
     ThemeChoices,
@@ -12,9 +21,10 @@ from apps.builder.models import (
     Website,
     LeadRegistration,
     RegistrationOptions,
-    Package,
+    Package, StripeWebhookPayload,
 )
 from apps.builder.permissions import IsLeadRegistrationNotCompleted
+from apps.builder.schemas import StripeEvent, StripeEventType
 from apps.builder.serializers import (
     ThemeChoicesSerializer,
     ColorSchemeChoicesSerializer,
@@ -291,6 +301,86 @@ class RegistrationOptionsViewSet(
         if lead_registration:
             queryset = queryset.filter(lead_registration_id=lead_registration)
         return queryset
+
+
+class StripeWebhookView(APIView):
+    """
+    Stripe webhook view to handle checkout session completion.
+    """
+
+    permission_classes = [AllowAny]
+
+    @staticmethod
+    def handle_checkout_session_completed(stripe_event: StripeEvent) -> bool:
+        lead_registration_id = stripe_event.get_lead_registration_id()
+        try:
+            lead_registration = LeadRegistration.objects.get(
+                id=lead_registration_id
+            )
+            lead_registration.registration_options.update(
+                paid_at=datetime.now()
+            )
+            logger.info(f"Lead registration {lead_registration_id} updated")
+            return True
+        except LeadRegistration.DoesNotExist:
+            return False
+
+    @staticmethod
+    def validate_webhook_request(request):
+        sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
+        if not sig_header:
+            return False, {"error": "No Stripe signature provided"}
+
+        try:
+            event = stripe.Webhook.construct_event(
+                request.body, sig_header, settings.STRIPE_WEBHOOK_SECRET
+            )
+        except ValueError as e:
+            logger.info(f"Stripe webhook validation failed: {e}")
+            data = {"error": "Invalid payload."}
+            return False, data
+        except SignatureVerificationError as e:
+            logger.info(f"Stripe webhook signature verification failed: {e}")
+            data = {"error": "Invalid signature."}
+            return False, data
+
+        return True, event
+
+    def get_event_handler_map(self, event_type: StripeEvent):
+        event_handler_map = {
+            StripeEventType.CHECKOUT_COMPLETED: self.handle_checkout_session_completed,
+        }
+        return event_handler_map.get(event_type.type, self.default_handler)
+
+    def default_handler(self, event_type: StripeEvent) -> bool:
+        logger.info(f"Unprocessed Stripe webhook event: {event_type.type}. Data: {event_type.model_dump()}")
+        return True
+
+    def post(self, request, *args, **kwargs):
+        is_valid, validation_data = self.validate_webhook_request(request)
+        if not is_valid:
+            return Response(validation_data, status=status.HTTP_400_BAD_REQUEST)
+
+        payload = request.body
+        json_data = json.loads(payload.decode("utf-8"))
+        stripe_webhook = StripeWebhookPayload.objects.create(payload=json_data, processed_successfully=False)
+        stripe_event = StripeEvent.model_validate_json(payload)
+        lead_registration_id = stripe_event.get_lead_registration_id()
+        lead_registration = LeadRegistration.objects.filter(id=lead_registration_id).first()
+        stripe_webhook.lead_registration = lead_registration
+        event_handler = self.get_event_handler_map(stripe_event)
+        updated = False
+        try:
+            updated = event_handler(stripe_event)
+
+            stripe_webhook.completed_at = datetime.now()
+            stripe_webhook.processed_successfully = updated
+        except Exception as e:
+            logger.error(f"Unable to process Stripe webhook event. Data: {stripe_event.model_dump()}. Error: {e}")
+
+        stripe_webhook.save()
+        ret_status = status.HTTP_200_OK if updated else status.HTTP_400_BAD_REQUEST
+        return Response(status=ret_status)
 
 
 class PackageViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):

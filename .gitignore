@@ -17,3 +17,8 @@ certs
 #Env Vars
 .env
 .env.debug
+.env.local
+
+# tests
+.coverage
+.coveragerc
