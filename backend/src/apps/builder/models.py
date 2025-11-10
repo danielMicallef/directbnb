@@ -185,15 +185,18 @@ class LeadRegistration(AbstractTrackedModel):
     def __str__(self):
         return f"{self.email} - {self.first_name or 'N/A'} {self.last_name or 'N/A'}"
 
+    def get_latest_registration_options(self):
+        return self.registration_options.order_by(
+            "package", "-created_at"
+        ).distinct("package")
+
     def create_checkout_session(self):
         # Create a Stripe Checkout Session
         stripe.api_key = settings.STRIPE_SECRET_KEY
         line_items = []
 
         # Get the latest registration option for each package
-        latest_options = self.registration_options.order_by(
-            "package", "-created_at"
-        ).distinct("package")
+        latest_options = self.get_latest_registration_options()
 
         for option in latest_options:
             amount = option.package.amount
