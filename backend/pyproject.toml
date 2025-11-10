@@ -30,4 +30,71 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ruff>=0.14.2",
+    "pytest>=8.3.0",
+    "pytest-django>=4.9.0",
+    "pytest-cov>=6.0.0",
+    "pytest-xdist>=3.6.0",
+    "factory-boy>=3.3.0",
+    "faker>=33.0.0",
 ]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+pythonpath = ["src"]
+testpaths = ["src"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--reuse-db",
+    "--nomigrations",
+    "--cov=src",
+    "--cov-report=html",
+    "--cov-report=term-missing:skip-covered",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+exclude = [
+    ".git",
+    "__pycache__",
+    "migrations",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by formatter
+    "B008",  # do not perform function calls in argument defaults
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apps", "core"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+lines-after-imports = 2
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
