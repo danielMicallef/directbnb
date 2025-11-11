@@ -311,19 +311,50 @@ class StripeWebhookView(APIView):
     permission_classes = [AllowAny]
 
     @staticmethod
-    def handle_checkout_session_completed(stripe_event: StripeEvent) -> bool:
+    def handle_checkout_session_completed(stripe_event: StripeEvent) -> tuple[bool, str]:
         lead_registration_id = stripe_event.get_lead_registration_id()
         try:
             lead_registration = LeadRegistration.objects.get(
                 id=lead_registration_id
             )
-            lead_registration.registration_options.update(
-                paid_at=datetime.now()
-            )
-            logger.info(f"Lead registration {lead_registration_id} updated")
-            return True
+
+            # Update all registration options with payment timestamp
+            lead_registration.registration_options.update(paid_at=datetime.now())
+            logger.info(f"Lead registration {lead_registration_id} payment recorded")
+
+            # Create user account from lead registration
+            user, user_created = lead_registration.create_user_from_lead()
+            if user_created:
+                logger.info(
+                    f"Created new user {user.email} from lead registration {lead_registration_id}"
+                )
+            else:
+                logger.info(
+                    f"User {user.email} already exists for lead registration {lead_registration_id}"
+                )
         except LeadRegistration.DoesNotExist:
-            return False
+            logger.error(f"Lead registration {lead_registration_id} not found")
+            return False, "Lead registration not found"
+        except Exception as e:
+            logger.error(
+                f"Error handling checkout session completed for {lead_registration_id}: {e}"
+            )
+            return False, f"Error handling checkout session completed for {lead_registration_id}"
+
+        # Send payment confirmation email with email verification link
+        try:
+            lead_registration.send_payment_confirmation_email()
+            logger.info(
+                f"Payment confirmation email sent to {user.email} for lead {lead_registration_id}"
+            )
+        except Exception as email_error:
+            # Don't fail the webhook if email fails - payment was still processed
+            # Todo: Queue this for retry using Celery
+            logger.error(
+                f"Failed to send payment confirmation email to {user.email}: {email_error}"
+            )
+
+        return True, "User created."
 
     @staticmethod
     def validate_webhook_request(request):
@@ -352,9 +383,9 @@ class StripeWebhookView(APIView):
         }
         return event_handler_map.get(event_type.type, self.default_handler)
 
-    def default_handler(self, event_type: StripeEvent) -> bool:
+    def default_handler(self, event_type: StripeEvent) -> tuple[bool, str]:
         logger.info(f"Unprocessed Stripe webhook event: {event_type.type}. Data: {event_type.model_dump()}")
-        return True
+        return True, f"Unprocessed Stripe webhook event {event_type.type}"
 
     def post(self, request, *args, **kwargs):
         is_valid, validation_data = self.validate_webhook_request(request)
@@ -369,18 +400,18 @@ class StripeWebhookView(APIView):
         lead_registration = LeadRegistration.objects.filter(id=lead_registration_id).first()
         stripe_webhook.lead_registration = lead_registration
         event_handler = self.get_event_handler_map(stripe_event)
-        updated = False
+        updated, reason = False, ""
         try:
-            updated = event_handler(stripe_event)
-
+            updated, reason = event_handler(stripe_event)
             stripe_webhook.completed_at = datetime.now()
             stripe_webhook.processed_successfully = updated
         except Exception as e:
+            import pdb; pdb.set_trace()
             logger.error(f"Unable to process Stripe webhook event. Data: {stripe_event.model_dump()}. Error: {e}")
 
         stripe_webhook.save()
         ret_status = status.HTTP_200_OK if updated else status.HTTP_400_BAD_REQUEST
-        return Response(status=ret_status)
+        return Response(status=ret_status, data={"reason": reason})
 
 
 class PackageViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):

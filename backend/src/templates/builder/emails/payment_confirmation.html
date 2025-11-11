@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmed - Welcome to {{ site_name }}</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 20px 0;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .order-summary {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .order-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .item-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .item-price {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .discount {
+            color: #f44336;
+            font-size: 0.9em;
+        }
+        .total {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding-top: 10px;
+            margin-top: 10px;
+            border-top: 2px solid #4CAF50;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .verification-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    {% autoescape off %}
+    <div class="header">
+        <h1>🎉 Payment Confirmed!</h1>
+        <p>Welcome to {{ site_name }}</p>
+    </div>
+
+    <div class="content">
+        <p>Hi {{ user.first_name }},</p>
+
+        <p>Thank you for your payment! We're excited to help you create your direct booking website.</p>
+
+        <div class="verification-note">
+            <strong>⚠️ Important: Verify Your Email</strong>
+            <p>To complete your registration and access your account, please verify your email address by clicking the button below:</p>
+            <a style="{text-align: center;}"
+               href="{{ verification_url }}"
+               class="button">Verify Email & Activate Account</a>
+            <p style="font-size: 0.9em; margin-top: 10px;">This verification link will expire in 24 hours.</p>
+        </div>
+
+        <h2>Payment Summary</h2>
+        <div class="order-summary">
+            {% for option in registration_options %}
+            <div class="order-item">
+                <div class="item-name">{{ option.package.name }}</div>
+                <div>{{ option.package.description }}</div>
+                <div style="margin-top: 5px;">
+                    {% if option.promotion %}
+                    <span style="text-decoration: line-through; color: #999;">
+                        {{ option.package.currency }} {{ option.package.amount }}
+                    </span>
+                    <span class="discount">
+                        -{{ option.promotion.discount_percentage }}% off
+                    </span>
+                    <br>
+                    <span class="item-price">
+                        {{ option.package.currency }} {{ option.discounted_amount }}
+                    </span>
+                    {% else %}
+                    <span class="item-price">
+                        {{ option.package.currency }} {{ option.package.amount }}
+                    </span>
+                    {% endif %}
+                    <span style="color: #666; font-size: 0.9em;">
+                        ({{ option.package.get_frequency_display }})
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="total">
+                Total Paid: {{ total_currency }} {{ total_amount }}
+            </div>
+        </div>
+
+        <h2>What Happens Next?</h2>
+        <ol>
+            <li><strong>Verify your email</strong> - Click the button above to confirm your email address</li>
+            <li><strong>Account activation</strong> - Once verified, your account will be fully activated</li>
+            <li><strong>Website setup</strong> - Our team will start setting up your direct booking website</li>
+            <li><strong>You'll receive updates</strong> - We'll keep you informed about your website progress</li>
+        </ol>
+
+        <h2>Your Account Details</h2>
+        <p>
+            <strong>Email:</strong> {{ user.email }}<br>
+            <strong>Name:</strong> {{ user.get_full_name }}<br>
+            {% if user.phone_number %}
+            <strong>Phone:</strong> {{ user.phone_number }}<br>
+            {% endif %}
+        </p>
+
+        <p>If you have any questions, please don't hesitate to reach out to our support team.</p>
+
+        <p>Best regards,<br>
+        The {{ site_name }} Team</p>
+    </div>
+
+    <div class="footer">
+        <p>This is an automated email. Please do not reply to this message.</p>
+        <p>&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+    </div>
+    {% endautoescape %}
+</body>
+</html>

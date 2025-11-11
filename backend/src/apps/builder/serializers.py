@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
@@ -210,10 +211,10 @@ class LeadRegistrationSerializer(serializers.ModelSerializer):
 
         # Check if email already exists for new instances
         if BNBUser.objects.filter(email=value).exists():
+            site_url = settings.SITE_URL
             raise serializers.ValidationError(
-                _("A user with this email already exists.")
+                _(f"A user with this email already exists. Login to your portal on {site_url}."),
             )
-
         return value
 
     def validate_confirm_email(self, value):
