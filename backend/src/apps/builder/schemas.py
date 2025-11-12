@@ -12,6 +12,7 @@ class StripeSession(BaseModel):
 class StripeEventData(BaseModel):
     object: StripeSession
 
+
 class StripeEventType(StrEnum):
     CHECKOUT_COMPLETED = "checkout.session.completed"
     CHECKOUT_EXPIRED = "checkout.session.expired"

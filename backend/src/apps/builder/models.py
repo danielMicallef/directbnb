@@ -128,7 +128,7 @@ class Promotion(AbstractTrackedModel):
         if self.start_date and today < self.start_date:
             return False
 
-        if self.end_date and today >self.end_date:
+        if self.end_date and today > self.end_date:
             return False
 
         return True
@@ -225,10 +225,14 @@ class LeadRegistration(AbstractTrackedModel):
     def __str__(self):
         return f"{self.email} - {self.first_name or 'N/A'} {self.last_name or 'N/A'}"
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
     def get_latest_registration_options(self):
-        return self.registration_options.order_by(
-            "package", "-created_at"
-        ).distinct("package")
+        return self.registration_options.order_by("package", "-created_at").distinct(
+            "package"
+        )
 
     def create_user_from_lead(self):
         user, created = BNBUser.objects.get_or_create(
@@ -239,7 +243,7 @@ class LeadRegistration(AbstractTrackedModel):
                 "phone_number": self.phone_number,
                 "is_active": True,
                 "is_email_confirmed": False,
-            }
+            },
         )
         if created:
             user.set_unusable_password()
@@ -317,7 +321,7 @@ class LeadRegistration(AbstractTrackedModel):
         for option in latest_options:
             amount = option.package.amount
             name = option.package.name
-            if promotion:=option.promotion:
+            if promotion := option.promotion:
                 amount = promotion.get_discounted_amount()
                 name = promotion.get_promotional_name()
 

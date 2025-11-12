@@ -213,7 +213,9 @@ class LeadRegistrationSerializer(serializers.ModelSerializer):
         if BNBUser.objects.filter(email=value).exists():
             site_url = settings.SITE_URL
             raise serializers.ValidationError(
-                _(f"A user with this email already exists. Login to your portal on {site_url}."),
+                _(
+                    f"A user with this email already exists. Login to your portal on {site_url}."
+                ),
             )
         return value
 

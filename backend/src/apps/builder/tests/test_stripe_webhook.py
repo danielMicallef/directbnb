@@ -20,7 +20,9 @@ from apps.builder.tests.test_utils import generate_stripe_signature
 
 
 # Stripe webhook secret for testing
-STRIPE_WEBHOOK_SECRET = "whsec_e136fcf022bbf4fe4d31d2ca7f62c3b9d3bb824beb1368d6c592eb38b137cc06"
+STRIPE_WEBHOOK_SECRET = (
+    "whsec_e136fcf022bbf4fe4d31d2ca7f62c3b9d3bb824beb1368d6c592eb38b137cc06"
+)
 
 
 @pytest.fixture
@@ -155,7 +157,10 @@ def payment_intent_created_payload():
         "type": "payment_intent.created",
         "object": "event",
         "created": 1762759945,
-        "request": {"id": None, "idempotency_key": "e9a3c1ff-e7ad-490c-bc1c-52dff2ff7d0d"},
+        "request": {
+            "id": None,
+            "idempotency_key": "e9a3c1ff-e7ad-490c-bc1c-52dff2ff7d0d",
+        },
         "livemode": False,
         "api_version": "2025-10-29.clover",
         "pending_webhooks": 2,
@@ -262,7 +267,9 @@ class TestStripeWebhookView:
         payload = json.dumps(payment_intent_created_payload).encode("utf-8")
 
         response = api_client.post(
-            url, data=payload, content_type="application/json"
+            url,
+            data=payload,
+            content_type="application/json",
             # No HTTP_STRIPE_SIGNATURE header
         )
 
@@ -290,9 +297,7 @@ class TestStripeWebhookView:
         # This might be intentional for debugging purposes
         assert response.status_code in [200, 400]
 
-    def test_webhook_with_invalid_json_payload(
-        self, api_client, stripe_webhook_secret
-    ):
+    def test_webhook_with_invalid_json_payload(self, api_client, stripe_webhook_secret):
         """Test webhook with invalid JSON payload"""
         url = reverse("builder_api:stripe-webhook")
 
@@ -408,7 +413,11 @@ class TestStripeWebhookView:
         assert webhook_record.lead_registration.id == lead_registration.id
 
     def test_webhook_with_multiple_registration_options(
-        self, api_client, stripe_webhook_secret, lead_registration, package_with_promotion
+        self,
+        api_client,
+        stripe_webhook_secret,
+        lead_registration,
+        package_with_promotion,
     ):
         """Test webhook updates all registration options for a lead"""
         url = reverse("builder_api:stripe-webhook")

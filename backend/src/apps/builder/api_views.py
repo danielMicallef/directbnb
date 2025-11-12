@@ -21,7 +21,8 @@ from apps.builder.models import (
     Website,
     LeadRegistration,
     RegistrationOptions,
-    Package, StripeWebhookPayload,
+    Package,
+    StripeWebhookPayload,
 )
 from apps.builder.permissions import IsLeadRegistrationNotCompleted
 from apps.builder.schemas import StripeEvent, StripeEventType
@@ -311,12 +312,12 @@ class StripeWebhookView(APIView):
     permission_classes = [AllowAny]
 
     @staticmethod
-    def handle_checkout_session_completed(stripe_event: StripeEvent) -> tuple[bool, str]:
+    def handle_checkout_session_completed(
+        stripe_event: StripeEvent,
+    ) -> tuple[bool, str]:
         lead_registration_id = stripe_event.get_lead_registration_id()
         try:
-            lead_registration = LeadRegistration.objects.get(
-                id=lead_registration_id
-            )
+            lead_registration = LeadRegistration.objects.get(id=lead_registration_id)
 
             # Update all registration options with payment timestamp
             lead_registration.registration_options.update(paid_at=datetime.now())
@@ -339,7 +340,10 @@ class StripeWebhookView(APIView):
             logger.error(
                 f"Error handling checkout session completed for {lead_registration_id}: {e}"
             )
-            return False, f"Error handling checkout session completed for {lead_registration_id}"
+            return (
+                False,
+                f"Error handling checkout session completed for {lead_registration_id}",
+            )
 
         # Send payment confirmation email with email verification link
         try:
@@ -384,7 +388,9 @@ class StripeWebhookView(APIView):
         return event_handler_map.get(event_type.type, self.default_handler)
 
     def default_handler(self, event_type: StripeEvent) -> tuple[bool, str]:
-        logger.info(f"Unprocessed Stripe webhook event: {event_type.type}. Data: {event_type.model_dump()}")
+        logger.info(
+            f"Unprocessed Stripe webhook event: {event_type.type}. Data: {event_type.model_dump()}"
+        )
         return True, f"Unprocessed Stripe webhook event {event_type.type}"
 
     def post(self, request, *args, **kwargs):
@@ -394,10 +400,14 @@ class StripeWebhookView(APIView):
 
         payload = request.body
         json_data = json.loads(payload.decode("utf-8"))
-        stripe_webhook = StripeWebhookPayload.objects.create(payload=json_data, processed_successfully=False)
+        stripe_webhook = StripeWebhookPayload.objects.create(
+            payload=json_data, processed_successfully=False
+        )
         stripe_event = StripeEvent.model_validate_json(payload)
         lead_registration_id = stripe_event.get_lead_registration_id()
-        lead_registration = LeadRegistration.objects.filter(id=lead_registration_id).first()
+        lead_registration = LeadRegistration.objects.filter(
+            id=lead_registration_id
+        ).first()
         stripe_webhook.lead_registration = lead_registration
         event_handler = self.get_event_handler_map(stripe_event)
         updated, reason = False, ""
@@ -406,8 +416,12 @@ class StripeWebhookView(APIView):
             stripe_webhook.completed_at = datetime.now()
             stripe_webhook.processed_successfully = updated
         except Exception as e:
-            import pdb; pdb.set_trace()
-            logger.error(f"Unable to process Stripe webhook event. Data: {stripe_event.model_dump()}. Error: {e}")
+            import pdb
+
+            pdb.set_trace()
+            logger.error(
+                f"Unable to process Stripe webhook event. Data: {stripe_event.model_dump()}. Error: {e}"
+            )
 
         stripe_webhook.save()
         ret_status = status.HTTP_200_OK if updated else status.HTTP_400_BAD_REQUEST

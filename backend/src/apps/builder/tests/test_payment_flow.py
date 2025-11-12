@@ -12,7 +12,10 @@ from apps.users.models import BNBUser, UserToken
 
 
 # Stripe webhook secret for testing
-STRIPE_WEBHOOK_SECRET = "whsec_e136fcf022bbf4fe4d31d2ca7f62c3b9d3bb824beb1368d6c592eb38b137cc06"
+STRIPE_WEBHOOK_SECRET = (
+    "whsec_e136fcf022bbf4fe4d31d2ca7f62c3b9d3bb824beb1368d6c592eb38b137cc06"
+)
+
 
 @pytest.fixture()
 def lead_data():
@@ -36,6 +39,7 @@ class TestCompletePaymentFlow:
     4. Verify user creation
     5. Verify email sent with verification link
     """
+
     def get_webhook_payload(self, lead_registration_id):
         webhook_payload = {
             "id": "evt_test_payment_flow",
@@ -83,10 +87,7 @@ class TestCompletePaymentFlow:
         # Step 2: Create LeadRegistration via API
         lead_url = reverse("builder_api:lead-registration-list")
 
-
-        lead_response = api_client.post(
-            lead_url, data=lead_data, format="json"
-        )
+        lead_response = api_client.post(lead_url, data=lead_data, format="json")
         assert lead_response.status_code == 201
         lead_registration_id = lead_response.data["id"]
 
@@ -185,23 +186,24 @@ class TestCompletePaymentFlow:
 
         # Verify email content contains required information
         email_body = email.alternatives[0].content
-        assert lead_data.get("first_name") in email_body, "Email should contain user's first name"
+        assert lead_data.get("first_name") in email_body, (
+            "Email should contain user's first name"
+        )
         assert "verify" in email_body, "Email should mention email verification"
 
         # Step 9: Verify verification URL is in the email
         verification_url_part = f"/users/verify-email/{user_token.token}"
         assert (
-            verification_url_part in email_body
-            or str(user_token.token) in email_body
+            verification_url_part in email_body or str(user_token.token) in email_body
         ), "Email should contain verification URL with token"
 
         # Step 10: Verify payment summary is in the email
-        assert (
-            builder_package.name in email_body
-        ), "Email should contain builder package name"
-        assert (
-            hosting_package.name in email_body
-        ), "Email should contain hosting package name"
+        assert builder_package.name in email_body, (
+            "Email should contain builder package name"
+        )
+        assert hosting_package.name in email_body, (
+            "Email should contain hosting package name"
+        )
 
         # Verify promotion discount is mentioned
         assert "50%" in email_body or "discount" in email_body.lower()
@@ -228,13 +230,15 @@ class TestCompletePaymentFlow:
             "first_name": "Jane",
             "last_name": "Smith Updated",  # Different last name
             "phone_number": "+35677777777",
-            "listing_urls": []
+            "listing_urls": [],
         }
 
         lead_response = api_client.post(lead_url, data=lead_data, format="json")
         assert lead_response.status_code == 400
-        assert "A user with this email already exists." in lead_response.json().get("email")[0]
-
+        assert (
+            "A user with this email already exists."
+            in lead_response.json().get("email")[0]
+        )
 
     def test_payment_flow_multiple_packages_with_promotions(
         self, api_client, all_packages, promotion_factory, lead_data
@@ -269,11 +273,13 @@ class TestCompletePaymentFlow:
 
         # Create lead registration
         lead_url = reverse("builder_api:lead-registration-list")
-        lead_data.update({
-            "email": "multipackage@example.com",
-            "first_name": "Multi",
-            "last_name": "Package",
-        })
+        lead_data.update(
+            {
+                "email": "multipackage@example.com",
+                "first_name": "Multi",
+                "last_name": "Package",
+            }
+        )
         lead_response = api_client.post(lead_url, data=lead_data, format="json")
         assert lead_response.status_code == 201
         lead_registration_id = lead_response.data["id"]
@@ -394,7 +400,12 @@ class TestCompletePaymentFlow:
         lead_url = reverse("builder_api:lead-registration-list")
         lead_response = api_client.post(
             lead_url,
-            data={"email": "total@example.com", "first_name": "Total", "last_name": "Test", "listing_urls": []},
+            data={
+                "email": "total@example.com",
+                "first_name": "Total",
+                "last_name": "Test",
+                "listing_urls": [],
+            },
             format="json",
         )
         lead_registration_id = lead_response.data["id"]
@@ -452,5 +463,10 @@ class TestCompletePaymentFlow:
 
         # Verify original and discounted prices are in email
         # Note: Exact formatting may vary, so we check for the presence of key numbers
-        assert str(original_price) in email_body or str(int(original_price)) in email_body
-        assert str(discounted_price) in email_body or str(int(discounted_price)) in email_body
+        assert (
+            str(original_price) in email_body or str(int(original_price)) in email_body
+        )
+        assert (
+            str(discounted_price) in email_body
+            or str(int(discounted_price)) in email_body
+        )

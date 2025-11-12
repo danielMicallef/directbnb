@@ -6,7 +6,10 @@ from apps.builder.models import (
     ColorSchemeChoices,
     Website,
     Package,
-    Promotion, StripeWebhookPayload,
+    Promotion,
+    StripeWebhookPayload,
+    RegistrationOptions,
+    LeadRegistration,
 )
 
 
@@ -49,5 +52,66 @@ class PackageAdmin(admin.ModelAdmin):
 
 @admin.register(StripeWebhookPayload)
 class StripeWebhookPayloadAdmin(admin.ModelAdmin):
-    list_display = ("created_at", "payload",)
+    list_display = (
+        "created_at",
+        "payload",
+    )
     search_fields = ("payload",)
+
+
+class RegistrationOptionsInline(admin.TabularInline):
+    model = RegistrationOptions
+    extra = 0
+    fields = ("promotion", "package", "paid_at", "expires_at")
+
+
+@admin.register(LeadRegistration)
+class LeadRegistrationAdmin(admin.ModelAdmin):
+    list_display = (
+        "email",
+        "full_name",
+        "phone_number",
+        "theme",
+        "color_scheme",
+        "created_at",
+    )
+    list_filter = ("theme", "color_scheme", "created_at")
+    search_fields = ("email", "first_name", "last_name", "phone_number", "domain_name")
+    ordering = ("-created_at",)
+    readonly_fields = ("created_at", "updated_at")
+    inlines = [RegistrationOptionsInline]
+
+    fieldsets = (
+        (
+            "Contact Information",
+            {"fields": ("email", "first_name", "last_name", "phone_number", "user")},
+        ),
+        ("Design Preferences", {"fields": ("theme", "color_scheme")}),
+        ("Property Details", {"fields": ("listing_urls", "domain_name")}),
+        (
+            "Timestamps",
+            {"fields": ("created_at", "updated_at"), "classes": ("collapse",)},
+        ),
+    )
+
+
+@admin.register(RegistrationOptions)
+class RegistrationOptionsAdmin(admin.ModelAdmin):
+    list_display = ("lead_registration", "promotion", "package", "created_at")
+    list_filter = ("promotion", "package", "created_at")
+    search_fields = ("lead_registration__email",)
+    ordering = ("-created_at",)
+    readonly_fields = ("created_at", "updated_at")
+
+    fieldsets = (
+        ("Lead Information", {"fields": ("lead_registration",)}),
+        ("Options", {"fields": ("promotion", "package")}),
+        (
+            "Timestamps",
+            {
+                "fields": ("created_at", "updated_at", "expires_at"),
+                "classes": ("collapse",),
+            },
+        ),
+        ("Paid", {"fields": ("paid_at",)}),
+    )
