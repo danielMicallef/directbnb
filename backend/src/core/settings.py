@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "django_filters",
     "django_extensions",
+    "django_vite",
 ]
 DEBUG_APPS = []
 DJANGO_APPS = [
