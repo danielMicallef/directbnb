@@ -217,6 +217,7 @@ class LeadRegistration(AbstractTrackedModel):
         BNBUser, on_delete=models.DO_NOTHING, null=True, blank=True
     )
     completed_at = models.DateTimeField(null=True, blank=True)
+    checkout_session_id = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         verbose_name = "Lead Registration"
@@ -312,11 +313,22 @@ class LeadRegistration(AbstractTrackedModel):
 
     def create_checkout_session(self):
         # Create a Stripe Checkout Session
+        from loguru import logger
+
         stripe.api_key = settings.STRIPE_SECRET_KEY
+
+        if not stripe.api_key:
+            logger.error("STRIPE_SECRET_KEY is not configured")
+            raise ValueError("STRIPE_SECRET_KEY is not configured")
+
         line_items = []
 
         # Get the latest registration option for each package
         latest_options = self.get_latest_registration_options()
+
+        if not latest_options:
+            logger.error(f"No registration options found for lead {self.id}")
+            raise ValueError("No registration options found")
 
         for option in latest_options:
             amount = option.package.amount
@@ -338,15 +350,25 @@ class LeadRegistration(AbstractTrackedModel):
                 }
             )
 
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=["card"],
-            line_items=line_items,
-            mode="payment",
-            client_reference_id=self.id,
-            success_url=settings.SITE_URL + "/success/",
-            cancel_url=settings.SITE_URL + "/cancel/",
-        )
-        return checkout_session
+        logger.info(f"Creating checkout session for lead {self.id} with {len(line_items)} items")
+
+        success_url = reverse("builder:checkout_success", client_registration_id=self.id)
+        cancel_url = reverse("builder:checkout_cancelled", client_registration_id=self.id)
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=line_items,
+                mode="payment",
+                client_reference_id=str(self.id),
+                success_url=settings.SITE_URL + "/success/",
+                cancel_url=settings.SITE_URL + "/cancel/",
+            )
+            logger.info(f"Created checkout session {checkout_session.id} for lead {self.id}")
+            # self.checkout_url = checkout_session
+            return checkout_session
+        except Exception as e:
+            logger.error(f"Failed to create checkout session for lead {self.id}: {e}")
+            raise
 
 
 class RegistrationOptions(AbstractTrackedModel):

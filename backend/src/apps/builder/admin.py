@@ -10,6 +10,7 @@ from apps.builder.models import (
     StripeWebhookPayload,
     RegistrationOptions,
     LeadRegistration,
+    WebsitePlan,
 )
 
 
@@ -35,6 +36,13 @@ class WebsiteAdmin(admin.ModelAdmin):
     list_display = ("domain_name", "theme", "color_scheme")
     list_filter = ("theme", "color_scheme")
     search_fields = ("domain_name",)
+
+
+@admin.register(WebsitePlan)
+class WebsitePlanAdmin(admin.ModelAdmin):
+    list_display = ("website", "package", "promotion_applied")
+    search_fields = ("website__domain_name",)
+    list_filter = ("package",)
 
 
 class PromotionInline(admin.TabularInline):
