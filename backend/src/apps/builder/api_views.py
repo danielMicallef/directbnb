@@ -4,6 +4,7 @@ import stripe
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from loguru import logger
+from pydantic_core._pydantic_core import ValidationError
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -403,7 +404,12 @@ class StripeWebhookView(APIView):
         stripe_webhook = StripeWebhookPayload.objects.create(
             payload=json_data, processed_successfully=False
         )
-        stripe_event = StripeEvent.model_validate_json(payload)
+        try:
+            stripe_event = StripeEvent.model_validate_json(payload)
+        except ValidationError as e:
+            logger.error("Stripe webhook validation failed: %s", e)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
         lead_registration_id = stripe_event.get_lead_registration_id()
         lead_registration = LeadRegistration.objects.filter(
             id=lead_registration_id

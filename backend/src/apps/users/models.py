@@ -2,10 +2,13 @@ from uuid import uuid4
 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.urls import reverse
 from django.template.loader import render_to_string
 
@@ -90,6 +93,21 @@ class BNBUser(AbstractBaseUser, PermissionsMixin):
             subject=_("Activate Your Account"),
             message=body,
         )
+
+    def get_set_initial_password_url(self):
+        uid = urlsafe_base64_encode(force_bytes(self.pk))
+        token = default_token_generator.make_token(self)
+        return reverse(
+            "users:set_initial_password", kwargs={"uidb64": uid, "token": token}
+        )
+
+    def send_email_is_verified(self):
+        context = {"url": reverse("users:login")}
+        if not self.has_usable_password():
+            url = self.get_set_initial_password_url()
+            context.update({"url": url})
+
+        # Todo: Send "Your email has been verified." email with URL for next step
 
     def create_user_token(self):
         ut = UserToken(user=self)

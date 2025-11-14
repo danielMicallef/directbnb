@@ -25,7 +25,6 @@ urlpatterns = [
     path("api/auth/", include("apps.users.api_urls")),
     path("api/builder/", include("apps.builder.api_urls")),
     path("api/properties/", include("apps.properties.urls")),
-    # OpenAPI schema and documentation (protected in production)
     path("api/schema/", api_views.ProtectedSpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",
@@ -39,5 +38,6 @@ urlpatterns = [
     ),
     # Web views
     path("", include("apps.users.urls")),
+    path("builder/", include("apps.builder.urls")),
     path("properties/", include("apps.properties.urls")),
 ]

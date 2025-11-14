@@ -1,8 +1,10 @@
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, FormView, TemplateView
 from django import forms
@@ -12,6 +14,14 @@ from apps.users.models import BNBUser, UserToken
 
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
+
+from apps.users.forms import SetInitialPasswordForm
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
@@ -80,7 +90,18 @@ def verify_email(request, token):
         )
 
     user_token.delete()
-    return redirect("users:login")
+
+    if user.has_usable_password():
+        return redirect("users:login")
+
+    # Redirect to set initial password
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = default_token_generator.make_token(user)
+    return redirect(
+        reverse(
+            "users:set_initial_password", kwargs={"uidb64": uid, "token": token}
+        )
+    )
 
 
 class ResendVerificationEmailForm(forms.Form):
@@ -100,30 +121,68 @@ class ResendVerificationEmailView(FormView):
 
     def form_valid(self, form):
         email = form.cleaned_data["email"]
-
-        try:
-            user = BNBUser.objects.get(email=email)
-
-            if user.is_email_confirmed:
-                messages.info(
-                    self.request,
-                    _("This email is already verified. You can log in now."),
-                )
-            else:
-                token = user.refresh_user_token()
-                user.send_activation_email(token)
-
-                messages.success(
-                    self.request,
-                    _("Verification email has been sent. Please check your inbox."),
-                )
-        except BNBUser.DoesNotExist:
-            # Don't reveal if email exists or not for security
+        user = BNBUser.objects.filter(email=email).first()
+        if not user:
             messages.success(
                 self.request,
                 _(
                     "If an account exists with this email, a verification link has been sent."
                 ),
             )
+            return super().form_valid(form)
 
+        if user.is_email_confirmed:
+            user.send_email_is_verified()
+            if not user.has_usable_password():
+                # Redirect to set initial password
+                url = user.get_reset_password_url()
+                return redirect(url)
+
+            messages.info(
+                self.request,
+                message=_("This email is already verified. You can log in now."),
+            )
+        else:
+            token = user.refresh_user_token()
+            user.send_activation_email(token)
+
+            messages.success(
+                self.request,
+                _("Verification email has been sent. Please check your inbox."),
+            )
         return super().form_valid(form)
+
+
+class SetInitialPasswordView(PasswordResetConfirmView):
+    form_class = SetInitialPasswordForm
+    template_name = "registration/set_initial_password.html"
+    success_url = reverse_lazy("users:login")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.user
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, _("Your password has been set. You can now log in."))
+        return redirect(self.success_url)
+
+
+class BnbPasswordResetView(PasswordResetView):
+    template_name = "registration/password_reset_form.html"
+    email_template_name = "users/emails/password_reset_email.html"
+    success_url = reverse_lazy("users:password_reset_done")
+
+
+class BnbPasswordResetDoneView(PasswordResetDoneView):
+    template_name = "registration/password_reset_done.html"
+
+
+class BnbPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = "registration/password_reset_confirm.html"
+    success_url = reverse_lazy("users:password_reset_complete")
+
+
+class BnbPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = "registration/password_reset_complete.html"

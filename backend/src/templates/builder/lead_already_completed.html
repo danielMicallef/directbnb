@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Completed</title>
+</head>
+<body>
+    <h1>Registration Already Completed</h1>
+    <p>The registration for {{ lead.email }} was completed on {{ lead.completed_at }}.</p>
+    {% if lead.user and not lead.user.is_email_confirmed %}
+        <p>Please check your inbox to complete email verification.</p>
+        <p>Didn't receive verification email? <a href="{% url 'users:resend_verification' %}">Resend here</a>.</p>
+    {% else %}
+    <p>Your email has been verified. <a href="{% url 'users:login' %}">Login</a> to finalize your website.</p>
+    {% endif %}
+
+
+
+    <p>If you have any questions, please contact support.</p>
+</body>
+</html>

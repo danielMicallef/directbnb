@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, SetPasswordForm
 from django.utils.translation import gettext_lazy as _
 
 from apps.users.models import BNBUser
@@ -64,3 +64,14 @@ class EmailAuthenticationForm(AuthenticationForm):
             }
         ),
     )
+
+
+class SetInitialPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["new_password1"].widget.attrs.update(
+            {"placeholder": "Password", "class": "form-control"}
+        )
+        self.fields["new_password2"].widget.attrs.update(
+            {"placeholder": "Confirm password", "class": "form-control"}
+        )
