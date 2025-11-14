@@ -102,12 +102,17 @@ class BNBUser(AbstractBaseUser, PermissionsMixin):
         )
 
     def send_email_is_verified(self):
-        context = {"url": reverse("users:login")}
+        context = {"url": reverse("users:login"), "password_set": True}
         if not self.has_usable_password():
             url = self.get_set_initial_password_url()
-            context.update({"url": url})
+            context.update({"url": url, "password_set": False})
 
-        # Todo: Send "Your email has been verified." email with URL for next step
+        body = render_to_string("users/emails/email_is_verified.html", context)
+
+        self.email_user(
+            subject=_("Your account is verified"),
+            message=body
+        )
 
     def create_user_token(self):
         ut = UserToken(user=self)

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Verified</title>
+</head>
+<body>
+    <h1>Thank you for verifying your email, {{ user.first_name }}!</h1>
+
+    {% if password_set %}
+        <p>Your account is now active. You can log in to access your dashboard.</p>
+        <a href="{{ url }}">Click here to Log In</a>
+    {% else %}
+        <p>Your account has been created. The final step is to set a password.</p>
+        <a href="{{ url }}">Click here to Set Your Password</a>
+    {% endif %}
+
+</body>
+</html>
