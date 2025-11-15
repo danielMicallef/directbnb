@@ -32,15 +32,12 @@ DEBUG = os.getenv("DJANGO_DEBUG", "True")
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 
-CORS_ALLOWED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
 # CORS Settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite default port
-    "http://localhost:3000",  # React default port (if you use it)
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:8081",
-]
+CORS_ALLOWED_ORIGINS_ENV = os.getenv(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000,http://127.0.0.1:8081"
+)
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS_ENV.split(",") if origin.strip()]
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
@@ -314,3 +311,21 @@ SCRAPE_PROXY_URL = ""
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+
+# Django Vite Configuration
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": DEBUG,
+        "dev_server_host": "localhost",
+        "dev_server_port": 5173,
+        "manifest_path": os.path.join(BASE_DIR, "static", "dist", "manifest.json"),
+    }
+}
+
+# Add static root for production
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# Static files directories
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static", "dist"),
+]

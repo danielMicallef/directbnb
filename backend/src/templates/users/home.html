@@ -1,18 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Homepage</title>
-</head>
-<body>
-<section>
-    <p>
-      Hello from <svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 32 32"><path d="M14.135 4H18.1v18.169a26.218 26.218 0 0 1-5.143.535c-4.842-.005-7.362-2.168-7.362-6.322 0-4 2.673-6.6 6.816-6.6a6.448 6.448 0 0 1 1.724.2V4Zm0 9.142a3.992 3.992 0 0 0-1.337-.2c-2 0-3.163 1.223-3.163 3.366 0 2.087 1.107 3.239 3.138 3.239a9.355 9.355 0 0 0 1.362-.1v-6.3Z" style="fill:#44b78b"/><path d="M24.4 10.059v9.1c0 3.133-.235 4.639-.923 5.938A6.316 6.316 0 0 1 20.237 28l-3.678-1.733a5.708 5.708 0 0 0 3.141-2.629c.566-1.121.745-2.42.745-5.837v-7.742ZM20.441 4.02h3.964v4.028h-3.964z" style="fill:#44b78b"/></svg>
-    </p>
-    <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit" class="btn">Logout</button>
-    </form>
-</section>
-</body>
-</html>
+{% extends "logged_in_base.html" %}
+
+{% block title %}Home - DirectBnB{% endblock %}
+
+{% block page_content %}
+<div class="hero min-h-[60vh] bg-base-200">
+    <div class="hero-content text-center">
+        <div class="max-w-2xl">
+            <div class="badge badge-primary badge-lg mb-4">Welcome to DirectBnB</div>
+            <h1 class="text-5xl font-bold mb-6">Find Your Perfect Stay</h1>
+            <p class="text-lg opacity-80 mb-8">
+                Experience seamless property rentals with our modern platform.
+                Discover unique spaces, book instantly, and enjoy premium stays.
+            </p>
+            <div class="flex gap-4 justify-center">
+                <button class="btn btn-primary btn-lg">Explore Properties</button>
+                <button class="btn btn-outline btn-lg">Learn More</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="py-16">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-4">Built for Modern Travel</h2>
+        <p class="text-lg opacity-70">Everything you need for a seamless rental experience</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
+            <div class="card-body">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Instant Booking</h3>
+                <p class="opacity-70">Book properties instantly with our streamlined process. No waiting, no hassle.</p>
+            </div>
+        </div>
+
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
+            <div class="card-body">
+                <div class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Secure Payments</h3>
+                <p class="opacity-70">Your transactions are protected with enterprise-grade security measures.</p>
+            </div>
+        </div>
+
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
+            <div class="card-body">
+                <div class="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Premium Support</h3>
+                <p class="opacity-70">24/7 customer support to help you with any questions or concerns.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-base-200 py-16">
+    <div class="max-w-4xl mx-auto text-center px-4">
+        <h2 class="text-4xl font-bold mb-4">Ready to Get Started?</h2>
+        <p class="text-lg opacity-70 mb-8">Join thousands of travelers finding their perfect stay with DirectBnB</p>
+        <div class="flex gap-4 justify-center">
+            <button class="btn btn-primary btn-lg">Browse Properties</button>
+            <button class="btn btn-outline btn-lg">List Your Property</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
