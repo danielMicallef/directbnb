@@ -1,131 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resend Verification Email - {{ site_name }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-        .messages {
-            margin-bottom: 20px;
-        }
-        .message {
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .message.info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="email"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .errorlist {
-            color: #721c24;
-            list-style: none;
-            padding: 0;
-            margin: 5px 0;
-        }
-        .errorlist li {
-            background-color: #f8d7da;
-            padding: 5px 10px;
-            border-radius: 4px;
-            margin-bottom: 5px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .help-text {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 10px;
-            margin-bottom: 15px;
-        }
-        .back-link {
-            margin-top: 15px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <h1>Resend Verification Email</h1>
+{% extends "base.html" %}
 
-    <p class="help-text">
-        Didn't receive the verification email? Enter your email address below and we'll send you a new one.
-    </p>
+{% block title %}Resend Verification - DirectBnB{% endblock %}
 
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <div class="message {{ message.tags }}">
-            {{ message }}
+{% block content %}
+<!-- Navbar -->
+<div class="navbar bg-base-100 border-b border-base-300">
+    <div class="container mx-auto px-6">
+        <div class="flex-1">
+            <a href="/" class="text-2xl font-bold">DirectBnB</a>
         </div>
-        {% endfor %}
+        <div class="flex-none">
+            <a href="{% url 'users:login' %}" class="btn btn-ghost">Sign in</a>
+        </div>
     </div>
-    {% endif %}
+</div>
 
-    <form method="post" action="{% url 'users:resend_verification' %}">
-        {% csrf_token %}
-
-        {% if form.non_field_errors %}
-        <ul class="errorlist">
-            {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        <div class="form-group">
-            <label for="{{ form.email.id_for_label }}">Email:</label>
-            {{ form.email }}
-            {% if form.email.errors %}
-                {{ form.email.errors }}
-            {% endif %}
+<!-- Resend Verification Content -->
+<div class="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-base-100 px-4 py-16">
+    <div class="w-full max-w-md">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-3">Resend verification email</h1>
+            <p class="text-base-content/60 text-lg">Didn't receive the verification email? Enter your email address and we'll send you a new one</p>
         </div>
 
-        <button type="submit">Resend Verification Email</button>
-    </form>
+        <!-- Card -->
+        <div class="card bg-base-200 shadow-xl">
+            <div class="card-body p-8">
+                {% if messages %}
+                <div class="space-y-3 mb-6">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} py-3">
+                        <span>{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
 
-    <div class="back-link">
-        <a href="{% url 'users:login' %}">Back to Login</a>
+                <form method="post" action="{% url 'users:resend_verification' %}" class="space-y-6">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-error py-3">
+                        <ul class="list-disc list-inside">
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <div class="form-control">
+                        <label class="label pb-2" for="{{ form.email.id_for_label }}">
+                            <span class="label-text font-medium text-base">Email address</span>
+                        </label>
+                        <input
+                            type="email"
+                            name="{{ form.email.name }}"
+                            id="{{ form.email.id_for_label }}"
+                            class="input input-bordered h-12 text-base {% if form.email.errors %}input-error{% endif %}"
+                            placeholder="you@example.com"
+                            required
+                        />
+                        {% if form.email.errors %}
+                        <label class="label pt-2">
+                            <span class="label-text-alt text-error">{{ form.email.errors.0 }}</span>
+                        </label>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full h-12 text-base">Resend verification email</button>
+                </form>
+
+                <div class="divider my-6"></div>
+
+                <div class="text-center">
+                    <a href="{% url 'users:login' %}" class="link link-primary font-medium">Back to login</a>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

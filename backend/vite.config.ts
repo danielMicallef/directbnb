@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
 export default defineConfig({
-  base: '/',
+  base: '/static',
   css: {
     postcss: './postcss.config.js',
   },
@@ -27,12 +27,7 @@ export default defineConfig({
       usePolling: true,
       disableGlobbing: false,
     },
-    proxy: {
-      '/static': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-      },
-    },
+    origin: 'http://localhost:5173',
   },
   resolve: {
     alias: {

@@ -3,82 +3,109 @@
 {% block title %}Login - DirectBnB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-base-200">
-    <div class="card w-full max-w-md shadow-2xl bg-base-100">
-        <div class="card-body">
-            <h2 class="card-title text-3xl font-bold justify-center mb-6">Login</h2>
+<!-- Navbar -->
+<div class="navbar bg-base-100 border-b border-base-300">
+    <div class="container mx-auto px-6">
+        <div class="flex-1">
+            <a href="/" class="text-2xl font-bold">DirectBnB</a>
+        </div>
+        <div class="flex-none">
+            <a href="{% url 'users:register' %}" class="btn btn-ghost">Sign up</a>
+        </div>
+    </div>
+</div>
 
-            {% if messages %}
-            <div class="space-y-2">
-                {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    <span>{{ message }}</span>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+<!-- Login Content -->
+<div class="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-base-100 px-4 py-16">
+    <div class="w-full max-w-md">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-3">Welcome back</h1>
+            <p class="text-base-content/60 text-lg">Sign in to your account to continue</p>
+        </div>
 
-            <form method="post" action="{% url 'users:login' %}">
-                {% csrf_token %}
-
-                {% if form.non_field_errors %}
-                <div class="alert alert-error">
-                    <ul>
-                        {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
+        <!-- Card -->
+        <div class="card bg-base-200 shadow-xl">
+            <div class="card-body p-8">
+                {% if messages %}
+                <div class="space-y-3 mb-6">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} py-3">
+                        <span>{{ message }}</span>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
 
-                <div class="form-control">
-                    <label class="label" for="{{ form.username.id_for_label }}">
-                        <span class="label-text">Email</span>
-                    </label>
-                    <input type="email" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
-                           class="input input-bordered {% if form.username.errors %}input-error{% endif %}"
-                           placeholder="your@email.com" required />
-                    {% if form.username.errors %}
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ form.username.errors.0 }}</span>
-                    </label>
+                <form method="post" action="{% url 'users:login' %}" class="space-y-6">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-error py-3">
+                        <ul class="list-disc list-inside">
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                     {% endif %}
+
+                    <div class="form-control">
+                        <label class="label pb-2" for="{{ form.username.id_for_label }}">
+                            <span class="label-text font-medium text-base">Email address</span>
+                        </label>
+                        <input
+                            type="email"
+                            name="{{ form.username.name }}"
+                            id="{{ form.username.id_for_label }}"
+                            class="input input-bordered h-12 text-base {% if form.username.errors %}input-error{% endif %}"
+                            placeholder="you@example.com"
+                            required
+                        />
+                        {% if form.username.errors %}
+                        <label class="label pt-2">
+                            <span class="label-text-alt text-error">{{ form.username.errors.0 }}</span>
+                        </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label pb-2" for="{{ form.password.id_for_label }}">
+                            <span class="label-text font-medium text-base">Password</span>
+                        </label>
+                        <input
+                            type="password"
+                            name="{{ form.password.name }}"
+                            id="{{ form.password.id_for_label }}"
+                            class="input input-bordered h-12 text-base {% if form.password.errors %}input-error{% endif %}"
+                            placeholder="••••••••"
+                            required
+                        />
+                        {% if form.password.errors %}
+                        <label class="label pt-2">
+                            <span class="label-text-alt text-error">{{ form.password.errors.0 }}</span>
+                        </label>
+                        {% endif %}
+                        <label class="label pt-2">
+                            <a href="{% url 'users:password_reset' %}" class="label-text-alt link link-primary">Forgot password?</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full h-12 text-base">Sign in</button>
+                </form>
+
+                <div class="divider my-6">OR</div>
+
+                <div class="text-center space-y-3">
+                    <p class="text-sm text-base-content/60">
+                        Don't have an account?
+                        <a href="{% url 'users:register' %}" class="link link-primary font-medium">Create account</a>
+                    </p>
+                    <p class="text-sm text-base-content/60">
+                        Need a verification email?
+                        <a href="{% url 'users:resend_verification' %}" class="link link-primary font-medium">Resend</a>
+                    </p>
                 </div>
-
-                <div class="form-control mt-4">
-                    <label class="label" for="{{ form.password.id_for_label }}">
-                        <span class="label-text">Password</span>
-                    </label>
-                    <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
-                           class="input input-bordered {% if form.password.errors %}input-error{% endif %}"
-                           placeholder="Enter your password" required />
-                    {% if form.password.errors %}
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ form.password.errors.0 }}</span>
-                    </label>
-                    {% endif %}
-                </div>
-
-                <div class="form-control mt-6">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </div>
-            </form>
-
-            <div class="divider">OR</div>
-
-            <div class="text-center space-y-2">
-                <p class="text-sm">
-                    Don't have an account?
-                    <a href="{% url 'users:register' %}" class="link link-primary">Register here</a>
-                </p>
-                <p class="text-sm">
-                    Didn't receive verification email?
-                    <a href="{% url 'users:resend_verification' %}" class="link link-primary">Resend email</a>
-                </p>
-                <p class="text-sm">
-                    Forgot password?
-                    <a href="{% url 'users:password_reset' %}" class="link link-primary">Reset</a>
-                </p>
             </div>
         </div>
     </div>

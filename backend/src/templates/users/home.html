@@ -1,77 +1,80 @@
 {% extends "logged_in_base.html" %}
 
-{% block title %}Home - DirectBnB{% endblock %}
+{% block title %}Home - {{ site_name }}{% endblock %}
 
 {% block page_content %}
-<div class="hero min-h-[60vh] bg-base-200">
-    <div class="hero-content text-center">
+<!-- Hero Section -->
+<div class="hero min-h-[60vh] bg-base-200 rounded-2xl">
+    <div class="hero-content text-center py-16 px-8">
         <div class="max-w-2xl">
-            <div class="badge badge-primary badge-lg mb-4">Welcome to DirectBnB</div>
+            <div class="badge badge-primary badge-lg mb-6 px-4 py-3 text-sm font-medium">Welcome to {{ site_name }}</div>
             <h1 class="text-5xl font-bold mb-6">Find Your Perfect Stay</h1>
-            <p class="text-lg opacity-80 mb-8">
+            <p class="text-lg text-base-content/60 mb-8 leading-relaxed">
                 Experience seamless property rentals with our modern platform.
                 Discover unique spaces, book instantly, and enjoy premium stays.
             </p>
-            <div class="flex gap-4 justify-center">
-                <button class="btn btn-primary btn-lg">Explore Properties</button>
-                <button class="btn btn-outline btn-lg">Learn More</button>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <button class="btn btn-primary btn-lg h-12 px-8">Explore Properties</button>
+                <button class="btn btn-outline btn-lg h-12 px-8">Learn More</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Features Section -->
 <div class="py-16">
     <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold mb-4">Built for Modern Travel</h2>
-        <p class="text-lg opacity-70">Everything you need for a seamless rental experience</p>
+        <h2 class="text-4xl font-bold mb-4">Built for Modern Hosts</h2>
+        <p class="text-lg text-base-content/60">Everything you need to create a seamless rental experience</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
-            <div class="card-body">
-                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div class="card-body p-8">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-6">
                     <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
                 </div>
-                <h3 class="card-title">Instant Booking</h3>
-                <p class="opacity-70">Book properties instantly with our streamlined process. No waiting, no hassle.</p>
+                <h3 class="text-xl font-bold mb-3">Instant Booking</h3>
+                <p class="text-base-content/60">Book properties instantly with our streamlined process. No waiting, no hassle.</p>
             </div>
         </div>
 
-        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
-            <div class="card-body">
-                <div class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div class="card-body p-8">
+                <div class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-6">
                     <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                     </svg>
                 </div>
-                <h3 class="card-title">Secure Payments</h3>
-                <p class="opacity-70">Your transactions are protected with enterprise-grade security measures.</p>
+                <h3 class="text-xl font-bold mb-3">Secure Payments</h3>
+                <p class="text-base-content/60">Your transactions are protected with enterprise-grade security measures.</p>
             </div>
         </div>
 
-        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
-            <div class="card-body">
-                <div class="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center mb-4">
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div class="card-body p-8">
+                <div class="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center mb-6">
                     <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
                     </svg>
                 </div>
-                <h3 class="card-title">Premium Support</h3>
-                <p class="opacity-70">24/7 customer support to help you with any questions or concerns.</p>
+                <h3 class="text-xl font-bold mb-3">Premium Support</h3>
+                <p class="text-base-content/60">24/7 customer support to help you with any questions or concerns.</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="bg-base-200 py-16">
-    <div class="max-w-4xl mx-auto text-center px-4">
+<!-- CTA Section -->
+<div class="bg-base-200 rounded-2xl py-16 px-8">
+    <div class="max-w-4xl mx-auto text-center">
         <h2 class="text-4xl font-bold mb-4">Ready to Get Started?</h2>
-        <p class="text-lg opacity-70 mb-8">Join thousands of travelers finding their perfect stay with DirectBnB</p>
-        <div class="flex gap-4 justify-center">
-            <button class="btn btn-primary btn-lg">Browse Properties</button>
-            <button class="btn btn-outline btn-lg">List Your Property</button>
+        <p class="text-lg text-base-content/60 mb-8">Join thousands of travelers finding their perfect stay with DirectBnB</p>
+        <div class="flex flex-wrap gap-4 justify-center">
+            <button class="btn btn-primary btn-lg h-12 px-8">Browse Properties</button>
+            <button class="btn btn-outline btn-lg h-12 px-8">List Your Property</button>
         </div>
     </div>
 </div>

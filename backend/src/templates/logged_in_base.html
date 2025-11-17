@@ -2,34 +2,36 @@
 
 {% block content %}
 <div class="drawer lg:drawer-open">
-    <input id="main-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
         <!-- Navbar -->
-        <div class="navbar bg-base-200 shadow-lg">
-            <div class="flex-none lg:hidden">
+        <div class="navbar bg-base-100 border-b border-base-300 h-16">
+            <div class="flex-none lg:hidden px-2">
                 <label for="main-drawer" class="btn btn-square btn-ghost">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </label>
             </div>
-            <div class="flex-1 px-2 mx-2">
-                <span class="text-xl font-bold">DirectBnB</span>
+            <div class="flex-1 px-6">
+                <span class="text-2xl font-bold">{{ site_name }}</span>
             </div>
-            <div class="flex-none">
+            <div class="flex-none px-6">
                 <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                        <div class="w-10 rounded-full bg-primary text-primary-content flex items-center justify-center">
-                            <span class="text-lg">{{ user.email.0|upper }}</span>
+                        <div class="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                            <span class="text-lg font-medium">{{ user.email.0|upper }}</span>
                         </div>
                     </label>
-                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-200 rounded-box w-52">
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Settings</a></li>
-                        <li>
-                            <form action="{% url 'users:logout' %}" method="post">
+                    <ul tabindex="0" class="menu dropdown-content mt-3 z-[1] p-2 shadow-xl bg-base-200 rounded-box w-56">
+                        <li class="menu-title px-4 py-3">
+                            <span class="text-sm font-medium text-base-content/60">{{ user.email }}</span>
+                        </li>
+                        <li><a href="#" class="py-3 px-4 text-base">Profile</a></li>
+                        <li><a href="#" class="py-3 px-4 text-base">Settings</a></li>
+                        <li class="border-t border-base-300 mt-2 pt-2">
+                            <form action="{% url 'users:logout' %}" method="post" class="w-full">
                                 {% csrf_token %}
-                                <button type="submit" class="w-full text-left">Logout</button>
+                                <button type="submit" class="w-full text-left py-3 px-4 text-base">Logout</button>
                             </form>
                         </li>
                     </ul>
@@ -38,43 +40,51 @@
         </div>
 
         <!-- Page content -->
-        <div class="flex-1 p-6">
+        <div class="flex-1 bg-base-100 p-8">
             {% block page_content %}{% endblock %}
         </div>
     </div>
 
     <!-- Sidebar -->
-    <div class="drawer-side">
+    <div class="drawer-side z-10">
         <label for="main-drawer" class="drawer-overlay"></label>
-        <aside class="bg-base-200 w-64 min-h-screen">
-            <div class="p-4">
-                <h2 class="text-2xl font-bold mb-6">DirectBnB</h2>
+        <aside class="bg-base-200 w-64 min-h-screen border-r border-base-300">
+            <div class="px-6 py-6">
+                <h2 class="text-2xl font-bold">DirectBnB</h2>
             </div>
-            <ul class="menu p-4 w-full text-base-content">
-                <li><a href="{% url 'users:home' %}" class="{% if request.path == '/' %}active{% endif %}">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    Home
-                </a></li>
-                <li><a>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    Browse Properties
-                </a></li>
-                <li><a>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                    </svg>
-                    My Bookings
-                </a></li>
-                <li><a>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    Messages
-                </a></li>
+            <ul class="menu px-4 w-full text-base-content space-y-2">
+                <li>
+                    <a href="{% url 'users:home' %}" class="py-3 px-4 text-base font-medium {% if request.path == '/' %}active{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="py-3 px-4 text-base font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        Browse Properties
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="py-3 px-4 text-base font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                        </svg>
+                        My Bookings
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="py-3 px-4 text-base font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        Messages
+                    </a>
+                </li>
             </ul>
         </aside>
     </div>

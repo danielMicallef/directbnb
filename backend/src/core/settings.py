@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 
 SITE_URL = os.getenv("SITE_URL", default="http://localhost:8000")
-SITE_NAME = os.getenv("SITE_NAME", default="DIRECTBNB")
+SITE_NAME = os.getenv("SITE_NAME", default="Direct Stay Hub")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
