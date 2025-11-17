@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Resend Verification - DirectBnB{% endblock %}
+{% block title %}Resend Verification - {{ site_name }}{% endblock %}
 
 {% block content %}
 <!-- Navbar -->
 <div class="navbar bg-base-100 border-b border-base-300">
     <div class="container mx-auto px-6">
         <div class="flex-1">
-            <a href="/" class="text-2xl font-bold">DirectBnB</a>
+            <a href="/" class="text-2xl font-bold">{{ site_name }}</a>
         </div>
         <div class="flex-none">
             <a href="{% url 'users:login' %}" class="btn btn-ghost">Sign in</a>

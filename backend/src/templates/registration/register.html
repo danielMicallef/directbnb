@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Register - DirectBnB{% endblock %}
+{% block title %}Register - {{ site_name }}{% endblock %}
 
 {% block content %}
 <!-- Navbar -->
 <div class="navbar bg-base-100 border-b border-base-300">
     <div class="container mx-auto px-6">
         <div class="flex-1">
-            <a href="/" class="text-2xl font-bold">DirectBnB</a>
+            <a href="/" class="text-2xl font-bold">{{ site_name }}</a>
         </div>
         <div class="flex-none">
             <a href="{% url 'users:login' %}" class="btn btn-ghost">Sign in</a>
@@ -21,7 +21,7 @@
         <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold mb-3">Create your account</h1>
-            <p class="text-base-content/60 text-lg">Join DirectBnB to start your journey</p>
+            <p class="text-base-content/60 text-lg">Join {{ site_name }} to start your journey</p>
         </div>
 
         <!-- Card -->

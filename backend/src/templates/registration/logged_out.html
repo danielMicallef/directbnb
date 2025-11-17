@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Logged Out - DirectBnB{% endblock %}
+{% block title %}Logged Out - {{ site_name }}{% endblock %}
 
 {% block content %}
 <!-- Navbar -->
 <div class="navbar bg-base-100 border-b border-base-300">
     <div class="container mx-auto px-6">
         <div class="flex-1">
-            <a href="/" class="text-2xl font-bold">DirectBnB</a>
+            <a href="/" class="text-2xl font-bold">{{ site_name }}</a>
         </div>
         <div class="flex-none">
             <a href="{% url 'users:login' %}" class="btn btn-ghost">Sign in</a>
@@ -23,7 +23,7 @@
             <div class="card-body p-8 text-center">
                 <div class="text-info text-6xl mb-6">👋</div>
                 <h1 class="text-3xl font-bold mb-4">You've been logged out</h1>
-                <p class="text-base-content/60 text-lg mb-8">Thanks for visiting DirectBnB. Come back soon!</p>
+                <p class="text-base-content/60 text-lg mb-8">Thanks for visiting {{ site_name }}. Come back soon!</p>
                 <a href="{% url 'users:login' %}" class="btn btn-primary w-full h-12 text-base">Sign in again</a>
             </div>
         </div>
