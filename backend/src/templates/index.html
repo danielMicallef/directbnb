@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero min-h-[60vh] bg-base-200 rounded-2xl">
+    <div class="hero-content text-center py-16 px-8">
+        <div class="max-w-3xl">
+            <div class="badge badge-success badge-lg mb-6 px-4 py-3 text-sm font-medium">{% lucide "trending-down" %}Stop paying 15-20% Commission</div>
+            <h1 class="text-5xl font-bold mb-6">Create Your Own Online Brand</h1>
+            <p class="text-lg text-base-content/60 mb-8 leading-relaxed">
+                We provide the tools to build your online presence and book your property without relying on OTAs like Airbnb, Booking.com, or Expedia.
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <button class="btn btn-primary btn-lg h-12 px-8">Create Your Website</button>
+                <button class="btn btn-outline btn-lg h-12 px-8">Learn More</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="py-16">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-4">Your All-in-One Toolkit</h2>
+        <p class="text-lg text-base-content/60">Everything you need to succeed independently.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div class="card-body p-8">
+                <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Create Your Website in Clicks</h3>
+                <p class="text-base-content/60">Launch a professional, high-converting website for your property in minutes.</p>
+            </div>
+        </div>
+
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div class="card-body p-8">
+                <div class="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Powerful Conversion Widgets</h3>
+                <p class="text-base-content/60">Add an Instant Booking Widget (no commission!), Airbnb reviews, and more to come.</p>
+            </div>
+        </div>
+
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div class="card-body p-8">
+                <div class="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Reliable Hosting Included</h3>
+                <p class="text-base-content/60">Get 1 year of free, secure hosting when you create your website with us.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="bg-base-200 rounded-2xl py-16 px-8">
+    <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl font-bold mb-4">Ready to Build Your Brand?</h2>
+        <p class="text-lg text-base-content/60 mb-8">Take control of your bookings and build your online presence today.</p>
+        <div class="flex flex-wrap gap-4 justify-center">
+            <button class="btn btn-primary btn-lg h-12 px-8">Get Started Now</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

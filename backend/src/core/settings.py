@@ -67,6 +67,7 @@ LOCAL_APPS = [
 THIRD_PARTY_APPS = [
     "corsheaders",
     "storages",
+    "lucide",
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
@@ -102,12 +103,25 @@ MIDDLEWARE = [
 ROOT_URLCONF = "core.urls"
 
 UI_TEMPLATES = os.path.join(BASE_DIR, "templates")
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [UI_TEMPLATES],
-        "APP_DIRS": True,
+        # "APP_DIRS": True,
         "OPTIONS": {
+            "builtins": [
+                "django_cotton.templatetags.cotton",
+                "lucide.templatetags.lucide",
+            ],
+            "loaders": [(
+                "django.template.loaders.cached.Loader",
+                [
+                    "django_cotton.cotton_loader.Loader",
+                    "django.template.loaders.filesystem.Loader",
+                    "django.template.loaders.app_directories.Loader",
+                ],
+            )],
             "context_processors": [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",

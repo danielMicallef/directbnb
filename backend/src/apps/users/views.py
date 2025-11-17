@@ -24,8 +24,15 @@ from django.contrib.auth.views import (
 from apps.users.forms import SetInitialPasswordForm
 
 
-class HomeView(LoginRequiredMixin, TemplateView):
-    template_name = "users/home.html"
+class HomeView(TemplateView):
+    template_name = "index.html"
+
+    def get_template_names(self):
+        if self.request.user.is_authenticated:
+            return ["users/home.html"]
+
+        template_names = super().get_template_names()
+        return template_names
 
 
 class RegisterView(CreateView):
