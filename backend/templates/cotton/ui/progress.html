@@ -1,0 +1,10 @@
+<c-vars w="56" color radial class_name size thickness/>
+{% if radial is True %}
+    <div class="radial-progress{% if color %} text-{{ color }}{% endif %}{% if class_name %} {{ class_name }}{% endif %}" style="--value:{{ value }};{% if size %} --size:{{ size }};{% endif %}{% if thickness %} --thickness:{{ thickness }};{% endif %}" role="progressbar">
+    {{ slot }}
+    </div>
+{% else %}
+    <progress class="progress w-{{ w }}{% if color %} progress-{{ color }}{% endif %}{% if class_name %} {{ class_name }}{% endif %}" {{ attrs }}>
+    {{ slot }}
+    </progress>
+{% endif %}

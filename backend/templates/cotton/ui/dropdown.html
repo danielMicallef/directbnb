@@ -1,0 +1,6 @@
+<c-vars title position align hover open class_name/>
+
+<div class="dropdown{% if position %} dropdown-{{ position }}{% endif %}{% if align %} dropdown-{{ align }}{% endif %}{% if hover %} dropdown-hover{% endif %}{% if open %} dropdown-open{% endif %}{% if class_name %} {{ class_name }}{% endif %}" {{ attrs }}>
+    <div tabindex="0" role="button" class="btn m-1">{{ title }}</div>
+    {{ slot }}
+</div>

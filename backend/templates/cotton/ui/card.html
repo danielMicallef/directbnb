@@ -1,0 +1,17 @@
+<c-vars
+        bg="base-100"
+        w="96"
+        shadow
+        compact
+        image_full
+        glass
+        side
+        class_name
+/>
+<div
+        class="card{% if bg %} bg-{{ bg }}{% endif %}{% if w %} w-{{ w }}{% endif %}{% if shadow %} shadow-{{ shadow }}{% endif %}{% if compact %} card-compact{% endif %}{% if image_full %} image-full{% endif %}{% if glass %} glass{% endif %}{% if side %} lg:card-side{% endif %}{% if class_name %} {{ class_name }}{% endif %}"
+        {{ attrs }}
+>
+    {{ figure }}
+    {{ slot }}
+</div>
