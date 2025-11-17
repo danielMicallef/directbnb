@@ -4,5 +4,18 @@
 
 {% block page_content %}
 <!-- Hero Section -->
-Dashboard
+        <div className="hero bg-gradient-to-r from-primary to-secondary rounded-2xl shadow-2xl mb-8">
+          <div className="hero-content text-neutral-content w-full py-10">
+            <div className="w-full">
+              <h1 className="text-4xl font-bold mb-2">Welcome, John! 🎉</h1>
+              <p className="text-lg opacity-90 mb-6">Let's get your commission-free booking website live in just a few steps</p>
+
+              {/* Progress */}
+              <div className="mb-3">
+                <progress className="progress progress-info bg-base-100/30 w-full" value={progress} max="100"></progress>
+              </div>
+              <p className="text-sm opacity-80">{completedTasks} of {checklist.length} steps completed ({Math.round(progress)}%)</p>
+            </div>
+          </div>
+        </div>
 {% endblock %}

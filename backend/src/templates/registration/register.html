@@ -1,19 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}Register - {{ site_name }}{% endblock %}
+{% block navbar_end %}
+<a href="{% url 'users:login' %}" class="btn btn-ghost">Login</a>
+{% endblock %}
 
 {% block content %}
-<!-- Navbar -->
-<div class="navbar bg-base-100 border-b border-base-300">
-    <div class="container mx-auto px-6">
-        <div class="flex-1">
-            <a href="/" class="text-2xl font-bold">{{ site_name }}</a>
-        </div>
-        <div class="flex-none">
-            <a href="{% url 'users:login' %}" class="btn btn-ghost">Sign in</a>
-        </div>
-    </div>
-</div>
 
 <!-- Register Content -->
 <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-base-100 px-4 py-16">
@@ -58,7 +50,7 @@
                             type="email"
                             name="{{ form.email.name }}"
                             id="{{ form.email.id_for_label }}"
-                            class="input input-bordered h-12 text-base {% if form.email.errors %}input-error{% endif %}"
+                            class="input input-bordered h-12 text-base {% if form.email.errors %}input-error{% endif %} w-full"
                             placeholder="you@example.com"
                             required
                         />
@@ -115,7 +107,7 @@
                             type="password"
                             name="{{ form.password1.name }}"
                             id="{{ form.password1.id_for_label }}"
-                            class="input input-bordered h-12 text-base {% if form.password1.errors %}input-error{% endif %}"
+                            class="input input-bordered h-12 text-base {% if form.password1.errors %}input-error{% endif %} w-full"
                             placeholder="••••••••"
                             required
                         />
@@ -138,7 +130,7 @@
                             type="password"
                             name="{{ form.password2.name }}"
                             id="{{ form.password2.id_for_label }}"
-                            class="input input-bordered h-12 text-base {% if form.password2.errors %}input-error{% endif %}"
+                            class="input input-bordered h-12 text-base {% if form.password2.errors %}input-error{% endif %} w-full"
                             placeholder="••••••••"
                             required
                         />
