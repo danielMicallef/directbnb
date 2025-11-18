@@ -85,6 +85,4 @@ class Command(BaseCommand):
                 )
 
         except stripe.error.StripeError as e:
-            self.stdout.write(
-                self.style.ERROR(f"Stripe API error: {str(e)}")
-            )
+            self.stdout.write(self.style.ERROR(f"Stripe API error: {str(e)}"))

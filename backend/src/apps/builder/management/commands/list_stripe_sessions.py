@@ -10,9 +10,7 @@ class Command(BaseCommand):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
         if not stripe.api_key:
-            self.stdout.write(
-                self.style.ERROR("STRIPE_SECRET_KEY is not set!")
-            )
+            self.stdout.write(self.style.ERROR("STRIPE_SECRET_KEY is not set!"))
             return
 
         self.stdout.write("\nFetching recent checkout sessions...\n")
@@ -22,9 +20,7 @@ class Command(BaseCommand):
             sessions = stripe.checkout.Session.list(limit=10)
 
             if not sessions.data:
-                self.stdout.write(
-                    self.style.WARNING("No checkout sessions found.")
-                )
+                self.stdout.write(self.style.WARNING("No checkout sessions found."))
                 return
 
             for session in sessions.data:
@@ -33,7 +29,7 @@ class Command(BaseCommand):
                     customer_email = session.customer_details.get("email", "N/A")
 
                 self.stdout.write(
-                    f"\n{'='*60}\n"
+                    f"\n{'=' * 60}\n"
                     f"Session ID: {session.id}\n"
                     f"Status: {session.status}\n"
                     f"Payment Status: {session.payment_status}\n"

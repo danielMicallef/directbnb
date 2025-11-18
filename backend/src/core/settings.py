@@ -35,9 +35,11 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 # CORS Settings
 CORS_ALLOWED_ORIGINS_ENV = os.getenv(
     "CORS_ALLOWED_ORIGINS",
-    "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000,http://127.0.0.1:8081"
+    "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000,http://127.0.0.1:8081",
 )
-CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ALLOWED_ORIGINS_ENV.split(",") if origin.strip()]
+CORS_ALLOWED_ORIGINS = [
+    origin.strip() for origin in CORS_ALLOWED_ORIGINS_ENV.split(",") if origin.strip()
+]
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
@@ -75,6 +77,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "django_extensions",
     "django_vite",
+    "django_cotton",
 ]
 DEBUG_APPS = []
 DJANGO_APPS = [
@@ -114,14 +117,16 @@ TEMPLATES = [
                 "django_cotton.templatetags.cotton",
                 "lucide.templatetags.lucide",
             ],
-            "loaders": [(
-                "django.template.loaders.cached.Loader",
-                [
-                    "django_cotton.cotton_loader.Loader",
-                    "django.template.loaders.filesystem.Loader",
-                    "django.template.loaders.app_directories.Loader",
-                ],
-            )],
+            "loaders": [
+                (
+                    "django.template.loaders.cached.Loader",
+                    [
+                        "django_cotton.cotton_loader.Loader",
+                        "django.template.loaders.filesystem.Loader",
+                        "django.template.loaders.app_directories.Loader",
+                    ],
+                )
+            ],
             "context_processors": [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",

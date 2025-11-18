@@ -25,7 +25,9 @@ class Command(BaseCommand):
         )
 
         self.stdout.write(f"\nStripe API Key (masked): {masked_key}")
-        self.stdout.write(f"Key type: {'TEST' if stripe.api_key.startswith('sk_test_') else 'LIVE'}")
+        self.stdout.write(
+            f"Key type: {'TEST' if stripe.api_key.startswith('sk_test_') else 'LIVE'}"
+        )
 
         # Try to fetch account info to verify the key works
         try:
@@ -52,9 +54,7 @@ class Command(BaseCommand):
                 if len(webhook_secret) > 16
                 else "SECRET_TOO_SHORT"
             )
-            self.stdout.write(
-                f"\nWebhook Secret (masked): {masked_webhook_secret}"
-            )
+            self.stdout.write(f"\nWebhook Secret (masked): {masked_webhook_secret}")
         else:
             self.stdout.write(
                 self.style.WARNING("\n⚠ STRIPE_WEBHOOK_SECRET is not set!")

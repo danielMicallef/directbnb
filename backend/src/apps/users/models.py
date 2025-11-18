@@ -109,10 +109,7 @@ class BNBUser(AbstractBaseUser, PermissionsMixin):
 
         body = render_to_string("users/emails/email_is_verified.html", context)
 
-        self.email_user(
-            subject=_("Your account is verified"),
-            message=body
-        )
+        self.email_user(subject=_("Your account is verified"), message=body)
 
     def create_user_token(self):
         ut = UserToken(user=self)

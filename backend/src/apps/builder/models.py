@@ -350,10 +350,16 @@ class LeadRegistration(AbstractTrackedModel):
                 }
             )
 
-        logger.info(f"Creating checkout session for lead {self.id} with {len(line_items)} items")
+        logger.info(
+            f"Creating checkout session for lead {self.id} with {len(line_items)} items"
+        )
 
-        success_url = reverse("builder:checkout_success", client_registration_id=self.id)
-        cancel_url = reverse("builder:checkout_cancelled", client_registration_id=self.id)
+        success_url = reverse(
+            "builder:checkout_success", client_registration_id=self.id
+        )
+        cancel_url = reverse(
+            "builder:checkout_cancelled", client_registration_id=self.id
+        )
         try:
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
@@ -363,7 +369,9 @@ class LeadRegistration(AbstractTrackedModel):
                 success_url=settings.SITE_URL + "/success/",
                 cancel_url=settings.SITE_URL + "/cancel/",
             )
-            logger.info(f"Created checkout session {checkout_session.id} for lead {self.id}")
+            logger.info(
+                f"Created checkout session {checkout_session.id} for lead {self.id}"
+            )
             # self.checkout_url = checkout_session
             return checkout_session
         except Exception as e:

@@ -105,9 +105,7 @@ def verify_email(request, token):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
     return redirect(
-        reverse(
-            "users:set_initial_password", kwargs={"uidb64": uid, "token": token}
-        )
+        reverse("users:set_initial_password", kwargs={"uidb64": uid, "token": token})
     )
 
 
@@ -172,7 +170,9 @@ class SetInitialPasswordView(PasswordResetConfirmView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(self.request, _("Your password has been set. You can now log in."))
+        messages.success(
+            self.request, _("Your password has been set. You can now log in.")
+        )
         return redirect(self.success_url)
 
 
