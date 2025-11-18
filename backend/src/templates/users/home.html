@@ -4,5 +4,15 @@
 {% block title %}Home - {{ site_name }}{% endblock %}
 
 {% block page_content %}
-Dashboard
+<c-ui.hero
+    bg="base-200"
+    title="Welcome {{ user.first_name }}!  🎉"
+    min_h_screen="False"
+>
+    <p class="py-6">
+        Let's get your commission-free booking website live in just a few steps.
+    </p>
+    <progress class="progress progress-accent w-full" value="70" max="100"></progress>
+    <p className="text-sm text-indigo-100"> 7 of 10 steps completed (70%)</p>
+</c-ui.hero>
 {% endblock %}
