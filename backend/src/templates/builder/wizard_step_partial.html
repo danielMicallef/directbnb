@@ -1,0 +1,70 @@
+<form
+    method="post"
+    hx-post="{% url 'builder:wizard' %}"
+    hx-target="#wizard-content"
+    hx-swap="innerHTML"
+    class="space-y-6"
+>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-error">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    <!-- Step-specific content -->
+    {% if step == 1 %}
+        {% include 'builder/steps/step1_theme.html' %}
+    {% elif step == 2 %}
+        {% include 'builder/steps/step2_color.html' %}
+    {% elif step == 3 %}
+        {% include 'builder/steps/step3_booking_links.html' %}
+    {% elif step == 4 %}
+        {% include 'builder/steps/step4_domain.html' %}
+    {% elif step == 5 %}
+        {% include 'builder/steps/step5_contact.html' %}
+    {% elif step == 6 %}
+        {% include 'builder/steps/step6_package.html' %}
+    {% elif step == 7 %}
+        {% include 'builder/steps/step7_review.html' %}
+    {% endif %}
+
+    <!-- Navigation Buttons -->
+    <div class="flex justify-between pt-6 border-t border-base-300">
+        {% if step > 1 %}
+        <button
+            type="button"
+            hx-get="{% url 'builder:wizard_back' %}"
+            hx-target="#wizard-content"
+            class="btn btn-ghost"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+        </button>
+        {% else %}
+        <div></div>
+        {% endif %}
+
+        <div>
+        <a href="/" class="btn btn-danger btn-outline">Cancel</a>
+        {% if step < total_steps %}
+        <button type="submit" class="btn btn-primary">
+            Next
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+        {% else %}
+        <button type="submit" class="btn btn-primary">
+            Complete & Pay
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </button>
+        {% endif %}
+        </div>
+    </div>
+</form>

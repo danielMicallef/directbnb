@@ -1,0 +1,41 @@
+<div class="space-y-4">
+    <h3 class="text-xl font-bold">Select your Color Preset</h3>
+
+    <div class="alert alert-info">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>This is not final and you can always update your selection later.</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        {% for choice in form.color_scheme %}
+        <label class="cursor-pointer">
+            <input type="radio" name="{{ form.color_scheme.name }}" value="{{ choice.data.value }}" class="peer sr-only" {% if choice.data.selected %}checked{% endif %}>
+            <div class="card bg-base-300 border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/50 transition-all">
+                <div class="card-body items-center text-center p-6">
+                    <div class="flex w-full h-8 rounded-md overflow-hidden mb-4 border border-base-content/20">
+                        {% if choice.data.theme_colors %}
+                            {% for color in choice.data.theme_colors %}
+                            <div class="flex-1" style="background-color: {{ color.value }}"></div>
+                            {% endfor %}
+                        {% else %}
+                            <!-- Fallback colors if theme_colors not available -->
+                            <div class="flex-1 bg-primary"></div>
+                            <div class="flex-1 bg-secondary"></div>
+                            <div class="flex-1 bg-accent"></div>
+                            <div class="flex-1 bg-neutral"></div>
+                            <div class="flex-1 bg-info"></div>
+                        {% endif %}
+                    </div>
+                    <span class="font-semibold">{{ choice.choice_label }}</span>
+                </div>
+            </div>
+        </label>
+        {% endfor %}
+    </div>
+
+    {% if form.color_scheme.errors %}
+    <div class="text-error text-sm mt-2">{{ form.color_scheme.errors.0 }}</div>
+    {% endif %}
+</div>

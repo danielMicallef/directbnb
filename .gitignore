@@ -13295,3 +13295,6 @@ certs
 /marketing_frontend/node_modules/zod/LICENSE
 /marketing_frontend/node_modules/zod/package.json
 /marketing_frontend/node_modules/zod/README.md
+
+# Django media files (user uploads)
+backend/src/media/

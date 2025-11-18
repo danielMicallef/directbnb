@@ -1,0 +1,218 @@
+{% extends "logged_in_base.html" %}
+
+{% block title %}{{ property.title|default:"Property Details" }} - {{ site_name }}{% endblock %}
+
+{% block page_content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-4">
+            <a href="{% url 'properties:property-list' %}" class="btn btn-ghost btn-square">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+            <div>
+                <h1 class="text-3xl font-bold">{{ property.title|default:"Untitled Property" }}</h1>
+                <p class="text-base-content/60">{{ property.room_type|default:"Property details" }}</p>
+            </div>
+        </div>
+        <a href="{% url 'properties:property-update' property.pk %}" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Edit Property
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Images -->
+            {% if property.images.all %}
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-4">Photos</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        {% for image in property.images.all %}
+                        <div class="aspect-video bg-base-300 rounded-lg overflow-hidden">
+                            <img src="{{ image.url }}" alt="{{ image.title }}" class="w-full h-full object-cover" />
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Description -->
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-4">About this place</h2>
+                    <p class="text-base-content/80 leading-relaxed">
+                        {{ property.description|default:"No description provided." }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Highlights -->
+            {% if property.highlights.all %}
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-4">Highlights</h2>
+                    <div class="space-y-4">
+                        {% for highlight in property.highlights.all %}
+                        <div class="flex items-start gap-4">
+                            <div class="text-2xl">{{ highlight.icon }}</div>
+                            <div>
+                                <h3 class="font-bold">{{ highlight.title }}</h3>
+                                <p class="text-sm text-base-content/60">{{ highlight.subtitle }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- House Rules -->
+            {% if property.house_rules %}
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-4">House Rules</h2>
+                    <p class="text-base-content/80">
+                        {{ property.house_rules.additional|default:"No house rules specified." }}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Location -->
+            {% if property.coordinates %}
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-4">Location</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <div class="text-sm text-base-content/60">Latitude</div>
+                            <div class="text-lg font-medium">{{ property.coordinates.latitude }}</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-base-content/60">Longitude</div>
+                            <div class="text-lg font-medium">{{ property.coordinates.longitude }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1 space-y-6">
+            <!-- Property Info -->
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Property Details</h2>
+                    <div class="space-y-3">
+                        {% if property.room_type %}
+                        <div>
+                            <div class="text-sm text-base-content/60">Room Type</div>
+                            <div class="font-medium">{{ property.room_type }}</div>
+                        </div>
+                        {% endif %}
+
+                        {% if property.person_capacity %}
+                        <div>
+                            <div class="text-sm text-base-content/60">Guest Capacity</div>
+                            <div class="font-medium">{{ property.person_capacity }} guests</div>
+                        </div>
+                        {% endif %}
+
+                        <div class="flex gap-2 flex-wrap pt-2">
+                            {% if property.is_super_host %}
+                            <div class="badge badge-primary">Superhost</div>
+                            {% endif %}
+                            {% if property.is_guest_favorite %}
+                            <div class="badge badge-secondary">Guest Favorite</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rating -->
+            {% if property.rating %}
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Rating</h2>
+                    <div class="space-y-2">
+                        {% if property.rating.guest_satisfaction %}
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-warning" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                            </svg>
+                            <span class="text-xl font-bold">{{ property.rating.guest_satisfaction|floatformat:1 }}</span>
+                            {% if property.rating.review_count %}
+                            <span class="text-sm text-base-content/60">({{ property.rating.review_count }} reviews)</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <div class="divider my-2"></div>
+
+                        <div class="space-y-2 text-sm">
+                            {% if property.rating.cleanliness %}
+                            <div class="flex justify-between">
+                                <span class="text-base-content/60">Cleanliness</span>
+                                <span class="font-medium">{{ property.rating.cleanliness|floatformat:1 }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if property.rating.accuracy %}
+                            <div class="flex justify-between">
+                                <span class="text-base-content/60">Accuracy</span>
+                                <span class="font-medium">{{ property.rating.accuracy|floatformat:1 }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if property.rating.communication %}
+                            <div class="flex justify-between">
+                                <span class="text-base-content/60">Communication</span>
+                                <span class="font-medium">{{ property.rating.communication|floatformat:1 }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if property.rating.location %}
+                            <div class="flex justify-between">
+                                <span class="text-base-content/60">Location</span>
+                                <span class="font-medium">{{ property.rating.location|floatformat:1 }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if property.rating.value %}
+                            <div class="flex justify-between">
+                                <span class="text-base-content/60">Value</span>
+                                <span class="font-medium">{{ property.rating.value|floatformat:1 }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Host -->
+            {% if property.host %}
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Host</h2>
+                    <div>
+                        <div class="font-bold text-lg">{{ property.host.name }}</div>
+                        <div class="text-sm text-base-content/60">Host ID: {{ property.host.host_id }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

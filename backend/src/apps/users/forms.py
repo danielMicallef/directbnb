@@ -79,3 +79,9 @@ class SetInitialPasswordForm(SetPasswordForm):
         self.fields["new_password2"].widget.attrs.update(
             {"placeholder": "Confirm password", "class": "form-control"}
         )
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = BNBUser
+        fields = ("first_name", "last_name", "phone_number", "avatar")

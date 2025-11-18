@@ -9,7 +9,11 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, FormView, TemplateView
 from django import forms
 
-from apps.users.forms import EmailAuthenticationForm, RegistrationForm
+from apps.users.forms import (
+    EmailAuthenticationForm,
+    RegistrationForm,
+    ProfileUpdateForm,
+)
 from apps.users.models import BNBUser, UserToken
 
 
@@ -193,3 +197,22 @@ class BnbPasswordResetConfirmView(PasswordResetConfirmView):
 
 class BnbPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = "registration/password_reset_complete.html"
+
+
+class ProfileUpdateView(LoginRequiredMixin, FormView):
+    form_class = ProfileUpdateForm
+    template_name = "users/profile.html"
+    success_url = reverse_lazy("users:profile")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["instance"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(
+            self.request,
+            _("Your profile has been updated successfully."),
+        )
+        return super().form_valid(form)

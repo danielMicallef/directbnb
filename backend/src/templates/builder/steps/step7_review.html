@@ -1,0 +1,62 @@
+<div class="space-y-6">
+    <h3 class="text-xl font-bold">Review & Confirm</h3>
+
+    {% if wizard_data.step_6_package_details and wizard_data.step_6_hosting_details %}
+    <div class="p-4 bg-base-300 rounded-lg">
+        <div class="font-semibold mb-2">Price Breakdown:</div>
+        <div class="space-y-1 text-sm">
+            <div class="flex justify-between">
+                <span>Website Builder Package</span>
+                <span>{{ wizard_data.step_6_package_details.currency }}{{ wizard_data.step_6_package_details.amount }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Hosting Plan</span>
+                <span>{{ wizard_data.step_6_hosting_details.currency }}{{ wizard_data.step_6_hosting_details.amount }}</span>
+            </div>
+            {% if wizard_data.step_6.live_reviews %}
+            <div class="flex justify-between">
+                <span>Live Reviews Add-on</span>
+                <span>{{ wizard_data.step_6_addon_details.currency }}{{ wizard_data.step_6_addon_details.amount }}</span>
+            </div>
+            {% endif %}
+            <div class="border-t border-base-content/20 pt-2 mt-2 flex justify-between font-bold">
+                <span>Total</span>
+                <span>{{ wizard_data.step_6_total.currency }}{{ wizard_data.step_6_total.amount }}</span>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <span>Please complete the previous steps to see your order summary.</span>
+    </div>
+    {% endif %}
+
+    <div class="alert alert-info text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span><strong>Payment Note:</strong> If guests pay online, a bank processing fee of up to 3.9% will apply. This fee will not be charged if guests pay in person.</span>
+    </div>
+
+    <div class="form-control">
+        <label class="label cursor-pointer justify-start gap-3 p-4 border-2 border-base-300 rounded-lg">
+            <input type="checkbox" name="{{ form.micro_invest.name }}" class="checkbox" {% if form.micro_invest.value %}checked{% endif %}>
+            <span class="label-text">{{ form.micro_invest.label }}</span>
+        </label>
+    </div>
+
+    <div class="form-control">
+        <label class="label cursor-pointer justify-start gap-3 p-4 border-2 {% if form.terms_accepted.errors %}border-error{% else %}border-base-300{% endif %} rounded-lg">
+            <input type="checkbox" name="{{ form.terms_accepted.name }}" class="checkbox checkbox-primary" {% if form.terms_accepted.value %}checked{% endif %} required>
+            <span class="label-text font-medium">{{ form.terms_accepted.label }} *</span>
+        </label>
+        {% if form.terms_accepted.errors %}
+        <label class="label">
+            <span class="label-text-alt text-error">{{ form.terms_accepted.errors.0 }}</span>
+        </label>
+        {% endif %}
+    </div>
+</div>

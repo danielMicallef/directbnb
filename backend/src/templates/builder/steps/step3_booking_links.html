@@ -1,0 +1,49 @@
+<div class="space-y-4" x-data="{ notListed: {{ form.not_listed.value|default:'false'|lower }} }">
+    <h3 class="text-xl font-bold">Your Current Booking Links</h3>
+    <p class="text-base-content/60">Paste your Airbnb or Booking.com listing URLs to automatically import your property details.</p>
+
+    <div class="space-y-4" x-show="!notListed">
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text font-medium">Airbnb Link</span>
+            </label>
+            {{ form.airbnb_link }}
+            {% if form.airbnb_link.errors %}
+            <label class="label">
+                <span class="label-text-alt text-error">{{ form.airbnb_link.errors.0 }}</span>
+            </label>
+            {% endif %}
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text font-medium">Booking.com Link (Optional)</span>
+            </label>
+            {{ form.booking_com_link }}
+            {% if form.booking_com_link.errors %}
+            <label class="label">
+                <span class="label-text-alt text-error">{{ form.booking_com_link.errors.0 }}</span>
+            </label>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-control pt-4">
+        <label class="label cursor-pointer justify-start gap-3">
+            <input
+                type="checkbox"
+                name="{{ form.not_listed.name }}"
+                class="checkbox"
+                {% if form.not_listed.value %}checked{% endif %}
+                x-model="notListed"
+            >
+            <span class="label-text">{{ form.not_listed.label }}</span>
+        </label>
+    </div>
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-error mt-4">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,372 @@
+{% extends "logged_in_base.html" %}
+
+{% block title %}Edit Property - {{ site_name }}{% endblock %}
+
+{% block page_content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center gap-4 mb-8">
+        <a href="{% url 'properties:property-list' %}" class="btn btn-ghost btn-square">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+        </a>
+        <div>
+            <h1 class="text-3xl font-bold">Edit Property</h1>
+            <p class="text-base-content/60">{{ property.title|default:"Untitled Property" }}</p>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% else %}alert-info{% endif %} mb-6 transition-opacity duration-500" id="alertMessage">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                {% if message.tags == 'success' %}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                {% else %}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                {% endif %}
+            </svg>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Sidebar - Section Cards -->
+        <div class="lg:col-span-1 space-y-4">
+            <div class="card bg-base-200 shadow-xl cursor-pointer hover:shadow-2xl transition-shadow section-card" data-section="basic">
+                <div class="card-body">
+                    <h3 class="card-title text-lg">Basic Information</h3>
+                    <p class="text-sm text-base-content/60">Title, description, capacity</p>
+                </div>
+            </div>
+
+            <div class="card bg-base-200 shadow-xl cursor-pointer hover:shadow-2xl transition-shadow section-card" data-section="location">
+                <div class="card-body">
+                    <h3 class="card-title text-lg">Location</h3>
+                    <p class="text-sm text-base-content/60">Coordinates and descriptions</p>
+                </div>
+            </div>
+
+            <div class="card bg-base-200 shadow-xl cursor-pointer hover:shadow-2xl transition-shadow section-card" data-section="images">
+                <div class="card-body">
+                    <h3 class="card-title text-lg">Photos</h3>
+                    <p class="text-sm text-base-content/60">Property images</p>
+                </div>
+            </div>
+
+            <div class="card bg-base-200 shadow-xl cursor-pointer hover:shadow-2xl transition-shadow section-card" data-section="highlights">
+                <div class="card-body">
+                    <h3 class="card-title text-lg">Highlights</h3>
+                    <p class="text-sm text-base-content/60">Key features and selling points</p>
+                </div>
+            </div>
+
+            <div class="card bg-base-200 shadow-xl cursor-pointer hover:shadow-2xl transition-shadow section-card" data-section="house-rules">
+                <div class="card-body">
+                    <h3 class="card-title text-lg">House Rules</h3>
+                    <p class="text-sm text-base-content/60">Additional rules and policies</p>
+                </div>
+            </div>
+
+            <div class="card bg-base-200 shadow-xl cursor-pointer hover:shadow-2xl transition-shadow section-card" data-section="host">
+                <div class="card-body">
+                    <h3 class="card-title text-lg">Host Information</h3>
+                    <p class="text-sm text-base-content/60">Host details</p>
+                </div>
+            </div>
+
+            <div class="card bg-base-200 shadow-xl section-card opacity-60">
+                <div class="card-body">
+                    <h3 class="card-title text-lg">Rating</h3>
+                    <p class="text-sm text-base-content/60">View only (generated from reviews)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Content Area - Editable Sections -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <p class="text-center text-base-content/60 py-8">
+                        Select a section from the left to edit
+                    </p>
+
+                    <!-- Basic Information Section -->
+                    <div id="section-basic" class="section-content hidden">
+                        <h2 class="text-2xl font-bold mb-6">Basic Information</h2>
+                        <form method="post" class="space-y-6">
+                            {% csrf_token %}
+
+                            <div class="form-control">
+                                <label class="label pb-2">
+                                    <span class="label-text font-medium text-base">Property Title *</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    value="{{ property.title|default:'' }}"
+                                    class="input input-bordered h-12 text-base w-full"
+                                    placeholder="Beautiful Downtown Apartment"
+                                />
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label pb-2">
+                                    <span class="label-text font-medium text-base">Description</span>
+                                </label>
+                                <textarea
+                                    name="description"
+                                    class="textarea textarea-bordered text-base h-32"
+                                    placeholder="Describe your property..."
+                                >{{ property.description|default:'' }}</textarea>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="form-control">
+                                    <label class="label pb-2">
+                                        <span class="label-text font-medium text-base">Room Type</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="room_type"
+                                        value="{{ property.room_type|default:'' }}"
+                                        class="input input-bordered h-12 text-base"
+                                        placeholder="Entire home"
+                                    />
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label pb-2">
+                                        <span class="label-text font-medium text-base">Guest Capacity</span>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="person_capacity"
+                                        value="{{ property.person_capacity|default:'' }}"
+                                        class="input input-bordered h-12 text-base"
+                                        placeholder="4"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="submit" name="section" value="basic" class="btn btn-primary h-12">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Save Changes
+                                </button>
+                                <button type="button" class="btn btn-ghost h-12 cancel-btn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Location Section -->
+                    <div id="section-location" class="section-content hidden">
+                        <h2 class="text-2xl font-bold mb-6">Location</h2>
+                        <form method="post" class="space-y-6">
+                            {% csrf_token %}
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="form-control">
+                                    <label class="label pb-2">
+                                        <span class="label-text font-medium text-base">Latitude</span>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="coordinates-latitude"
+                                        value="{{ property.coordinates.latitude|default:'' }}"
+                                        class="input input-bordered h-12 text-base"
+                                        step="0.000001"
+                                        placeholder="40.7128"
+                                    />
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label pb-2">
+                                        <span class="label-text font-medium text-base">Longitude</span>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="coordinates-longitude"
+                                        value="{{ property.coordinates.longitude|default:'' }}"
+                                        class="input input-bordered h-12 text-base"
+                                        step="0.000001"
+                                        placeholder="-74.0060"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="submit" name="section" value="location" class="btn btn-primary h-12">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Save Changes
+                                </button>
+                                <button type="button" class="btn btn-ghost h-12 cancel-btn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Images Section -->
+                    <div id="section-images" class="section-content hidden">
+                        <h2 class="text-2xl font-bold mb-6">Photos</h2>
+                        <p class="text-base-content/60 mb-6">Manage your property photos (coming soon)</p>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {% for image in property.images.all %}
+                            <div class="aspect-video bg-base-300 rounded-lg overflow-hidden">
+                                <img src="{{ image.url }}" alt="{{ image.title }}" class="w-full h-full object-cover" />
+                            </div>
+                            {% empty %}
+                            <div class="col-span-full text-center py-8 text-base-content/60">
+                                No images uploaded yet
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Highlights Section -->
+                    <div id="section-highlights" class="section-content hidden">
+                        <h2 class="text-2xl font-bold mb-6">Highlights</h2>
+                        <p class="text-base-content/60 mb-6">Key features and selling points (coming soon)</p>
+                        <div class="space-y-4">
+                            {% for highlight in property.highlights.all %}
+                            <div class="card bg-base-300">
+                                <div class="card-body">
+                                    <h3 class="font-bold">{{ highlight.title }}</h3>
+                                    <p class="text-sm text-base-content/60">{{ highlight.subtitle }}</p>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-center py-8 text-base-content/60">
+                                No highlights added yet
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- House Rules Section -->
+                    <div id="section-house-rules" class="section-content hidden">
+                        <h2 class="text-2xl font-bold mb-6">House Rules</h2>
+                        <form method="post" class="space-y-6">
+                            {% csrf_token %}
+
+                            <div class="form-control">
+                                <label class="label pb-2">
+                                    <span class="label-text font-medium text-base">Additional Rules</span>
+                                </label>
+                                <textarea
+                                    name="house_rules-additional"
+                                    class="textarea textarea-bordered text-base h-32"
+                                    placeholder="Enter any additional house rules..."
+                                >{{ property.house_rules.additional|default:'' }}</textarea>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="submit" name="section" value="house-rules" class="btn btn-primary h-12">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Save Changes
+                                </button>
+                                <button type="button" class="btn btn-ghost h-12 cancel-btn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Host Section -->
+                    <div id="section-host" class="section-content hidden">
+                        <h2 class="text-2xl font-bold mb-6">Host Information</h2>
+                        <form method="post" class="space-y-6">
+                            {% csrf_token %}
+
+                            <div class="form-control">
+                                <label class="label pb-2">
+                                    <span class="label-text font-medium text-base">Host Name</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="host-name"
+                                    value="{{ property.host.name|default:'' }}"
+                                    class="input input-bordered h-12 text-base w-full"
+                                    placeholder="John Doe"
+                                />
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label pb-2">
+                                    <span class="label-text font-medium text-base">Host ID</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="host-host_id"
+                                    value="{{ property.host.host_id|default:'' }}"
+                                    class="input input-bordered h-12 text-base w-full"
+                                    placeholder="HOST123"
+                                />
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="submit" name="section" value="host" class="btn btn-primary h-12">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Save Changes
+                                </button>
+                                <button type="button" class="btn btn-ghost h-12 cancel-btn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Section navigation
+    const sectionCards = document.querySelectorAll('.section-card[data-section]');
+    const sectionContents = document.querySelectorAll('.section-content');
+    const cancelBtns = document.querySelectorAll('.cancel-btn');
+
+    sectionCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const section = card.dataset.section;
+
+            // Hide all sections
+            sectionContents.forEach(content => content.classList.add('hidden'));
+
+            // Show selected section
+            const targetSection = document.getElementById(`section-${section}`);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+
+            // Update active state
+            sectionCards.forEach(c => c.classList.remove('ring-2', 'ring-primary'));
+            card.classList.add('ring-2', 'ring-primary');
+        });
+    });
+
+    // Cancel buttons
+    cancelBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            sectionContents.forEach(content => content.classList.add('hidden'));
+            sectionCards.forEach(c => c.classList.remove('ring-2', 'ring-primary'));
+        });
+    });
+
+    // Auto-dismiss success messages
+    const alertMessage = document.getElementById('alertMessage');
+    if (alertMessage) {
+        setTimeout(() => {
+            alertMessage.style.opacity = '0';
+            setTimeout(() => alertMessage.remove(), 500);
+        }, 5000);
+    }
+</script>
+{% endblock %}

@@ -21,10 +21,17 @@ from apps.properties.tasks import BNBUser
 class ThemeChoicesSerializer(serializers.ModelSerializer):
     """Serializer for theme choices"""
 
+    icon_name = serializers.SerializerMethodField()
+
     class Meta:
         model = ThemeChoices
         fields = ("id", "name", "icon_name", "created_at", "preview_link", "updated_at")
         read_only_fields = ("id", "created_at", "preview_link", "updated_at")
+
+    def get_icon_name(self, obj):
+        if not obj.icon_name:
+            return ""
+        return "".join(word.capitalize() for word in obj.icon_name.split("-"))
 
 
 class ColorSchemeChoicesSerializer(serializers.ModelSerializer):

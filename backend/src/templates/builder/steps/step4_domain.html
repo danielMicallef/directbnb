@@ -1,0 +1,29 @@
+<div class="space-y-4" x-data="{ skipDomain: {{ form.skip_domain.value|default:'false'|lower }} }">
+    <h3 class="text-xl font-bold">Add Your Domain Name</h3>
+    <p class="text-base-content/60">Pick a memorable domain for your direct booking website. We can help you register it! (Optional)</p>
+
+    <div class="form-control" x-show="!skipDomain">
+        <label class="label">
+            <span class="label-text font-medium">Domain Name</span>
+        </label>
+        {{ form.domain_name }}
+        {% if form.domain_name.help_text %}
+        <label class="label">
+            <span class="label-text-alt text-base-content/60">{{ form.domain_name.help_text }}</span>
+        </label>
+        {% endif %}
+    </div>
+
+    <div class="form-control pt-4">
+        <label class="label cursor-pointer justify-start gap-3">
+            <input
+                type="checkbox"
+                name="{{ form.skip_domain.name }}"
+                class="checkbox"
+                {% if form.skip_domain.value %}checked{% endif %}
+                x-model="skipDomain"
+            >
+            <span class="label-text">{{ form.skip_domain.label }}</span>
+        </label>
+    </div>
+</div>

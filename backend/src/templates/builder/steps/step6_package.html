@@ -1,0 +1,80 @@
+<div class="space-y-6">
+    <div class="space-y-4">
+        <h3 class="text-xl font-bold">Choose Your Package</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for choice in form.package %}
+            <label class="cursor-pointer">
+                <input type="radio" name="{{ form.package.name }}" value="{{ choice.data.value }}" class="peer sr-only" {% if choice.data.selected %}checked{% endif %}>
+                <div class="card bg-base-300 border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/50 transition-all h-full">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ choice.data.package_name|default:choice.choice_label }}</h4>
+                        {% if choice.data.package_description %}
+                        <p class="text-sm text-base-content/60">{{ choice.data.package_description }}</p>
+                        {% endif %}
+                        <div class="text-2xl font-bold text-primary mt-2">
+                            {{ choice.data.package_currency }}{{ choice.data.package_amount }}
+                        </div>
+                    </div>
+                </div>
+            </label>
+            {% endfor %}
+        </div>
+
+        {% if form.package.errors %}
+        <div class="text-error text-sm mt-2">{{ form.package.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div class="space-y-4">
+        <h3 class="text-xl font-bold">Select Hosting Plan</h3>
+
+        <div class="space-y-3">
+            {% for choice in form.hosting_plan %}
+            <label class="cursor-pointer">
+                <input type="radio" name="{{ form.hosting_plan.name }}" value="{{ choice.data.value }}" class="peer sr-only" {% if choice.data.selected %}checked{% endif %}>
+                <div class="flex mt-3 items-center justify-between p-4 border-2 border-base-300 rounded-lg peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/50 transition-all">
+                    <div class="flex items-start gap-3">
+                        <div class="radio radio-primary peer-checked:radio-checked mt-1"></div>
+                        <div>
+                            <div class="font-semibold">{{ choice.data.package_name|default:choice.choice_label }}</div>
+                            {% if choice.data.package_description %}
+                            <p class="text-sm text-base-content/60 mt-1">{{ choice.data.package_description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="font-semibold">
+                        {{ choice.data.package_currency }}{{ choice.data.package_amount }}
+                        {% if choice.data.package_frequency|default:"1" != "1" %}
+                        <span class="text-sm text-base-content/60">/{{ choice.data.package_frequency_display }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </label>
+            {% endfor %}
+        </div>
+
+        {% if form.hosting_plan.errors %}
+        <div class="text-error text-sm mt-2">{{ form.hosting_plan.errors.0 }}</div>
+        {% endif %}
+    </div>
+
+    <div class="pt-4 border-t border-base-300">
+        <h3 class="text-base font-bold mb-3">Add-ons</h3>
+
+        <div class="form-control">
+            <label class="label cursor-pointer justify-start gap-3 p-4 border-2 border-base-300 rounded-lg">
+                <input type="checkbox" name="{{ form.live_reviews.name }}" class="checkbox" {% if form.live_reviews.value %}checked{% endif %}>
+                <div class="flex-1">
+                    <span class="label-text font-semibold">{{ form.live_reviews.label }}</span>
+                    <p class="text-sm text-base-content/60 mt-1">Automatically sync reviews from booking platforms</p>
+                </div>
+                <div class="font-semibold">
+                    {% if form.addon %}
+                    +{{ form.addon.currency }}{{ form.addon.amount }}
+                    {% endif %}
+                </div>
+            </label>
+        </div>
+    </div>
+</div>

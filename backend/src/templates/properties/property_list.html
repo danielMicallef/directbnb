@@ -1,0 +1,111 @@
+{% extends "logged_in_base.html" %}
+
+{% block title %}My Properties - {{ site_name }}{% endblock %}
+
+{% block page_content %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold mb-2">My Properties</h1>
+            <p class="text-base-content/60">Manage your property listings</p>
+        </div>
+        <a href="#" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Add Property
+        </a>
+    </div>
+
+    {% if properties %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for property in properties %}
+        <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
+            {% if property.images.first %}
+            <figure class="aspect-video">
+                <img src="{{ property.images.first.url }}" alt="{{ property.title }}" class="w-full h-full object-cover" />
+            </figure>
+            {% else %}
+            <figure class="aspect-video bg-base-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-base-content/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+            </figure>
+            {% endif %}
+
+            <div class="card-body">
+                <h2 class="card-title">{{ property.title|default:"Untitled Property" }}</h2>
+
+                <div class="space-y-2 text-sm">
+                    {% if property.room_type %}
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <span class="text-base-content/80">{{ property.room_type }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if property.person_capacity %}
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span class="text-base-content/80">Up to {{ property.person_capacity }} guests</span>
+                    </div>
+                    {% endif %}
+
+                    {% if property.rating %}
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-warning" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                        </svg>
+                        <span class="text-base-content/80">{{ property.rating.guest_satisfaction|floatformat:1|default:"N/A" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="card-actions justify-end mt-4">
+                    <a href="{% url 'properties:property-detail' property.pk %}" class="btn btn-sm btn-ghost">View</a>
+                    <a href="{% url 'properties:property-update' property.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <div class="flex justify-center mt-8">
+        <div class="join">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn">«</a>
+            {% endif %}
+
+            <button class="join-item btn btn-active">Page {{ page_obj.number }}</button>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="join-item btn">»</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="card bg-base-200 shadow-xl">
+        <div class="card-body items-center text-center py-16">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-base-content/20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <h2 class="card-title text-2xl mb-2">No Properties Yet</h2>
+            <p class="text-base-content/60 mb-6">Get started by adding your first property listing</p>
+            <a href="#" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Your First Property
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

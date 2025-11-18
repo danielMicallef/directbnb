@@ -40,5 +40,6 @@ urlpatterns = [
         views.BnbPasswordResetCompleteView.as_view(),
         name="password_reset_complete",
     ),
+    path("profile/", views.ProfileUpdateView.as_view(), name="profile"),
     path("", views.HomeView.as_view(), name="home"),
 ]

@@ -1,0 +1,25 @@
+<div class="space-y-4">
+    <h3 class="text-xl font-bold">Choose Your Theme</h3>
+    <p class="text-base-content/60">Select a theme that matches your property style</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        {{ form.theme.icon_name }}
+        {% for choice in form.theme %}
+        <label class="cursor-pointer">
+            <input type="radio" name="{{ form.theme.name }}" value="{{ choice.data.value }}" class="peer sr-only" {% if choice.data.selected %}checked{% endif %}>
+            <div class="card bg-base-300 border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/50 transition-all">
+                <div class="card-body items-center text-center p-6">
+                    {% if choice.data.icon_name %}
+                        {% lucide choice.data.icon_name class="h-12 w-12 mb-3 text-primary" %}
+                    {% endif %}
+                    <span class="font-semibold">{{ choice.choice_label }}</span>
+                </div>
+            </div>
+        </label>
+        {% endfor %}
+    </div>
+
+    {% if form.theme.errors %}
+    <div class="text-error text-sm mt-2">{{ form.theme.errors.0 }}</div>
+    {% endif %}
+</div>

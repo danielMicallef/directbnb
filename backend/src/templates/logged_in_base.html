@@ -26,7 +26,7 @@
                         <li class="menu-title px-4 py-3">
                             <span class="text-sm font-medium text-base-content/60">{{ user.email }}</span>
                         </li>
-                        <li><a href="#" class="py-3 px-4 text-base">Profile</a></li>
+                        <li><a href="{% url 'users:profile' %}" class="py-3 px-4 text-base">Profile</a></li>
                         <li><a href="#" class="py-3 px-4 text-base">Settings</a></li>
                         <li class="border-t border-base-300 mt-2 pt-2">
                             <form action="{% url 'users:logout' %}" method="post" class="w-full">
@@ -62,11 +62,15 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="py-3 px-4 text-base font-medium">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        Browse Properties
+                    <a href="{% url 'properties:property-list' %}" class="py-3 px-4 text-base font-medium {% if 'properties' in request.path %}active{% endif %}">
+                        {% lucide "house-plus" class="h-5 w-h" %}
+                        My Properties
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'properties:property-list' %}" class="py-3 px-4 text-base font-medium {% if 'properties' in request.path %}active{% endif %}">
+                        {% lucide "monitor-cog" class="h-5 w-h" %}
+                        My Websites
                     </a>
                 </li>
                 <li>

@@ -1,0 +1,261 @@
+{% extends "logged_in_base.html" %}
+{% load cotton %}
+
+{% block title %}Profile - {{ site_name }}{% endblock %}
+
+{% block page_content %}
+<div class="max-w-3xl">
+    <div class="flex justify-between items-center mb-2">
+        <h1 class="text-3xl font-bold">Profile</h1>
+        <button id="editButton" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Edit
+        </button>
+    </div>
+    <p class="text-base-content/60 mb-8">View and update your personal information</p>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% else %}alert-info{% endif %} mb-6 transition-opacity duration-500" id="alertMessage">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                {% if message.tags == 'success' %}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                {% elif message.tags == 'error' %}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                {% else %}
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                {% endif %}
+            </svg>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- View Mode -->
+    <div id="viewMode" class="card bg-base-200 shadow-xl">
+        <div class="card-body">
+            <div class="space-y-6">
+                <!-- Avatar -->
+                <div class="flex items-center gap-6">
+                    <div class="avatar">
+                        <div class="w-24 h-24 rounded-full {% if not user.avatar %}bg-primary text-primary-content flex items-center justify-center{% endif %}">
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" alt="{{ user.get_full_name }}" />
+                            {% else %}
+                                <span class="text-3xl font-bold">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold">{{ user.get_full_name }}</h2>
+                        <p class="text-base-content/60">{{ user.email }}</p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Email -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div class="font-medium text-base-content/60">Email</div>
+                    <div class="md:col-span-2 font-medium">{{ user.email }}</div>
+                </div>
+
+                <!-- First Name -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div class="font-medium text-base-content/60">First Name</div>
+                    <div class="md:col-span-2">{{ user.first_name }}</div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div class="font-medium text-base-content/60">Last Name</div>
+                    <div class="md:col-span-2">{{ user.last_name }}</div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div class="font-medium text-base-content/60">Phone Number</div>
+                    <div class="md:col-span-2">{{ user.phone_number|default:"Not provided" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Mode -->
+    <div id="editMode" class="card bg-base-200 shadow-xl hidden">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Email (Read-only) -->
+                <div class="form-control">
+                    <label class="label pb-2">
+                        <span class="label-text font-medium text-base">Email</span>
+                    </label>
+                    <input
+                        type="email"
+                        value="{{ user.email }}"
+                        disabled
+                        class="input input-bordered h-12 text-base bg-base-300 cursor-not-allowed"
+                    />
+                    <label class="label pt-2">
+                        <span class="label-text-alt text-base-content/60">Email cannot be changed</span>
+                    </label>
+                </div>
+
+                <!-- First Name & Last Name (inline) -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label pb-2" for="{{ form.first_name.id_for_label }}">
+                            <span class="label-text font-medium text-base">First name *</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="{{ form.first_name.name }}"
+                            id="{{ form.first_name.id_for_label }}"
+                            value="{{ form.first_name.value|default:user.first_name }}"
+                            class="input input-bordered h-12 text-base {% if form.first_name.errors %}input-error{% endif %}"
+                            placeholder="First name"
+                            required
+                        />
+                        {% if form.first_name.errors %}
+                        <label class="label pt-2">
+                            <span class="label-text-alt text-error">{{ form.first_name.errors.0 }}</span>
+                        </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label pb-2" for="{{ form.last_name.id_for_label }}">
+                            <span class="label-text font-medium text-base">Last name *</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="{{ form.last_name.name }}"
+                            id="{{ form.last_name.id_for_label }}"
+                            value="{{ form.last_name.value|default:user.last_name }}"
+                            class="input input-bordered h-12 text-base {% if form.last_name.errors %}input-error{% endif %}"
+                            placeholder="Last name"
+                            required
+                        />
+                        {% if form.last_name.errors %}
+                        <label class="label pt-2">
+                            <span class="label-text-alt text-error">{{ form.last_name.errors.0 }}</span>
+                        </label>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-control">
+                    <label class="label pb-2" for="{{ form.phone_number.id_for_label }}">
+                        <span class="label-text font-medium text-base">Phone number</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="{{ form.phone_number.name }}"
+                        id="{{ form.phone_number.id_for_label }}"
+                        value="{{ form.phone_number.value|default:user.phone_number }}"
+                        class="input input-bordered h-12 text-base {% if form.phone_number.errors %}input-error{% endif %} w-full"
+                        placeholder="+1234567890"
+                    />
+                    {% if form.phone_number.errors %}
+                    <label class="label pt-2">
+                        <span class="label-text-alt text-error">{{ form.phone_number.errors.0 }}</span>
+                    </label>
+                    {% else %}
+                    <label class="label pt-2">
+                        <span class="label-text-alt text-base-content/60">Optional: Include country code (e.g., +1 for US)</span>
+                    </label>
+                    {% endif %}
+                </div>
+
+                <!-- Avatar -->
+                <div class="form-control">
+                    <label class="label pb-2" for="{{ form.avatar.id_for_label }}">
+                        <span class="label-text font-medium text-base">Profile picture</span>
+                    </label>
+
+                    {% if user.avatar %}
+                    <div class="mb-4 flex items-center gap-4">
+                        <div class="avatar">
+                            <div class="w-20 h-20 rounded-full">
+                                <img src="{{ user.avatar.url }}" alt="Current avatar" />
+                            </div>
+                        </div>
+                        <div class="text-sm text-base-content/60">Current profile picture</div>
+                    </div>
+                    {% endif %}
+
+                    <input
+                        type="file"
+                        name="{{ form.avatar.name }}"
+                        id="{{ form.avatar.id_for_label }}"
+                        class="file-input file-input-bordered h-12 text-base {% if form.avatar.errors %}file-input-error{% endif %} w-full"
+                        accept="image/*"
+                    />
+                    {% if form.avatar.errors %}
+                    <label class="label pt-2">
+                        <span class="label-text-alt text-error">{{ form.avatar.errors.0 }}</span>
+                    </label>
+                    {% else %}
+                    <label class="label pt-2">
+                        <span class="label-text-alt text-base-content/60">Upload a new profile picture (optional, JPG, PNG, or GIF)</span>
+                    </label>
+                    {% endif %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-4 pt-2">
+                    <button type="submit" class="btn btn-primary h-12 text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Save Changes
+                    </button>
+                    <button type="button" id="cancelButton" class="btn btn-ghost h-12 text-base">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle between view and edit modes
+    const viewMode = document.getElementById('viewMode');
+    const editMode = document.getElementById('editMode');
+    const editButton = document.getElementById('editButton');
+    const cancelButton = document.getElementById('cancelButton');
+
+    editButton.addEventListener('click', () => {
+        viewMode.classList.add('hidden');
+        editMode.classList.remove('hidden');
+    });
+
+    cancelButton.addEventListener('click', () => {
+        editMode.classList.add('hidden');
+        viewMode.classList.remove('hidden');
+    });
+
+    // Auto-dismiss success messages after 5 seconds
+    const alertMessage = document.getElementById('alertMessage');
+    if (alertMessage) {
+        setTimeout(() => {
+            alertMessage.style.opacity = '0';
+            setTimeout(() => {
+                alertMessage.remove();
+            }, 500); // Wait for fade out animation
+        }, 5000);
+    }
+
+    // If there are form errors, show edit mode by default
+    {% if form.errors %}
+        viewMode.classList.add('hidden');
+        editMode.classList.remove('hidden');
+    {% endif %}
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+<div class="space-y-4">
+    <h3 class="text-xl font-bold">Your Contact Details</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text font-medium">First Name *</span>
+            </label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+            <label class="label">
+                <span class="label-text-alt text-error">{{ form.first_name.errors.0 }}</span>
+            </label>
+            {% endif %}
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text font-medium">Last Name *</span>
+            </label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+            <label class="label">
+                <span class="label-text-alt text-error">{{ form.last_name.errors.0 }}</span>
+            </label>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text font-medium">Email *</span>
+        </label>
+        {{ form.email }}
+        {% if form.email.errors %}
+        <label class="label">
+            <span class="label-text-alt text-error">{{ form.email.errors.0 }}</span>
+        </label>
+        {% endif %}
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text font-medium">Phone Number *</span>
+        </label>
+        {{ form.phone }}
+        {% if form.phone.errors %}
+        <label class="label">
+            <span class="label-text-alt text-error">{{ form.phone.errors.0 }}</span>
+        </label>
+        {% endif %}
+    </div>
+
+    {{ form.confirm_email }}
+</div>

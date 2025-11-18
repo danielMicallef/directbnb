@@ -12,7 +12,18 @@
     <p class="py-6">
         Let's get your commission-free booking website live in just a few steps.
     </p>
-    <progress class="progress progress-accent w-full" value="70" max="100"></progress>
-    <p className="text-sm text-indigo-100"> 7 of 10 steps completed (70%)</p>
+
+    <a href="{% url 'builder:wizard' %}" class="btn btn-primary btn-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        Start Building Your Website
+    </a>
+
+    <div class="mt-8 text-sm text-base-content/60">
+        <p>✓ No commission fees</p>
+        <p>✓ Professional templates</p>
+        <p>✓ Setup in minutes</p>
+    </div>
 </c-ui.hero>
 {% endblock %}
