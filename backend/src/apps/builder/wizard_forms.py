@@ -35,10 +35,11 @@ class ColorSchemeRadioSelect(RadioSelect):
         # Add the color scheme theme_colors to the option context
         if value:
             try:
-                color_scheme = ColorSchemeChoices.objects.get(pk=value)
+                color_scheme = value.instance
                 option["theme_colors"] = color_scheme.theme_colors
-            except (ColorSchemeChoices.DoesNotExist, ValueError, TypeError):
+            except (ColorSchemeChoices.DoesNotExist, ValueError, TypeError, AttributeError):
                 option["theme_colors"] = []
+
         return option
 
     def optgroups(self, name, value, attrs=None):
@@ -47,13 +48,18 @@ class ColorSchemeRadioSelect(RadioSelect):
         # Enhance each option with theme_colors
         for group_name, options, index in groups:
             for option in options:
-                if option.get("value"):
+                option_value = option.get("value")
+                if option_value:
                     try:
-                        color_scheme = ColorSchemeChoices.objects.get(
-                            pk=option["value"]
-                        )
+                        # Extract the actual PK value from ModelChoiceIteratorValue
+                        if hasattr(option_value, 'value'):
+                            pk = option_value.value
+                        else:
+                            pk = option_value
+                        
+                        color_scheme = ColorSchemeChoices.objects.get(pk=pk)
                         option["theme_colors"] = color_scheme.theme_colors
-                    except (ColorSchemeChoices.DoesNotExist, ValueError, TypeError):
+                    except (ColorSchemeChoices.DoesNotExist, ValueError, TypeError, AttributeError):
                         option["theme_colors"] = []
         return groups
 
