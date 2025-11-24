@@ -8,19 +8,7 @@
     <div class="max-w-4xl mx-auto" x-data="wizardData()">
         <div class="card bg-base-200 shadow-xl">
             <div class="card-body">
-                <!-- Header -->
-                <div class="mb-6">
-                    <h2 class="card-title text-2xl">Create Your Direct Booking Website</h2>
-                    <p class="text-base-content/60 mt-2">Step {{ step }} of {{ total_steps }}</p>
 
-                    <!-- Progress Bar -->
-                    <div class="w-full bg-base-300 rounded-full h-3 mt-4">
-                        <div
-                            class="bg-primary h-3 rounded-full transition-all duration-300"
-                            :style="`width: ${({{ step }} / {{ total_steps }}) * 100}%`"
-                        ></div>
-                    </div>
-                </div>
 
                 <!-- Wizard Content -->
                 <div

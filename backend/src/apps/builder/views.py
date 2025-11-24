@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -366,7 +366,13 @@ class BookingWizardView(View):
             request.session.pop("wizard_data", None)
             request.session.pop("wizard_step", None)
 
-            # Redirect to Stripe checkout
+            # Handle HTMX requests with HX-Redirect header
+            if request.headers.get("HX-Request"):
+                response = HttpResponse(status=200)
+                response["HX-Redirect"] = checkout_session.url
+                return response
+
+            # Regular redirect for non-HTMX requests
             return HttpResponseRedirect(checkout_session.url)
 
         except Exception as e:
