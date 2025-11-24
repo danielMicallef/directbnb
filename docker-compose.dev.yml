@@ -47,6 +47,7 @@ services:
       - web_network
     depends_on:
       - db
+      - vite
     environment:
       SITE_URL: ${SITE_URL:-http://localhost:8001}
       POSTGRES_HOST: ${POSTGRES_HOST:-db}
@@ -55,7 +56,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      DJANGO_DEBUG: ${DJANGO_DEBUG:-False}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
       DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000,http://localhost:8081}
       USE_S3: ${USE_S3:-False}
@@ -63,6 +64,21 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME}
       AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
+
+  vite:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+      target: base
+    command: bun run dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - "./backend/src/static:/app/src/static"
+      - "./backend/vite.config.ts:/app/vite.config.ts"
+      - "./backend/tailwind.config.js:/app/tailwind.config.js"
+    networks:
+      - web_network
 
   mailcatcher:
     image: schickling/mailcatcher

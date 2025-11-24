@@ -422,9 +422,6 @@ class StripeWebhookView(APIView):
             stripe_webhook.completed_at = datetime.now()
             stripe_webhook.processed_successfully = updated
         except Exception as e:
-            import pdb
-
-            pdb.set_trace()
             logger.error(
                 f"Unable to process Stripe webhook event. Data: {stripe_event.model_dump()}. Error: {e}"
             )

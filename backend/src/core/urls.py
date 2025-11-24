@@ -19,10 +19,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 from apps.users import api_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.png")),
     # API endpoints
     path("api/auth/", include("apps.users.api_urls")),
     path("api/builder/", include("apps.builder.api_urls")),

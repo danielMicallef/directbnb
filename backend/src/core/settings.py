@@ -32,17 +32,17 @@ DEBUG = os.getenv("DJANGO_DEBUG", "True")
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 
-# CORS Settings
-CORS_ALLOWED_ORIGINS_ENV = os.getenv(
-    "CORS_ALLOWED_ORIGINS",
-    "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000,http://127.0.0.1:8081",
-)
-CORS_ALLOWED_ORIGINS = [
-    origin.strip() for origin in CORS_ALLOWED_ORIGINS_ENV.split(",") if origin.strip()
-]
-
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
+else:
+    # CORS Settings
+    CORS_ALLOWED_ORIGINS_ENV = os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000,http://127.0.0.1:8081",
+    )
+    CORS_ALLOWED_ORIGINS = [
+        origin.strip() for origin in CORS_ALLOWED_ORIGINS_ENV.split(",") if origin.strip()
+    ]
 
 # Allow credentials (cookies, authorization headers, etc.)
 CORS_ALLOW_CREDENTIALS = True
@@ -352,4 +352,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Static files directories
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static", "dist"),
+    os.path.join(BASE_DIR, "static"),
 ]
