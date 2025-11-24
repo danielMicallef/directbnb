@@ -2,12 +2,14 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 from core.models import AbstractTrackedModel
+from apps.builder.models import LeadRegistration
 
 BNBUser = get_user_model()
 
 
 class Property(AbstractTrackedModel):
-    owner = models.ForeignKey(BNBUser, on_delete=models.CASCADE)
+    owner = models.ForeignKey(BNBUser, on_delete=models.CASCADE, null=True, blank=True)
+    lead = models.ForeignKey(LeadRegistration, on_delete=models.CASCADE, null=True, blank=True)
     room_type = models.CharField(max_length=255, null=True, blank=True)
     is_super_host = models.BooleanField(default=False)
     home_tier = models.IntegerField(null=True, blank=True)
@@ -106,7 +108,8 @@ class Image(AbstractTrackedModel):
         Property, on_delete=models.CASCADE, related_name="images"
     )
     title = models.CharField(max_length=255)
-    url = models.URLField()
+    url = models.URLField(blank=True, null=True)  # Keep for reference
+    image = models.ImageField(upload_to="property_images/", blank=True, null=True)
 
 
 class LocationDescription(AbstractTrackedModel):

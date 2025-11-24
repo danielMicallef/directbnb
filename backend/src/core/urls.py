@@ -28,7 +28,7 @@ urlpatterns = [
     # API endpoints
     path("api/auth/", include("apps.users.api_urls")),
     path("api/builder/", include("apps.builder.api_urls")),
-    path("api/properties/", include("apps.properties.urls")),
+    path("api/properties/", include("apps.properties.api_urls")),
     path("api/schema/", api_views.ProtectedSpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",
