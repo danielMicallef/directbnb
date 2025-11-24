@@ -1,9 +1,14 @@
+import uuid
+import requests
+from io import BytesIO
+
 from pyairbnb import details
 
 from celery import shared_task
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
 
 from .models import (
     Property,
@@ -25,6 +30,35 @@ from .models import (
 BNBUser = get_user_model()
 
 
+def download_image_from_url(image_url: str, property_id: int, index: int) -> ContentFile:
+    """
+    Download image from URL and return ContentFile.
+    
+    Args:
+        image_url: URL of the image to download
+        property_id: ID of the property (for filename)
+        index: Index of the image (for filename)
+    
+    Returns:
+        ContentFile containing the image data
+    """
+    try:
+        response = requests.get(image_url, timeout=30)
+        response.raise_for_status()
+        
+        # Extract extension from URL or default to jpg
+        ext = image_url.split('.')[-1].split('?')[0].lower()
+        if ext not in ['jpg', 'jpeg', 'png', 'gif', 'webp']:
+            ext = 'jpg'
+        
+        filename = f"property_{property_id}_image_{index}.{ext}"
+        return ContentFile(response.content, name=filename)
+    except Exception as e:
+        # Log error but don't fail the entire task
+        print(f"Failed to download image from {image_url}: {e}")
+        return None
+
+
 def get_airbnb_data_from_url(room_url: str, proxy_url: str = ""):
     if not proxy_url:
         proxy_url = settings.SCRAPE_PROXY_URL
@@ -35,7 +69,7 @@ def get_airbnb_data_from_url(room_url: str, proxy_url: str = ""):
     return data
 
 
-def save_property_data(data: dict, owner_id: int) -> Property:
+def save_property_data(data: dict, owner_id: int, lead_id: uuid.UUID) -> Property:
     """
     Save scraped Airbnb data to the database.
 
@@ -46,11 +80,16 @@ def save_property_data(data: dict, owner_id: int) -> Property:
     Returns:
         Property instance
     """
-    owner = BNBUser.objects.get(id=owner_id)
+    owner = BNBUser.objects.filter(id=owner_id).first()
+    lead = LeadRegistration.objects.filter(id=lead_id).first()
+    
+    if not lead or owner:
+        raise ValueError("Lead or owner not found")
 
     # Create main property
     property_obj = Property.objects.create(
         owner=owner,
+        lead=lead,
         room_type=data.get("room_type"),
         is_super_host=data.get("is_super_host", False),
         home_tier=data.get("home_tier"),
@@ -139,12 +178,19 @@ def save_property_data(data: dict, owner_id: int) -> Property:
             )
 
     # Create images
-    for image in data.get("images", []):
-        Image.objects.create(
+    for idx, image in enumerate(data.get("images", [])):
+        image_url = image.get("url")
+        image_obj = Image.objects.create(
             property=property_obj,
             title=image.get("title"),
-            url=image.get("url"),
+            url=image_url,
         )
+        
+        # Download and save the image
+        if image_url:
+            image_file = download_image_from_url(image_url, property_obj.id, idx)
+            if image_file:
+                image_obj.image.save(image_file.name, image_file, save=True)
 
     # Create location descriptions
     for loc_desc in data.get("location_descriptions", []):
@@ -175,7 +221,7 @@ def save_property_data(data: dict, owner_id: int) -> Property:
 
 
 @shared_task(bind=True, max_retries=3)
-def scrape_airbnb_listing(self, listing_url: str, owner_id: int):
+def scrape_airbnb_listing(self, listing_url: str, owner_id: int = None, lead_id: uuid.UUID = None):
     """
     Celery task to scrape an Airbnb listing and save it to the database.
 
@@ -185,7 +231,7 @@ def scrape_airbnb_listing(self, listing_url: str, owner_id: int):
     """
     try:
         data = get_airbnb_data_from_url(listing_url)
-        property_obj = save_property_data(data, owner_id)
+        property_obj = save_property_data(data, owner_id, lead_id)
         return {"success": True, "property_id": property_obj.id}
     except Exception as exc:
         raise self.retry(exc=exc, countdown=60)
