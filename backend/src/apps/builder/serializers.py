@@ -121,8 +121,6 @@ class WebsiteCreateUpdateSerializer(serializers.ModelSerializer):
         fields = (
             "theme",
             "color_scheme",
-            "airbnb_listing_url",
-            "booking_listing_url",
             "domain_name",
         )
 
