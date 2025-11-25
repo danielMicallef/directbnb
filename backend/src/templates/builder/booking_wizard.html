@@ -41,6 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 5000);
     });
 });
+
+// Handle HX-Redirect header for Stripe checkout
+document.body.addEventListener('htmx:beforeSwap', function(evt) {
+    if (evt.detail.xhr.getResponseHeader('HX-Redirect')) {
+        const redirectUrl = evt.detail.xhr.getResponseHeader('HX-Redirect');
+        window.location.href = redirectUrl;
+        evt.detail.shouldSwap = false; // Prevent HTMX from swapping content
+    }
+});
 </script>
 
 {% endblock %}
+

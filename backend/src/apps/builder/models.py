@@ -386,19 +386,24 @@ class LeadRegistration(AbstractTrackedModel):
         )
 
         success_url = reverse(
-            "builder:checkout_success", client_registration_id=self.id
+            "builder:checkout_success", kwargs={"pk": self.id}
         )
         cancel_url = reverse(
-            "builder:checkout_cancelled", client_registration_id=self.id
+            "builder:checkout_cancelled", kwargs={"pk": self.id}
         )
+        
+        # Build full URLs
+        full_success_url = f"{settings.SITE_URL}{success_url}"
+        full_cancel_url = f"{settings.SITE_URL}{cancel_url}"
+        
         try:
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
                 line_items=line_items,
                 mode="payment",
                 client_reference_id=str(self.id),
-                success_url=settings.SITE_URL + "/success/",
-                cancel_url=settings.SITE_URL + "/cancel/",
+                success_url=full_success_url,
+                cancel_url=full_cancel_url,
             )
             logger.info(
                 f"Created checkout session {checkout_session.id} for lead {self.id}"
