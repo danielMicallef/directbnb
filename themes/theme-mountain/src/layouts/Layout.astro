@@ -1,22 +1,84 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+const { 
+  title = 'Welcome to Your Perfect Getaway',
+  description = 'Experience the ultimate vacation at our beautiful property' 
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="mountain">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="drawer">
+      <input id="nav-drawer" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-content flex flex-col">
+        <!-- Navbar -->
+        <nav class="navbar bg-base-100 shadow-lg sticky top-0 z-50">
+          <div class="flex-none lg:hidden">
+            <label for="nav-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </label>
+          </div>
+          <div class="flex-1 px-2 mx-2">
+            <a href="/" class="text-xl font-bold text-primary">Mountain Retreat</a>
+          </div>
+          <div class="flex-none hidden lg:block">
+            <ul class="menu menu-horizontal px-1">
+              <li><a href="/">Home</a></li>
+              <li><a href="/gallery">Gallery</a></li>
+              <li><a href="/articles">Blog</a></li>
+              <li><a href="/contact">Contact</a></li>
+            </ul>
+            <a href="#book-now" class="btn btn-primary btn-sm ml-2">Book Now</a>
+          </div>
+        </nav>
+
+        <!-- Page content -->
+        <main class="min-h-screen">
+          <slot />
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer footer-center p-10 bg-base-200 text-base-content">
+          <aside>
+            <p class="font-bold text-lg">Your Perfect Mountain Getaway</p>
+            <p>© 2025 - All rights reserved</p>
+          </aside>
+          <nav>
+            <div class="grid grid-flow-col gap-4">
+              <a href="#" class="link link-hover">Contact</a>
+              <a href="#" class="link link-hover">Terms</a>
+              <a href="#" class="link link-hover">Privacy</a>
+            </div>
+          </nav>
+        </footer>
+      </div>
+
+      <!-- Sidebar (mobile) -->
+      <div class="drawer-side z-[60]">
+        <label for="nav-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+        <ul class="menu p-4 w-80 min-h-full bg-base-200">
+          <li><a href="/">Home</a></li>
+          <li><a href="/gallery">Gallery</a></li>
+          <li><a href="/articles">Blog</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="#book-now" class="btn btn-primary mt-4">Book Now</a></li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  icon?: string;
+}
+
+const { title, subtitle, icon } = Astro.props;
+---
+
+<div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+  <div class="card-body items-center text-center">
+    {icon && (
+      <div class="text-4xl mb-4">
+        {icon}
+      </div>
+    )}
+    <h3 class="card-title text-primary">{title}</h3>
+    <p>{subtitle}</p>
+  </div>
+</div>

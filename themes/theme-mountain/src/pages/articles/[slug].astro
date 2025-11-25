@@ -1,0 +1,180 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BookingCTA from '../../components/BookingCTA.astro';
+
+// Generate static paths at build time
+export async function getStaticPaths() {
+  // TODO: Replace with actual API call
+  // const response = await fetch(`${API_URL}/api/properties/articles/`);
+  // const articles = await response.json();
+  
+  const articles = [
+    {
+      slug: "top-hiking-trails",
+      title: "Top 10 Hiking Trails Near Mountain Retreat",
+      subtitle: "Discover the best trails for all skill levels in our beautiful mountain region",
+      readTime: 8,
+      tags: ["hiking", "outdoors", "adventure"],
+      publishedAt: "2025-01-15",
+      featuredImage: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200",
+      content: `
+        <p class="lead text-xl mb-6">
+          Whether you're an experienced hiker or just starting out, our mountain region offers an incredible variety of trails with stunning views and diverse terrain.
+        </p>
+
+        <h2 class="text-3xl font-bold mt-8 mb-4">1. Summit Peak Trail</h2>
+        <p class="mb-4">
+          This challenging 6-mile trail rewards hikers with panoramic views of the entire valley. Best tackled early in the day when the air is crisp and clear.
+        </p>
+
+        <h2 class="text-3xl font-bold mt-8 mb-4">2. Meadow Loop</h2>
+        <p class="mb-4">
+          A family-friendly 2-mile loop through wildflower meadows. Perfect for beginners and those looking for a leisurely afternoon walk.
+        </p>
+
+        <h2 class="text-3xl font-bold mt-8 mb-4">3. Waterfall Canyon</h2>
+        <p class="mb-4">
+          Follow the crystal-clear stream to a spectacular 50-foot waterfall. Moderate difficulty, 4 miles round trip.
+        </p>
+
+        <div class="alert alert-info mt-8 mb-8">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Always carry plenty of water, wear appropriate footwear, and let someone know your hiking plans!</span>
+        </div>
+
+        <h2 class="text-3xl font-bold mt-8 mb-4">Trail Maps & Resources</h2>
+        <p class="mb-4">
+          Stop by our property to grab free trail maps and updated conditions. We're always happy to provide recommendations based on your skill level and interests.
+        </p>
+      `
+    },
+    {
+      slug: "winter-activities",
+      title: "Winter Activities Guide",
+      subtitle: "Make the most of your winter getaway",
+      readTime: 6,
+      tags: ["winter", "skiing", "family"],
+      publishedAt: "2025-01-10",
+      featuredImage: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200",
+      content: `
+        <p class="lead text-xl mb-6">
+          Winter brings a magical transformation to our mountain region, offering countless activities for adventure seekers and relaxation enthusiasts alike.
+        </p>
+
+        <h2 class="text-3xl font-bold mt-8 mb-4">Skiing & Snowboarding</h2>
+        <p class="mb-4">
+          Just 15 minutes away, our local ski resort offers world-class slopes for all skill levels.
+        </p>
+      `
+    },
+    {
+      slug: "local-restaurants",
+      title: "Local Restaurant Recommendations",
+      subtitle: "The best dining experiences in the area",
+      readTime: 5,
+      tags: ["food", "dining", "local"],
+      publishedAt: "2025-01-05",
+      featuredImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200",
+      content: `
+        <p class="lead text-xl mb-6">
+          Discover the culinary delights that make our mountain region a food lover's paradise.
+        </p>
+
+        <h2 class="text-3xl font-bold mt-8 mb-4">Farm-to-Table Excellence</h2>
+        <p class="mb-4">
+          Experience fresh, locally-sourced ingredients prepared by award-winning chefs.
+        </p>
+      `
+    }
+  ];
+
+  return articles.map(article => ({
+    params: { slug: article.slug },
+    props: { article }
+  }));
+}
+
+const { article } = Astro.props;
+---
+
+<Layout title={article.title}>
+  <!-- Article Header -->
+  <div class="relative h-96 bg-cover bg-center" style={`background-image: url(${article.featuredImage})`}>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-black/70"></div>
+    <div class="relative container mx-auto px-4 h-full flex items-center justify-center text-center">
+      <div class="max-w-4xl text-white">
+        <h1 class="text-5xl font-bold mb-4">{article.title}</h1>
+        <p class="text-xl mb-6">{article.subtitle}</p>
+        <div class="flex items-center justify-center gap-6 text-sm opacity-90">
+          <span>{new Date(article.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          <span>•</span>
+          <span>{article.readTime} min read</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article Content -->
+  <article class="container mx-auto px-4 py-16 max-w-3xl">
+    <!-- Tags -->
+    <div class="flex gap-2 mb-8">
+      {article.tags.map(tag => (
+        <div class="badge badge-primary badge-lg">{tag}</div>
+      ))}
+    </div>
+
+    <!-- Content -->
+    <div class="prose prose-lg max-w-none" set:html={article.content} />
+
+    <!-- Share Section -->
+    <div class="divider my-12"></div>
+    <div class="text-center">
+      <p class="text-lg font-semibold mb-4">Enjoyed this article?</p>
+      <div class="flex gap-4 justify-center">
+        <button class="btn btn-circle btn-outline">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </button>
+        <button class="btn btn-circle btn-outline">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </article>
+
+  <!-- CTA -->
+  <BookingCTA 
+    title="Ready to explore these trails?" 
+    message="Book your stay and start your mountain adventure"
+  />
+
+  <!-- Related Articles -->
+  <section class="bg-base-200 py-16 px-4">
+    <div class="container mx-auto max-w-6xl">
+      <h2 class="text-3xl font-bold text-center mb-12">More Articles You Might Like</h2>
+      <div class="text-center opacity-50">
+        <p>Check out our <a href="/articles" class="link link-primary">articles page</a> for more guides and tips!</p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .prose {
+    @apply text-base-content;
+  }
+  .prose h2 {
+    @apply text-primary;
+  }
+  .prose p {
+    @apply text-base-content/80 leading-relaxed;
+  }
+  .lead {
+    @apply text-primary/90 font-medium;
+  }
+</style>

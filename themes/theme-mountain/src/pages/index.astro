@@ -1,11 +1,118 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import HighlightCard from '../components/HighlightCard.astro';
+import AttractionCard from '../components/AttractionCard.astro';
+import BookingCTA from '../components/BookingCTA.astro';
+import Button from '../components/Button.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// TODO: Replace with actual API call or JSON import
+const property = {
+  title: "Mountain Retreat",
+  description: "Experience the perfect mountain getaway in this stunning property with breathtaking views, modern amenities, and easy access to local attractions.",
+  mainImage: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200",
+  highlights: [
+    { title: "Mountain Views", subtitle: "Panoramic vistas from every room", icon: "⛰️" },
+    { title: "Modern Kitchen", subtitle: "Fully equipped with premium appliances", icon: "🍳" },
+    { title: "Hot Tub", subtitle: "Relax under the stars", icon: "♨️" },
+    { title: "Fire Pit", subtitle: "Perfect for evenings", icon: "🔥" },
+  ],
+  attractions: [
+    {
+      name: "Mountain Peak Trail",
+      description: "Scenic hiking trail with stunning views",
+      distance: "2 km away",
+      category: "Hiking",
+      imageSrc: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=400",
+      mapsUrl: "#"
+    },
+    {
+      name: "Local Bistro",
+      description: "Award-winning farm-to-table restaurant",
+      distance: "5 min drive",
+      category: "Restaurant",
+      imageSrc: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400",
+      mapsUrl: "#"
+    },
+    {
+      name: "Ski Resort",
+      description: "World-class skiing and snowboarding",
+      distance: "15 min drive",
+      category: "Sports",
+      imageSrc: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400",
+      mapsUrl: "#"
+    },
+  ]
+};
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={property.title} description={property.description}>
+  <!-- Hero Section -->
+  <Hero imageSrc={property.mainImage} title={property.title} subtitle={property.description}>
+    <Button slot="actions" href="#book-now" variant="primary" size="lg">
+      Book Your Stay
+    </Button>
+    <Button slot="actions" href="/gallery" variant="secondary" size="lg">
+      View Gallery
+    </Button>
+  </Hero>
+
+  <!-- Highlights Section -->
+  <section class="py-16 px-4 bg-base-200">
+    <div class="container mx-auto max-w-6xl">
+      <h2 class="text-4xl font-bold text-center mb-12">Property Highlights</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {property.highlights.map(highlight => (
+          <HighlightCard 
+            title={highlight.title}
+            subtitle={highlight.subtitle}
+            icon={highlight.icon}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Description Section -->
+  <section class="py-16 px-4">
+    <div class="container mx-auto max-w-4xl">
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div>
+          <h2 class="text-3xl font-bold mb-6">About the Property</h2>
+          <p class="text-lg mb-4 leading-relaxed">
+            {property.description}
+          </p>
+          <p class="text-lg mb-6 leading-relaxed">
+            Perfect for families, couples, or groups looking for a peaceful mountain escape with all the comforts of home and more.
+          </p>
+          <Button href="/gallery" variant="primary">
+            See More Photos
+          </Button>
+        </div>
+        <div class="rounded-lg overflow-hidden shadow-xl">
+          <img 
+            src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600" 
+            alt="Property interior" 
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discover Location Section -->
+  <section class="py-16 px-4 bg-base-200">
+    <div class="container mx-auto max-w-6xl">
+      <h2 class="text-4xl font-bold text-center mb-4">Discover the Area</h2>
+      <p class="text-center text-lg mb-12 opacity-75">Explore amazing attractions near the property</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {property.attractions.map(attraction => (
+          <AttractionCard {...attraction} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking CTA -->
+  <BookingCTA />
 </Layout>

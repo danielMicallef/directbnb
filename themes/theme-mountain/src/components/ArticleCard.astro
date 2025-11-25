@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  slug: string;
+  readTime: number;
+  tags: string[];
+  featuredImage?: string;
+}
+
+const { title, subtitle, slug, readTime, tags, featuredImage } = Astro.props;
+---
+
+<a href={`/articles/${slug}`} class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer">
+  {featuredImage && (
+    <figure class="h-48 overflow-hidden">
+      <img src={featuredImage} alt={title} class="w-full h-full object-cover hover:scale-105 transition-transform" />
+    </figure>
+  )}
+  <div class="card-body">
+    <h2 class="card-title">{title}</h2>
+    <p class="text-sm opacity-75">{subtitle}</p>
+    <div class="flex items-center gap-2 text-sm opacity-60 my-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{readTime} min read</span>
+    </div>
+    <div class="card-actions justify-between items-center">
+      <div class="flex gap-2 flex-wrap">
+        {tags.slice(0, 3).map(tag => (
+          <div class="badge badge-outline badge-sm">{tag}</div>
+        ))}
+      </div>
+      <button class="btn btn-ghost btn-sm">Read more →</button>
+    </div>
+  </div>
+</a>

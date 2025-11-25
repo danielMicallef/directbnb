@@ -1,0 +1,25 @@
+---
+interface Props {
+  title?: string;
+  message?: string;
+  ctaText?: string;
+  ctaHref?: string;
+}
+
+const { 
+  title = 'Ready to Book Your Stay?',
+  message = 'Experience the perfect getaway at our beautiful property',
+  ctaText = 'Book Now',
+  ctaHref = '#contact'
+} = Astro.props;
+---
+
+<div class="bg-primary text-primary-content py-16 px-4">
+  <div class="container mx-auto max-w-4xl text-center">
+    <h2 class="text-4xl font-bold mb-4">{title}</h2>
+    <p class="text-xl mb-8 opacity-90">{message}</p>
+    <a href={ctaHref} class="btn btn-secondary btn-lg">
+      {ctaText}
+    </a>
+  </div>
+</div>

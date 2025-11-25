@@ -1,0 +1,108 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BookingCTA from '../components/BookingCTA.astro';
+
+// TODO: Replace with actual API call or JSON import
+const images = [
+  { id: 1, src: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800", title: "Mountain View" },
+  { id: 2, src: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800", title: "Living Room" },
+  { id: 3, src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800", title: "Bedroom" },
+  { id: 4, src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800", title: "Kitchen" },
+  { id: 5, src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800", title: "Bathroom" },
+  { id: 6, src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800", title: "Patio" },
+  { id: 7, src: "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800", title: "Exterior" },
+  { id: 8, src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800", title: "Dining Area" },
+];
+---
+
+<Layout title="Photo Gallery - Mountain Retreat">
+  <div class="container mx-auto px-4 py-16">
+    <h1 class="text-5xl font-bold text-center mb-4">Photo Gallery</h1>
+    <p class="text-center text-lg mb-12 opacity-75">Explore our beautiful property through these stunning photos</p>
+
+    <!-- Image Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {images.map(image => (
+        <div class="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer hover:shadow-2xl transition-shadow">
+          <img 
+            src={image.src} 
+            alt={image.title}
+            class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+            onclick={`openLightbox(${image.id})`}
+          />
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <p class="text-white font-semibold">{image.title}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Lightbox Modal -->
+    <dialog id="lightbox-modal" class="modal">
+      <div class="modal-box w-11/12 max-w-5xl p-0 bg-transparent">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-white z-10">✕</button>
+        </form>
+        <div class="relative">
+          <img id="lightbox-image" src="" alt="" class="w-full h-auto max-h-[80vh] object-contain" />
+          <button 
+            id="prev-btn" 
+            class="btn btn-circle btn-ghost absolute left-2 top-1/2 -translate-y-1/2 text-white hover:bg-black/30"
+          >
+            ❮
+          </button>
+          <button 
+            id="next-btn" 
+            class="btn btn-circle btn-ghost absolute right-2 top-1/2 -translate-y-1/2 text-white hover:bg-black/30"
+          >
+            ❯
+          </button>
+        </div>
+        <p id="lightbox-title" class="text-center text-white mt-4 text-lg"></p>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+  </div>
+
+  <BookingCTA />
+</Layout>
+
+<script define:vars={{ images }}>
+  let currentIndex = 0;
+  const modal = document.getElementById('lightbox-modal');
+  const image = document.getElementById('lightbox-image');
+  const title = document.getElementById('lightbox-title');
+
+  window.openLightbox = function(imageId) {
+    currentIndex = images.findIndex(img => img.id === imageId);
+    showImage(currentIndex);
+    modal.showModal();
+  };
+
+  function showImage(index) {
+    if (index < 0) index = images.length - 1;
+    if (index >= images.length) index = 0;
+    currentIndex = index;
+    
+    image.src = images[index].src;
+    title.textContent = images[index].title;
+  }
+
+  document.getElementById('prev-btn').addEventListener('click', () => {
+    showImage(currentIndex - 1);
+  });
+
+  document.getElementById('next-btn').addEventListener('click', () => {
+    showImage(currentIndex + 1);
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (modal.open) {
+      if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+      if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+    }
+  });
+</script>
