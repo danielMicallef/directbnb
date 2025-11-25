@@ -232,6 +232,12 @@ def scrape_airbnb_listing(self, listing_url: str, owner_id: int = None, lead_id:
     try:
         data = get_airbnb_data_from_url(listing_url)
         property_obj = save_property_data(data, owner_id, lead_id)
+        
+        # Chain the build and deploy task if lead_id is provided
+        if lead_id:
+            from apps.builder.tasks import build_and_deploy_site
+            build_and_deploy_site.delay(property_obj.id, str(lead_id))
+        
         return {"success": True, "property_id": property_obj.id}
     except Exception as exc:
         raise self.retry(exc=exc, countdown=60)

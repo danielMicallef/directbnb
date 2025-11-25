@@ -354,3 +354,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static", "dist"),
     os.path.join(BASE_DIR, "static"),
 ]
+
+# Cloudflare Pages Configuration
+CLOUDFLARE_ACCOUNT_ID = os.getenv("CLOUDFLARE_ACCOUNT_ID")
+CLOUDFLARE_API_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN")
+

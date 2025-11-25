@@ -92,6 +92,9 @@ class Amenity(AbstractTrackedModel):
     )
     title = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name_plural = "Amenities"
+
 
 class AmenityValue(AbstractTrackedModel):
     amenity = models.ForeignKey(
