@@ -72,21 +72,15 @@ class PackageRadioSelect(RadioSelect):
         for group_name, options, index in groups:
             for option in options:
                 if option.get("value"):
-                    try:
-                        package = Package.objects.get(pk=option["value"])
-                        option["package_name"] = package.name
-                        option["package_description"] = package.description
-                        option["package_amount"] = str(package.amount)
-                        option["package_currency"] = package.currency
-                        option["package_frequency"] = package.frequency
-                        option["package_frequency_display"] = (
-                            package.get_frequency_display()
-                        )
-                    except (Package.DoesNotExist, ValueError, TypeError):
-                        option["package_name"] = option.get("label", "")
-                        option["package_description"] = ""
-                        option["package_amount"] = "0"
-                        option["package_currency"] = "EUR"
+                    package = option.get("value").instance
+                    option["package_name"] = package.name
+                    option["package_description"] = package.description
+                    option["package_amount"] = str(package.amount)
+                    option["package_currency"] = package.get_currency_symbol()
+                    option["package_frequency"] = package.frequency
+                    option["package_frequency_display"] = (
+                        package.get_frequency_display()
+                    )
         return groups
 
 

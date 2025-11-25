@@ -32,10 +32,9 @@
         <div class="space-y-3">
             {% for choice in form.hosting_plan %}
             <label class="cursor-pointer">
-                <input type="radio" name="{{ form.hosting_plan.name }}" value="{{ choice.data.value }}" class="peer sr-only" {% if choice.data.selected %}checked{% endif %}>
-                <div class="flex mt-3 items-center justify-between p-4 border-2 border-base-300 rounded-lg peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/50 transition-all">
+                <div class="flex mt-3 items-center justify-between p-4 border-2 border-base-300 rounded-lg has-[:checked]:border-primary has-[:checked]:bg-primary/5 hover:border-primary/50 transition-all">
                     <div class="flex items-start gap-3">
-                        <div class="radio radio-primary peer-checked:radio-checked mt-1"></div>
+                        <input type="radio" name="{{ form.hosting_plan.name }}" value="{{ choice.data.value }}" class="radio radio-primary mt-1" {% if choice.data.selected %}checked{% endif %}>
                         <div>
                             <div class="font-semibold">{{ choice.data.package_name|default:choice.choice_label }}</div>
                             {% if choice.data.package_description %}
@@ -43,10 +42,14 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="font-semibold">
-                        {{ choice.data.package_currency }}{{ choice.data.package_amount }}
+                    <div class="text-right">
+                        <div class="font-semibold">
+                            {{ choice.data.package_currency }}{{ choice.data.package_amount }}
+                        </div>
                         {% if choice.data.package_frequency|default:"1" != "1" %}
-                        <span class="text-sm text-base-content/60">/{{ choice.data.package_frequency_display }}</span>
+                        <div class="text-xs text-base-content/60">
+                            {{ choice.data.package_frequency_display }}
+                        </div>
                         {% endif %}
                     </div>
                 </div>

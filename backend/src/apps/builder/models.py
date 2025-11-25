@@ -116,6 +116,10 @@ class Package(AbstractTrackedModel):
     def __str__(self):
         return f"{self.name}, {self.frequency} payments"
 
+    def get_currency_symbol(self):
+        from apps.builder.utils import CURRENCY_SYMBOLS
+        return CURRENCY_SYMBOLS.get(self.currency, self.currency)
+
     def get_frequency_days(self):
         if self.frequency == self.Frequency.ONE_TIME:
             return None
