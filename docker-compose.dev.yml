@@ -1,3 +1,20 @@
+# Common environment variables shared across Django services
+x-common-env: &common-env
+  POSTGRES_HOST: ${POSTGRES_HOST:-db}
+  POSTGRES_DB: ${POSTGRES_DB:-postgres}
+  POSTGRES_USER: ${POSTGRES_USER:-postgresuser}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+  POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+  DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+  DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
+  CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
+  CELERY_RESULT_BACKEND: redis://redis:6379/0
+  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+  AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME}
+  AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
+  STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+
 services:
   traefik:
     image: traefik:v3.5.4
@@ -49,21 +66,11 @@ services:
       - db
       - vite
     environment:
+      <<: *common-env
       SITE_URL: ${SITE_URL:-http://localhost:8001}
-      POSTGRES_HOST: ${POSTGRES_HOST:-db}
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
-      POSTGRES_USER: ${POSTGRES_USER:-postgresuser}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
       DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000,http://localhost:8081}
       USE_S3: ${USE_S3:-False}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME}
-      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
 
   vite:
     build:
@@ -73,12 +80,15 @@ services:
     command: bun run dev
     ports:
       - "5173:5173"
+    environment:
+      <<: *common-env
     volumes:
-      - "./backend/src/static:/app/src/static"
+      - "./backend/src/static/src:/app/src/static/src"
       - "./backend/vite.config.ts:/app/vite.config.ts"
       - "./backend/tailwind.config.js:/app/tailwind.config.js"
     networks:
       - web_network
+      - db_network
 
   mailcatcher:
     image: schickling/mailcatcher
@@ -87,3 +97,4 @@ services:
       - "127.0.0.1:1025:1025"
     networks:
       - web_network
+
