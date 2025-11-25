@@ -137,67 +137,6 @@ class WebsiteViewSet(viewsets.ModelViewSet):
         # For now, return all (you'll need to add a user field to Website model)
         return queryset
 
-    @extend_schema(
-        description="Scrape data from Airbnb listing URL",
-        request=None,
-        responses={200: WebsiteSerializer},
-    )
-    @action(detail=True, methods=["post"])
-    def scrape_airbnb(self, request, pk=None):
-        """
-        Scrape data from the Airbnb listing URL.
-
-        This is a placeholder for future implementation.
-        """
-        website = self.get_object()
-
-        if not website.airbnb_listing_url:
-            return Response(
-                {"error": _("No Airbnb listing URL configured")},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # TODO: Implement Airbnb scraping logic here
-        # This would use the pyairbnb package and Celery tasks
-
-        return Response(
-            {
-                "message": _("Airbnb scraping task has been queued"),
-                "website": WebsiteSerializer(website).data,
-            },
-            status=status.HTTP_200_OK,
-        )
-
-    @extend_schema(
-        description="Scrape data from Booking.com listing URL",
-        request=None,
-        responses={200: WebsiteSerializer},
-    )
-    @action(detail=True, methods=["post"])
-    def scrape_booking(self, request, pk=None):
-        """
-        Scrape data from the Booking.com listing URL.
-
-        This is a placeholder for future implementation.
-        """
-        website = self.get_object()
-
-        if not website.booking_listing_url:
-            return Response(
-                {"error": _("No Booking.com listing URL configured")},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # TODO: Implement Booking.com scraping logic here
-        # This would use Celery tasks
-
-        return Response(
-            {
-                "message": _("Booking.com scraping task has been queued"),
-                "website": WebsiteSerializer(website).data,
-            },
-            status=status.HTTP_200_OK,
-        )
 
     @extend_schema(
         description="Get website configuration summary",
