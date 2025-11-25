@@ -7,6 +7,35 @@ from apps.builder.models import LeadRegistration
 BNBUser = get_user_model()
 
 
+class PlatformChoices(models.TextChoices):
+    AIRBNB = "airbnb", "Airbnb"
+    BOOKING = "booking", "Booking.com"
+    EXPEDIA = "expedia", "Expedia"
+    TRIPADVISOR = "tripadvisor", "Tripadvisor"
+
+
+class Listing(AbstractTrackedModel):
+    title = models.CharField(max_length=255)
+    url = models.URLField()
+    platform = models.CharField(
+        max_length=255,
+        choices=PlatformChoices.choices,
+        default=PlatformChoices.AIRBNB
+    )
+    property = models.ForeignKey(
+        "properties.Property", on_delete=models.RESTRICT, null=True, blank=True, related_name="listings"
+    )
+    website = models.ForeignKey(
+        "builder.Website", on_delete=models.RESTRICT, null=True, blank=True, related_name="listings"
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name_plural = "Listings"
+
+
 class Property(AbstractTrackedModel):
     owner = models.ForeignKey(BNBUser, on_delete=models.CASCADE, null=True, blank=True)
     lead = models.ForeignKey(LeadRegistration, on_delete=models.CASCADE, null=True, blank=True)
@@ -138,3 +167,74 @@ class CoHost(AbstractTrackedModel):
     )
     host_id = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255, null=True, blank=True)
+
+
+class TouristAttraction(AbstractTrackedModel):
+    """
+    Tourist attractions and points of interest near the property.
+    Used for the "Discover {Location}" section on the website.
+    """
+    property = models.ForeignKey(
+        Property, on_delete=models.CASCADE, related_name="attractions"
+    )
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    distance = models.CharField(max_length=100, help_text="e.g., '2 km away', '10 min walk'")
+    category = models.CharField(
+        max_length=100,
+        help_text="e.g., 'Restaurant', 'Museum', 'Beach', 'Park'"
+    )
+    image = models.ImageField(upload_to="attractions/", blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True, help_text="Fallback if image not uploaded")
+    google_maps_url = models.URLField(blank=True, null=True)
+    order = models.IntegerField(default=0, help_text="Display order, lower numbers first")
+
+    class Meta:
+        ordering = ['order', 'distance']
+        verbose_name = "Tourist Attraction"
+        verbose_name_plural = "Tourist Attractions"
+
+    def __str__(self):
+        return f"{self.name} - {self.property.title}"
+
+
+class Article(AbstractTrackedModel):
+    """
+    Blog articles/guides created by property hosts.
+    Used for content marketing and SEO.
+    """
+    property = models.ForeignKey(
+        Property, on_delete=models.CASCADE, related_name="articles"
+    )
+    title = models.CharField(max_length=255)
+    subtitle = models.CharField(max_length=500)
+    slug = models.SlugField(unique=True, max_length=255)
+    content = models.TextField(help_text="Article content in Markdown or HTML")
+    tags = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="List of tags, e.g., ['beach', 'family', 'adventure']"
+    )
+    read_time = models.IntegerField(
+        default=5,
+        help_text="Estimated read time in minutes"
+    )
+    featured_image = models.ImageField(upload_to="articles/", blank=True, null=True)
+    published = models.BooleanField(default=True)
+    published_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-published_at']
+        verbose_name = "Article"
+        verbose_name_plural = "Articles"
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        # Auto-generate slug from title if not provided
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+

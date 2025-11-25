@@ -11,6 +11,7 @@ from django.db import models
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.functional import cached_property
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.builder.utils import get_domain
@@ -49,9 +50,35 @@ class Website(AbstractTrackedModel):
     owner = models.ForeignKey(BNBUser, on_delete=models.DO_NOTHING)
     theme = models.ForeignKey(ThemeChoices, on_delete=models.RESTRICT)
     color_scheme = models.ForeignKey(ColorSchemeChoices, on_delete=models.RESTRICT)
-    airbnb_listing_url = models.URLField(null=True, blank=True)
-    booking_listing_url = models.URLField(null=True, blank=True)
     domain_name = models.URLField(null=True, blank=True)
+
+    @cached_property
+    def airbnb_listing_url(self):
+        listing = self.listings.filter(platform=PlatformChoices.AIRBNB).first()
+        if not listing:
+            return None
+        return listing.url
+
+    @cached_property
+    def booking_listing_url(self):
+        listing = self.listings.filter(platform=PlatformChoices.BOOKING).first()
+        if not listing:
+            return None
+        return listing.url
+
+    @cached_property
+    def expedia_listing_url(self):
+        listing = self.listings.filter(platform=PlatformChoices.EXPIEDIA).first()
+        if not listing:
+            return None
+        return listing.url
+
+    @cached_property
+    def tripadvisor_listing_url(self):
+        listing = self.listings.filter(platform=PlatformChoices.TRIPODVISOR).first()
+        if not listing:
+            return None
+        return listing.url
 
     def __str__(self):
         return f"{self.domain_name} by {self.owner}"
