@@ -15,6 +15,8 @@ from .models import (
     LocationDescription,
     Highlight,
     CoHost,
+    TouristAttraction,
+    Article,
 )
 
 
@@ -296,3 +298,47 @@ class PropertyCreateUpdateSerializer(serializers.ModelSerializer):
                 CoHost.objects.create(property=instance, **co_host_data)
 
         return instance
+
+
+class TouristAttractionSerializer(serializers.ModelSerializer):
+    """Serializer for tourist attractions near the property"""
+
+    class Meta:
+        model = TouristAttraction
+        fields = [
+            "id",
+            "name",
+            "description",
+            "distance",
+            "category",
+            "image",
+            "image_url",
+            "google_maps_url",
+            "order",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "created_at", "updated_at"]
+
+
+class ArticleSerializer(serializers.ModelSerializer):
+    """Serializer for property articles/blogs"""
+
+    class Meta:
+        model = Article
+        fields = [
+            "id",
+            "title",
+            "subtitle",
+            "slug",
+            "content",
+            "tags",
+            "read_time",
+            "featured_image",
+            "published",
+            "published_at",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "slug", "created_at", "updated_at", "published_at"]
+

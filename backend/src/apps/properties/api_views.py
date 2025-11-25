@@ -2,11 +2,13 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import Property
+from .models import Property, TouristAttraction, Article
 from .serializers import (
     PropertyListSerializer,
     PropertyDetailSerializer,
     PropertyCreateUpdateSerializer,
+    TouristAttractionSerializer,
+    ArticleSerializer,
 )
 
 
@@ -56,6 +58,8 @@ class PropertyViewSet(viewsets.ModelViewSet):
         "co_hosts",
         "house_rules__general",
         "house_rules__general__values",
+        "attractions",
+        "articles",
     )
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
@@ -98,3 +102,62 @@ class PropertyViewSet(viewsets.ModelViewSet):
         properties = self.get_queryset().filter(owner=request.user)
         serializer = self.get_serializer(properties, many=True)
         return Response(serializer.data)
+
+
+class TouristAttractionViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet for viewing tourist attractions.
+    
+    Provides read-only operations:
+    - list: GET /api/attractions/
+    - retrieve: GET /api/attractions/{id}/
+    
+    Query params:
+    - property_id: Filter attractions by property
+    """
+    queryset = TouristAttraction.objects.all()
+    serializer_class = TouristAttractionSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        property_id = self.request.query_params.get('property_id')
+        if property_id:
+            queryset = queryset.filter(property_id=property_id)
+        return queryset.order_by('order', 'distance')
+
+
+class ArticleViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet for viewing articles/blogs.
+    
+    Provides read-only operations:
+    - list: GET /api/articles/
+    - retrieve: GET /api/articles/{slug}/
+    
+    Query params:
+    - property_id: Filter articles by property
+    - tags: Filter by tags (comma-separated)
+    """
+    queryset = Article.objects.filter(published=True)
+    serializer_class = ArticleSerializer
+    permission_classes = [permissions.AllowAny]
+    lookup_field = 'slug'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Filter by property
+        property_id = self.request.query_params.get('property_id')
+        if property_id:
+            queryset = queryset.filter(property_id=property_id)
+        
+        # Filter by tags
+        tags = self.request.query_params.get('tags')
+        if tags:
+            tag_list = [tag.strip() for tag in tags.split(',')]
+            # Filter articles that contain ANY of the specified tags
+            for tag in tag_list:
+                queryset = queryset.filter(tags__contains=[tag])
+        
+        return queryset
