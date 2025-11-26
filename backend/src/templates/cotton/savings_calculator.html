@@ -1,0 +1,99 @@
+<div class="my-16">
+    <h2 class="text-4xl font-bold text-center mb-8">Calculate Yearly Savings</h2>
+    
+    <div class="card bg-base-100 shadow-xl max-w-4xl mx-auto"
+         x-data="{
+            avgPrice: 100,
+            occupancyRate: 59,
+            nightsPerYear: 215,
+            calculationMode: 'occupancy',
+            get yearlySavings() {
+                 const savings = this.avgPrice * this.nightsPerYear * 0.155;
+                 return new Intl.NumberFormat('en-MT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(savings);
+            },
+            updateOccupancy(val) {
+                this.occupancyRate = parseInt(val);
+                this.nightsPerYear = Math.round(365 * (this.occupancyRate / 100));
+            },
+            updateNights(val) {
+                this.nightsPerYear = parseInt(val);
+                this.occupancyRate = Math.round((this.nightsPerYear / 365) * 100);
+            }
+         }">
+        <div class="card-body">
+            <h3 class="text-xl font-bold text-center mb-8">Every year you will save</h3>
+
+        
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-6">
+                <!-- Average Price Input -->
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text font-medium">Average Price per Night (€)</span>
+                    </label>
+                    <input type="number" 
+                           x-model.number="avgPrice" 
+                           class="input input-bordered w-full text-lg" />
+                </div>
+
+                <!-- Calculation Mode Radio -->
+                <div class="flex gap-6">
+                    <label class="label cursor-pointer justify-start gap-2">
+                        <input type="radio" 
+                               name="calculationMode" 
+                               value="occupancy" 
+                               x-model="calculationMode"
+                               class="radio radio-primary" />
+                        <span class="label-text">Occupancy Rate</span>
+                    </label>
+                    <label class="label cursor-pointer justify-start gap-2">
+                        <input type="radio" 
+                               name="calculationMode" 
+                               value="nights" 
+                               x-model="calculationMode"
+                               class="radio radio-primary" />
+                        <span class="label-text">Nights per Year</span>
+                    </label>
+                </div>
+
+                <!-- Dynamic Input (Slider or Number) -->
+                <template x-if="calculationMode === 'occupancy'">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <label class="label-text font-medium">Occupancy Rate (%)</label>
+                            <span class="font-bold text-lg" x-text="occupancyRate + '%'"></span>
+                        </div>
+                        <input type="range" 
+                               min="0" 
+                               max="100" 
+                               x-model="occupancyRate"
+                               @input="updateOccupancy($event.target.value)"
+                               class="range range-primary" />
+                    </div>
+                </template>
+
+                <template x-if="calculationMode === 'nights'">
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text font-medium">Number of Nights per Year</span>
+                        </label>
+                        <input type="number" 
+                               x-model="nightsPerYear"
+                               @input="updateNights($event.target.value)"
+                               class="input input-bordered w-full text-lg" />
+                    </div>
+                </template>
+            </div>
+
+            <!-- Result Display -->
+            <div class="flex flex-col items-center justify-center p-8 bg-primary/5 rounded-2xl h-full">
+                <p class="text-lg text-base-content/60 mb-4">You Save Up To</p>
+                <div class="badge badge-success badge-lg text-4xl font-bold p-8 h-auto w-auto">
+                    <span x-text="yearlySavings"></span>
+                </div>
+                <p class="text-sm text-base-content/60 mt-4">per year</p>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

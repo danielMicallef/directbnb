@@ -1,13 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h1>Cancelled</h1>
-<p>Go back to check out</p>
-<!--Advertise promotions about to expire.-->
-</body>
-</html>
+{% block content %}
+<div class="min-h-screen bg-base-200 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-error/10 mb-4">
+                    <svg class="h-6 w-6 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                
+                <h2 class="card-title justify-center text-2xl font-bold mb-2">Payment Cancelled</h2>
+                <p class="text-base-content/70 mb-6">It looks like you cancelled the payment process. No charges were made.</p>
+
+                <div class="alert alert-warning text-sm mb-6 text-left">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    <span>Did you face an issue while completing payment? You can try again below.</span>
+                </div>
+
+                <div class="space-y-3">
+                    <a href="{% url 'builder:checkout' object.id %}" class="btn btn-primary btn-block">
+                        Try Payment Again
+                    </a>
+                    <a href="/" class="btn btn-ghost btn-block">Return Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

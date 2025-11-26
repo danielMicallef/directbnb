@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Success</h1>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-base-200 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-success/10 mb-4">
+                    <svg class="h-6 w-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                
+                <h2 class="card-title justify-center text-2xl font-bold mb-2">Payment Successful!</h2>
+                <p class="text-base-content/70 mb-6">Thank you for your purchase. Your website setup is now in progress.</p>
+
+                <div class="divider">Order Details</div>
+
+                <div class="text-left space-y-4 mb-6">
+                    {% for option in object.get_latest_registration_options %}
+                    <div class="flex justify-between items-start p-3 bg-base-200 rounded-lg">
+                        <div>
+                            <div class="font-semibold">{{ option.package.name }}</div>
+                            <div class="text-xs text-base-content/60">{{ option.package.get_frequency_display }}</div>
+                            {% if option.promotion %}
+                            <div class="badge badge-secondary badge-sm mt-1">{{ option.promotion.get_promotional_name }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="text-right">
+                            {% if option.promotion %}
+                            <div class="text-xs line-through text-base-content/60">{{ option.package.get_currency_symbol }}{{ option.package.amount }}</div>
+                            <div class="font-bold text-success">{{ option.package.get_currency_symbol }}{{ option.promotion.get_discounted_amount }}</div>
+                            {% else %}
+                            <div class="font-bold">{{ option.package.get_currency_symbol }}{{ option.package.amount }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="alert alert-info text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Please check your email for a verification link to access your dashboard.</span>
+                </div>
+
+                <div class="mt-6">
+                    <a href="/" class="btn btn-primary btn-block">Return Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -12,7 +12,7 @@
             </p>
             <div class="flex flex-wrap gap-4 justify-center">
                 <a href="{% url 'builder:wizard' %}" class="btn btn-primary btn-lg h-12 px-8">Create Your Website</a>
-                <button class="btn btn-outline btn-lg h-12 px-8">Learn More</button>
+                <a href="#how-it-works" class="btn btn-soft btn-secondary btn-lg h-12 px-8">See How It Works</a>
             </div>
         </div>
     </div>
@@ -63,6 +63,55 @@
         </div>
     </div>
 </div>
+
+<!-- How It Works Section -->
+<div class="py-16 bg-base-200" id="how-it-works">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold mb-4">Launch Your Website in 3 Simple Steps</h2>
+        <p class="text-lg text-base-content/60">No coding. No design skills. Just a few clicks.</p>
+    </div>
+
+    <div class="max-w-4xl mx-auto space-y-8">
+        <div class="flex gap-6 items-start">
+            <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-primary-content font-bold text-xl flex-shrink-0">
+                1
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-2">Choose Your Style</h3>
+                <p class="text-base-content/60">
+                    Pick from City, Mountain, or Seaside themes. Select your color scheme. We'll import your property details automatically from your current listings.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex gap-6 items-start">
+            <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-primary-content font-bold text-xl flex-shrink-0">
+                2
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-2">Get Your Domain</h3>
+                <p class="text-base-content/60">
+                    Choose a memorable domain name for your property. We'll help you register it and handle all the technical setup.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex gap-6 items-start">
+            <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-primary-content font-bold text-xl flex-shrink-0">
+                3
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-2">Start Getting Direct Bookings</h3>
+                <p class="text-base-content/60">
+                    Your website goes live instantly. We'll share proven strategies to drive traffic and turn visitors into guests.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Savings Calculator Section -->
+<c-savings_calculator />
 
 <!-- CTA Section -->
 <div class="bg-base-200 rounded-2xl py-16 px-8">
