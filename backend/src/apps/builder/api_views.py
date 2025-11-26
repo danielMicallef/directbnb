@@ -137,7 +137,6 @@ class WebsiteViewSet(viewsets.ModelViewSet):
         # For now, return all (you'll need to add a user field to Website model)
         return queryset
 
-
     @extend_schema(
         description="Get website configuration summary",
         responses={200: WebsiteSerializer},

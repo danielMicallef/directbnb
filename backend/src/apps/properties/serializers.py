@@ -341,4 +341,3 @@ class ArticleSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = ["id", "slug", "created_at", "updated_at", "published_at"]
-

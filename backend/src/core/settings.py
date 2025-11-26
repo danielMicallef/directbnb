@@ -41,7 +41,9 @@ else:
         "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000,http://127.0.0.1:8081",
     )
     CORS_ALLOWED_ORIGINS = [
-        origin.strip() for origin in CORS_ALLOWED_ORIGINS_ENV.split(",") if origin.strip()
+        origin.strip()
+        for origin in CORS_ALLOWED_ORIGINS_ENV.split(",")
+        if origin.strip()
     ]
 
 # Allow credentials (cookies, authorization headers, etc.)
@@ -358,4 +360,3 @@ STATICFILES_DIRS = [
 # Cloudflare Pages Configuration
 CLOUDFLARE_ACCOUNT_ID = os.getenv("CLOUDFLARE_ACCOUNT_ID")
 CLOUDFLARE_API_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN")
-

@@ -14,4 +14,3 @@ router.register(r"articles", ArticleViewSet, basename="article")
 urlpatterns = [
     path("", include(router.urls)),
 ]
-

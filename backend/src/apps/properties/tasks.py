@@ -30,27 +30,29 @@ from .models import (
 BNBUser = get_user_model()
 
 
-def download_image_from_url(image_url: str, property_id: int, index: int) -> ContentFile:
+def download_image_from_url(
+    image_url: str, property_id: int, index: int
+) -> ContentFile:
     """
     Download image from URL and return ContentFile.
-    
+
     Args:
         image_url: URL of the image to download
         property_id: ID of the property (for filename)
         index: Index of the image (for filename)
-    
+
     Returns:
         ContentFile containing the image data
     """
     try:
         response = requests.get(image_url, timeout=30)
         response.raise_for_status()
-        
+
         # Extract extension from URL or default to jpg
-        ext = image_url.split('.')[-1].split('?')[0].lower()
-        if ext not in ['jpg', 'jpeg', 'png', 'gif', 'webp']:
-            ext = 'jpg'
-        
+        ext = image_url.split(".")[-1].split("?")[0].lower()
+        if ext not in ["jpg", "jpeg", "png", "gif", "webp"]:
+            ext = "jpg"
+
         filename = f"property_{property_id}_image_{index}.{ext}"
         return ContentFile(response.content, name=filename)
     except Exception as e:
@@ -82,7 +84,7 @@ def save_property_data(data: dict, owner_id: int, lead_id: uuid.UUID) -> Propert
     """
     owner = BNBUser.objects.filter(id=owner_id).first()
     lead = LeadRegistration.objects.filter(id=lead_id).first()
-    
+
     if not lead or owner:
         raise ValueError("Lead or owner not found")
 
@@ -185,7 +187,7 @@ def save_property_data(data: dict, owner_id: int, lead_id: uuid.UUID) -> Propert
             title=image.get("title"),
             url=image_url,
         )
-        
+
         # Download and save the image
         if image_url:
             image_file = download_image_from_url(image_url, property_obj.id, idx)
@@ -221,7 +223,9 @@ def save_property_data(data: dict, owner_id: int, lead_id: uuid.UUID) -> Propert
 
 
 @shared_task(bind=True, max_retries=3)
-def scrape_airbnb_listing(self, listing_url: str, owner_id: int = None, lead_id: uuid.UUID = None):
+def scrape_airbnb_listing(
+    self, listing_url: str, owner_id: int = None, lead_id: uuid.UUID = None
+):
     """
     Celery task to scrape an Airbnb listing and save it to the database.
 
@@ -232,12 +236,13 @@ def scrape_airbnb_listing(self, listing_url: str, owner_id: int = None, lead_id:
     try:
         data = get_airbnb_data_from_url(listing_url)
         property_obj = save_property_data(data, owner_id, lead_id)
-        
+
         # Chain the build and deploy task if lead_id is provided
         if lead_id:
             from apps.builder.tasks import build_and_deploy_site
+
             build_and_deploy_site.delay(property_obj.id, str(lead_id))
-        
+
         return {"success": True, "property_id": property_obj.id}
     except Exception as exc:
         raise self.retry(exc=exc, countdown=60)

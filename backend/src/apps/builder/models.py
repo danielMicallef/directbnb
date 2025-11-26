@@ -118,6 +118,7 @@ class Package(AbstractTrackedModel):
 
     def get_currency_symbol(self):
         from apps.builder.utils import CURRENCY_SYMBOLS
+
         return CURRENCY_SYMBOLS.get(self.currency, self.currency)
 
     def get_frequency_days(self):
@@ -148,9 +149,7 @@ class PromotionManager(models.Manager):
         return self.filter(
             start_date__lte=today,
             end_date__gte=today,
-        ).exclude(
-            units_available=0
-        )
+        ).exclude(units_available=0)
 
 
 class Promotion(AbstractTrackedModel):
@@ -162,7 +161,7 @@ class Promotion(AbstractTrackedModel):
     start_date = models.DateField()
     end_date = models.DateField()
     promotion_code = models.CharField(max_length=30, null=True, blank=True)
-    
+
     objects = PromotionManager()
 
     def is_promotion_available(self):
@@ -399,17 +398,13 @@ class LeadRegistration(AbstractTrackedModel):
             f"Creating checkout session for lead {self.id} with {len(line_items)} items"
         )
 
-        success_url = reverse(
-            "builder:checkout_success", kwargs={"pk": self.id}
-        )
-        cancel_url = reverse(
-            "builder:checkout_cancelled", kwargs={"pk": self.id}
-        )
-        
+        success_url = reverse("builder:checkout_success", kwargs={"pk": self.id})
+        cancel_url = reverse("builder:checkout_cancelled", kwargs={"pk": self.id})
+
         # Build full URLs
         full_success_url = f"{settings.SITE_URL}{success_url}"
         full_cancel_url = f"{settings.SITE_URL}{cancel_url}"
-        
+
         try:
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=["card"],

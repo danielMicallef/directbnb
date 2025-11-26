@@ -39,7 +39,12 @@ class ColorSchemeRadioSelect(RadioSelect):
             try:
                 color_scheme = value.instance
                 option["theme_colors"] = color_scheme.theme_colors
-            except (ColorSchemeChoices.DoesNotExist, ValueError, TypeError, AttributeError):
+            except (
+                ColorSchemeChoices.DoesNotExist,
+                ValueError,
+                TypeError,
+                AttributeError,
+            ):
                 option["theme_colors"] = []
 
         return option
@@ -54,14 +59,19 @@ class ColorSchemeRadioSelect(RadioSelect):
                 if option_value:
                     try:
                         # Extract the actual PK value from ModelChoiceIteratorValue
-                        if hasattr(option_value, 'value'):
+                        if hasattr(option_value, "value"):
                             pk = option_value.value
                         else:
                             pk = option_value
-                        
+
                         color_scheme = ColorSchemeChoices.objects.get(pk=pk)
                         option["theme_colors"] = color_scheme.theme_colors
-                    except (ColorSchemeChoices.DoesNotExist, ValueError, TypeError, AttributeError):
+                    except (
+                        ColorSchemeChoices.DoesNotExist,
+                        ValueError,
+                        TypeError,
+                        AttributeError,
+                    ):
                         option["theme_colors"] = []
         return groups
 
@@ -75,10 +85,12 @@ class PackageRadioSelect(RadioSelect):
             for option in options:
                 if option.get("value"):
                     package = option.get("value").instance
-                    
+
                     # Check for active promotion using manager
-                    promotion = Promotion.objects.active().filter(package=package).first()
-                    
+                    promotion = (
+                        Promotion.objects.active().filter(package=package).first()
+                    )
+
                     # Base package info
                     option["package_name"] = package.name
                     option["package_description"] = package.description
@@ -88,16 +100,18 @@ class PackageRadioSelect(RadioSelect):
                     option["package_frequency_display"] = (
                         package.get_frequency_display()
                     )
-                    
+
                     # Promotion info
                     if promotion and promotion.is_promotion_available():
                         option["has_promotion"] = True
                         option["promotion_discount"] = promotion.discount_percentage
                         option["promotion_name"] = promotion.get_promotional_name()
-                        option["discounted_amount"] = str(promotion.get_discounted_amount())
+                        option["discounted_amount"] = str(
+                            promotion.get_discounted_amount()
+                        )
                     else:
                         option["has_promotion"] = False
-                    
+
         return groups
 
 
