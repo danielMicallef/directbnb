@@ -1,9 +1,11 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms.widgets import RadioSelect
+from django.utils import timezone
+
 from phonenumber_field.formfields import PhoneNumberField
 
-from apps.builder.models import ThemeChoices, ColorSchemeChoices, Package
+from apps.builder.models import ThemeChoices, ColorSchemeChoices, Package, Promotion
 
 
 class ThemeRadioSelect(RadioSelect):
@@ -73,6 +75,11 @@ class PackageRadioSelect(RadioSelect):
             for option in options:
                 if option.get("value"):
                     package = option.get("value").instance
+                    
+                    # Check for active promotion using manager
+                    promotion = Promotion.objects.active().filter(package=package).first()
+                    
+                    # Base package info
                     option["package_name"] = package.name
                     option["package_description"] = package.description
                     option["package_amount"] = str(package.amount)
@@ -81,6 +88,16 @@ class PackageRadioSelect(RadioSelect):
                     option["package_frequency_display"] = (
                         package.get_frequency_display()
                     )
+                    
+                    # Promotion info
+                    if promotion and promotion.is_promotion_available():
+                        option["has_promotion"] = True
+                        option["promotion_discount"] = promotion.discount_percentage
+                        option["promotion_name"] = promotion.get_promotional_name()
+                        option["discounted_amount"] = str(promotion.get_discounted_amount())
+                    else:
+                        option["has_promotion"] = False
+                    
         return groups
 
 

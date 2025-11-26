@@ -141,6 +141,18 @@ class Package(AbstractTrackedModel):
                 return i * 365
 
 
+class PromotionManager(models.Manager):
+    def active(self):
+        """Return only active promotions"""
+        today = timezone.now().date()
+        return self.filter(
+            start_date__lte=today,
+            end_date__gte=today,
+        ).exclude(
+            units_available=0
+        )
+
+
 class Promotion(AbstractTrackedModel):
     package = models.ForeignKey(Package, on_delete=models.RESTRICT)
     discount_percentage = models.PositiveSmallIntegerField(
@@ -150,6 +162,8 @@ class Promotion(AbstractTrackedModel):
     start_date = models.DateField()
     end_date = models.DateField()
     promotion_code = models.CharField(max_length=30, null=True, blank=True)
+    
+    objects = PromotionManager()
 
     def is_promotion_available(self):
         today = timezone.now().date()

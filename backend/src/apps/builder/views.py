@@ -320,12 +320,8 @@ class BookingWizardView(View):
             # Create registration options for builder package
             if package_id:
                 package = Package.objects.get(pk=package_id)
-                # Check for active promotion
-                promotion = Promotion.objects.filter(
-                    package=package,
-                    start_date__lte=timezone.now().date(),
-                    end_date__gte=timezone.now().date(),
-                ).first()
+                # Check for active promotion using manager
+                promotion = Promotion.objects.active().filter(package=package).first()
 
                 RegistrationOptions.objects.create(
                     lead_registration=lead,
