@@ -98,3 +98,10 @@ services:
     networks:
       - web_network
 
+  celery_worker:
+    volumes:
+      - ./backend/src:/app/src
+
+  celery_beat:
+    volumes:
+      - ./backend/src:/app/src
